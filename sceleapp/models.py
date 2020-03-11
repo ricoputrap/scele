@@ -101,7 +101,7 @@ class UserReply(models.Model):
 	user_post = models.ForeignKey(UserPost, on_delete=models.CASCADE)
 	course = models.ForeignKey(Course, on_delete=models.CASCADE)
 	creator = models.ForeignKey(UserApp, on_delete=models.CASCADE)
-	host_reply = models.ForeignKey(UserReply, on_delete=models.CASCADE, null=True, blank=True)
+	host_reply = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
 
 	class Meta:
 		ordering = ['-created_at']
@@ -135,7 +135,7 @@ class Notif(models.Model):
 		('r', 'reply'),
 	)
 	notif_type = models.CharField(max_length=1, choices=NOTIF_TYPES, default='b')
-	created_at = models.DateTimeField(auto_add_now=True)
+	created_at = models.DateTimeField(auto_now_add=True)
 	is_new = models.BooleanField()
 	img = models.CharField(max_length=200)
 	link = models.URLField()
