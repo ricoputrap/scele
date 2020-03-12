@@ -22,27 +22,27 @@ class UserApp(models.Model):
 	age = models.CharField(max_length=5, choices=AGES)
 
 	GENDERS = (
-		('L', 'laki-laki'),
-		('P', 'perempuan'),
+		('L', 'Laki-laki'),
+		('P', 'Perempuan'),
 	)
 	gender = models.CharField(max_length=1, choices=GENDERS)
 
 	DOMISILIS = (
-		('jab', 'jabodetabek'),
-		('njj', 'non-jabodetabek jawa'),
-		('lpj', 'luar pulau jawa'),
+		(0, 'Jabodetabek'),
+		(1, 'Non-Jabodetabek di Pulau Jawa'),
+		(2, 'Luar Pulau Jawa'),
 	)
-	domisili = models.CharField(max_length=3, choices=DOMISILIS)
+	domisili = models.IntegerField(choices=DOMISILIS)
 	univ = models.CharField(max_length=200)
 
 	DEGREES = (
-		('D1', 'Ahli Pratama'),
-		('D2', 'Ahli Muda'),
-		('D3', 'Ahli Madya'),
-		('D4', 'Sarjana Sains Terapan'),
-		('S1', 'Sarjana'),
-		('S2', 'Magister'),
-		('S3', 'Doktor'),
+		('D1', 'D1/Ahli Pratama'),
+		('D2', 'D2/Ahli Muda'),
+		('D3', 'D3/Ahli Madya'),
+		('D4', 'D4/Sarjana Sains Terapan'),
+		('S1', 'S1/Sarjana'),
+		('S2', 'S2/Magister'),
+		('S3', 'S3/Doktor'),
 		)
 	degree = models.CharField(max_length=2, choices=DEGREES)
 	angkatan = models.IntegerField()
@@ -112,7 +112,6 @@ class UserReply(models.Model):
 class ReplyLike(models.Model):
 	quantity = models.IntegerField()
 	user_reply = models.OneToOneField(UserReply, on_delete=models.CASCADE)
-	# likers = models.ManyToManyField(UserApp)
 
 	def __str__(self):
 		return '{0} likes for reply {1}'.format(self.quantity, self.user_reply.subject)
@@ -151,8 +150,8 @@ class Badge(models.Model):
 	criteria = models.TextField()
 
 	BADGE_TYPES = (
-		('p', 'participation'),
-		('s', 'skill'),
+		('p', 'Participation'),
+		('s', 'Skill'),
 	)
 	badge_type = models.CharField(max_length=1, choices=BADGE_TYPES, default='p')
 	img = models.CharField(max_length=200)
