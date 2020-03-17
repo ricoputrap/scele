@@ -1,124 +1,68 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
-
-class UserApp(models.Model):
-	username = models.CharField(max_length=40, primary_key=True)
-	password = models.CharField(max_length=100)
-	first_name = models.CharField(max_length=100)
-	last_name = models.CharField(max_length=100)
-	contact = models.CharField(max_length=100)
-
-	AGES = (
-		('U15', '< 15 tahun'),
-		('15-19', '15 - 19 tahun'),
-		('20-24', '20 - 24 tahun'),
-		('25-29', '25 - 29 tahun'),
-		('30-34','30 - 34 tahun'),
-		('35-39', '35 - 39 tahun'),
-		('40-44', '40 - 44 tahun'),
-		('O44', '>= 45 tahun'),
-		)
-	age = models.CharField(max_length=5, choices=AGES)
-
-	GENDERS = (
-		('L', 'Laki-laki'),
-		('P', 'Perempuan'),
-	)
-	gender = models.CharField(max_length=1, choices=GENDERS)
-
-	DOMISILIS = (
-		(0, 'Jabodetabek'),
-		(1, 'Non-Jabodetabek di Pulau Jawa'),
-		(2, 'Luar Pulau Jawa'),
-	)
-	domisili = models.IntegerField(choices=DOMISILIS)
-	univ = models.CharField(max_length=200)
-
-	DEGREES = (
-		('D1', 'D1/Ahli Pratama'),
-		('D2', 'D2/Ahli Muda'),
-		('D3', 'D3/Ahli Madya'),
-		('D4', 'D4/Sarjana Sains Terapan'),
-		('S1', 'S1/Sarjana'),
-		('S2', 'S2/Magister'),
-		('S3', 'S3/Doktor'),
-		)
-	degree = models.CharField(max_length=2, choices=DEGREES)
-	angkatan = models.IntegerField()
-	faculty = models.CharField(max_length=100)
-
-	class Meta:
-		ordering = ['first_name']
-
-	def __str__(self):
-		return self.username
-
-class Course(models.Model):
-	name = models.CharField(max_length=20)
-	is_active = models.BooleanField()
-
-	class Meta:
-		ordering = ['is_active']
-
-	def __str__(self):
-		return self.name
 
 class UserPost(models.Model):
 	subject = models.CharField(max_length=50)
 	msg = models.TextField()
 	created_at = models.DateTimeField(auto_now=True)
 	grade = models.IntegerField()
-	course = models.ForeignKey(Course, on_delete=models.CASCADE)
-	creator = models.ForeignKey(UserApp, on_delete=models.CASCADE) # raise ProtectedError in views if needed
+	permalink = models.CharField(max_length=200)
+	is_gamified = models.BooleanField(default=False)
+	creator = models.ForeignKey(User, on_delete=models.CASCADE) #creator gak mungkin dihapus
 
 	class Meta:
 		ordering = ['-created_at']
 
 	def __str__(self):
-		return 'Post {0} in {1} created by {2}'.format(self.subject, self.course.name,  self.creator.username)
+		return 'Post {0} created by {1}'.format(self.subject, self.creator.username)
 
 class PostLike(models.Model):
+	user_post = models.OneToOneField(UserPost, on_delete=models.SET_NULL, null=True)
 	quantity = models.IntegerField()
-	user_post = models.OneToOneField(UserPost, on_delete=models.CASCADE)
-	# likers = models.ManyToManyField(UserApp)
+	is_gamified = models.BooleanField(default=False)
 
 	def __str__(self):
-		return '{0} likes for post {1}'.format(self.quantity, self.user_post.subject)
+		return '{0} likes on post "{1}"'.format(self.quantity, self.user_post.subject)
 
 class GivenPostLike(models.Model):
-	liker = models.ForeignKey(UserApp, on_delete=models.CASCADE) # raise ProtectedError in views if needed
+	liker = models.ForeignKey(User, on_delete=models.CASCADE) # liker gak mungkin dihapus
 	post_like = models.ForeignKey(PostLike, on_delete=models.CASCADE)
+	pk = models.UniqueConstraint(fields=['liker', 'post_like'], name='given_post_like_pk')
 
 	def __str__(self):
-		return '{0} gave {1} likes'.format(self.liker, self.post_like.quantity)
+		return '{0} gave {1} likes'.format(self.liker.username, self.post_like.quantity)
 
 class UserReply(models.Model):
 	subject = models.CharField(max_length=50)
 	msg = models.TextField()
 	created_at = models.DateTimeField(auto_now=True)
 	grade = models.IntegerField()
+	permalink = models.CharField(max_length=200)
+	is_gamified = models.BooleanField(default=False)
 	user_post = models.ForeignKey(UserPost, on_delete=models.CASCADE)
-	course = models.ForeignKey(Course, on_delete=models.CASCADE)
-	creator = models.ForeignKey(UserApp, on_delete=models.CASCADE)
+	creator = models.ForeignKey(User, on_delete=models.CASCADE)
 	host_reply = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
 
 	class Meta:
 		ordering = ['-created_at']
 
 	def __str__(self):
-		return 'Reply {0} in {1} created by {2}'.format(self.subject, self.course.name,  self.creator.username)
+		return 'Reply {0} created by {1}'.format(self.subject,  self.creator.username)
 
 class ReplyLike(models.Model):
+	user_reply = models.OneToOneField(UserReply, on_delete=models.SET_NULL, null=True)
 	quantity = models.IntegerField()
-	user_reply = models.OneToOneField(UserReply, on_delete=models.CASCADE)
+	is_gamified = models.BooleanField(default=False)
 
 	def __str__(self):
 		return '{0} likes for reply {1}'.format(self.quantity, self.user_reply.subject)
 
 class GivenReplyLike(models.Model):
-	liker = models.ForeignKey(UserApp, on_delete=models.CASCADE) # raise ProtectedError in views if needed
+	liker = models.ForeignKey(User, on_delete=models.CASCADE) # liker gak mungkin dihapus
 	reply_like = models.ForeignKey(ReplyLike, on_delete=models.CASCADE)
+	pk = models.UniqueConstraint(fields=['liker', 'reply_like'], name='given_reply_like_pk')
 
 	def __str__(self):
 		return '{0} gave {1} likes'.format(self.liker, self.reply_like.quantity)
@@ -128,40 +72,64 @@ class Notif(models.Model):
 	desc = models.TextField()
 
 	NOTIF_TYPES = (
-		('b', 'badge'),
-		('g', 'grade'),
-		('l', 'like'),
-		('r', 'reply'),
+		('b', 'Badge'),
+		('g', 'Grade'),
+		('l', 'Like'),
+		('r', 'Reply'),
+		(None, '-------')
 	)
-	notif_type = models.CharField(max_length=1, choices=NOTIF_TYPES, default='b')
-	created_at = models.DateTimeField(auto_now_add=True)
-	is_new = models.BooleanField()
-	img = models.CharField(max_length=200)
-	link = models.URLField()
-	course = models.ForeignKey(Course, on_delete=models.CASCADE)
-	receiver = models.ForeignKey(UserApp, on_delete=models.CASCADE)
+	notif_type = models.CharField(max_length=1, choices=NOTIF_TYPES, default=None)
+	is_gamified = models.BooleanField(default=False)
+	created_at = models.DateTimeField(auto_now=True)
+	is_new = models.BooleanField(default=True)
+	img_loc = models.CharField(max_length=200)
+	user_post = models.ForeignKey(UserPost, on_delete=models.SET_NULL, null=True)
+	user_reply = models.ForeignKey(UserReply, on_delete=models.SET_NULL, null=True)
+	receiver = models.ForeignKey(User, on_delete=models.CASCADE)  # receiver gak mungkin dihapus
 
 	def __str__(self):
-		return '"{0}" got notif "{1}" in {2}'.format(self.receiver, self.title, self.course)
+		return '{0} got notif "{1}"'.format(self.receiver, self.title)
+
+class ReplyNotif(models.Model):
+	notif = models.OneToOneField(Notif, on_delete=models.CASCADE)
+	rep_quantity = models.IntegerField()
+
+	def __str__(self):
+		return '{0} replies'.format(self.rep_quantity)
+
+class LikeNotif(models.Model):
+	notif = models.OneToOneField(Notif, on_delete=models.CASCADE)
+	like_quantity = models.IntegerField()
+
+	def __str__(self):
+		return '{0} likes'.format(self.like_quantity)
 
 class Badge(models.Model):
 	name = models.CharField(max_length=50)
 	desc = models.TextField()
 	criteria = models.TextField()
-
-	BADGE_TYPES = (
+	img_loc = models.CharField(max_length=200)
+	RECEIVING_TYPES = (
 		('p', 'Participation'),
 		('s', 'Skill'),
 	)
-	badge_type = models.CharField(max_length=1, choices=BADGE_TYPES, default='p')
-	img = models.CharField(max_length=200)
+	receiving_type = models.CharField(max_length=1, choices=RECEIVING_TYPES, default='p')
+	ACTIVITY_TYPES = (
+		('p', 'Create a post'),
+		('r', 'Create a reply'),
+		('l', 'Give a like'),
+	)
+	activity_type = models.CharField(max_length=1, choices=ACTIVITY_TYPES, default='p')
 
 	def __str__(self):
 		return self.name
 
 class UserBadge(models.Model):
-	owner = models.ForeignKey(UserApp, on_delete=models.CASCADE)
+	owner = models.ForeignKey(User, on_delete=models.CASCADE)
 	badge = models.ForeignKey(Badge, on_delete=models.CASCADE)
+	pk = models.UniqueConstraint(fields=['owner','badge'], name='user_badge_pk')
+	user_post = models.OneToOneField(UserPost, on_delete=models.SET_NULL, null=True)
+	user_reply = models.OneToOneField(UserReply, on_delete=models.SET_NULL, null=True)
 
 	def __str__(self):
 		return 'Badge {0} owned by {1}'.format(self.badge, self.owner)
