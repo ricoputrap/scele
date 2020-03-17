@@ -1,4 +1,4 @@
-from django.contrib.auth import login as auth_login, authenticate, logout
+from django.contrib.auth import login as auth_login, authenticate, logout as auth_logout
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
@@ -11,11 +11,9 @@ from sceleapp.forms import RegisterForm
 
 def dashboard(request):
     if request.user.is_authenticated:
-        logout(request)
         return render(request, 'dashboard.html')
     else:
         return login(request)
-
 
 def login(request):
     if request.method == 'POST':
@@ -36,6 +34,9 @@ def login(request):
         form = AuthenticationForm()
     return render(request, 'auth/login.html', {'form': form})
 
+def logout(request):
+    return redirect('login')
+
 # sourcecode: https://simpleisbetterthancomplex.com/tutorial/2017/02/18/how-to-create-user-sign-up-view.html
 def register(request):
     if request.method == 'POST':
@@ -44,9 +45,6 @@ def register(request):
             form.save()
             uname = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=uname, password=raw_password)
-            auth_login(request, user)
-            registered = True
             return redirect('login')
     else:
         form = RegisterForm()
