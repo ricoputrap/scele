@@ -1,15 +1,22 @@
-from django.contrib.auth import login as auth_login, authenticate
+from django.contrib.auth import login as auth_login, authenticate, logout
 from django.shortcuts import render, redirect
 
 from sceleapp.forms import RegisterForm
 
 # Create your views here.
-is_logged_in = False
+
+def dashboard(request):
+    if request.user.is_authenticated:
+        logout(request)
+        return render(request, 'dashboard.html')
+    else:
+        return login(request)
+
 
 def login(request):
-    return render(request, 'login.html')
+    return render(request, 'auth/login.html')
 
-
+# sourcecode: https://simpleisbetterthancomplex.com/tutorial/2017/02/18/how-to-create-user-sign-up-view.html
 def register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
@@ -23,4 +30,4 @@ def register(request):
             return redirect('login')
     else:
         form = RegisterForm()
-    return render(request, 'register.html', {'form': form})
+    return render(request, 'auth/register.html', {'form': form})
