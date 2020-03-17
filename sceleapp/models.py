@@ -19,7 +19,7 @@ class UserPost(models.Model):
 		return 'Post {0} created by {1}'.format(self.subject, self.creator.username)
 
 class PostLike(models.Model):
-	user_post = models.OneToOneField(UserPost, on_delete=models.SET_NULL, null=True)
+	user_post = models.OneToOneField(UserPost, on_delete=models.SET_NULL, null=True, blank=True)
 	quantity = models.IntegerField()
 	is_gamified = models.BooleanField(default=False)
 
@@ -52,7 +52,7 @@ class UserReply(models.Model):
 		return 'Reply {0} created by {1}'.format(self.subject,  self.creator.username)
 
 class ReplyLike(models.Model):
-	user_reply = models.OneToOneField(UserReply, on_delete=models.SET_NULL, null=True)
+	user_reply = models.OneToOneField(UserReply, on_delete=models.SET_NULL, null=True, blank=True)
 	quantity = models.IntegerField()
 	is_gamified = models.BooleanField(default=False)
 
@@ -83,8 +83,8 @@ class Notif(models.Model):
 	created_at = models.DateTimeField(auto_now=True)
 	is_new = models.BooleanField(default=True)
 	img_loc = models.CharField(max_length=200)
-	user_post = models.ForeignKey(UserPost, on_delete=models.SET_NULL, null=True)
-	user_reply = models.ForeignKey(UserReply, on_delete=models.SET_NULL, null=True)
+	user_post = models.ForeignKey(UserPost, on_delete=models.SET_NULL, null=True, blank=True)
+	user_reply = models.ForeignKey(UserReply, on_delete=models.SET_NULL, null=True, blank=True)
 	receiver = models.ForeignKey(User, on_delete=models.CASCADE)  # receiver gak mungkin dihapus
 
 	def __str__(self):
@@ -127,9 +127,8 @@ class Badge(models.Model):
 class UserBadge(models.Model):
 	owner = models.ForeignKey(User, on_delete=models.CASCADE)
 	badge = models.ForeignKey(Badge, on_delete=models.CASCADE)
-	pk = models.UniqueConstraint(fields=['owner','badge'], name='user_badge_pk')
-	user_post = models.OneToOneField(UserPost, on_delete=models.SET_NULL, null=True)
-	user_reply = models.OneToOneField(UserReply, on_delete=models.SET_NULL, null=True)
+	user_post = models.OneToOneField(UserPost, on_delete=models.SET_NULL, null=True, blank=True)
+	user_reply = models.OneToOneField(UserReply, on_delete=models.SET_NULL, null=True, blank=True)
 
 	def __str__(self):
 		return 'Badge {0} owned by {1}'.format(self.badge, self.owner)
