@@ -1,17 +1,32 @@
 {% block header %}
 <div class="header-container row">
-    <div class="col-1 text-center">
+    <div class="col-1 text-center item-align-mid">
         {% load static %}
         <img src="{% static "img/univ-logo.png" %}" alt="univ-logo"/>
     </div>
     
-    <div class="col header-title-container">
-        <h2 id="header-title">Student Centered e-Learning Environment</h2>
-        <h5 id="header-subtitle">(Dummy Version for Research)</h5>
+    <div class="col header-title-container item-align-mid">
+        <h2 class="font-open-sans font-semi-bold">Student Centered e-Learning Environment</h2>
+        <h5 class="font-open-sans font-semi-bold">(Dummy Version for Research)</h5>
     </div>
 
-    <div class="col-2 user-area">
-
+    <div class="col-4 item-align-mid">
+        <div class="float-right user-area">
+            <div class="div-notif">
+                <!-- https://fontawesome.com/icons/bell?style=solid -->
+                <img class="align-top" src="{% static "img/notif-icon.png" %}" alt="notif-icon"/>
+            </div>
+            <div class="div-name">
+                <h5 class="font-open-sans font-semi-bold">HIRODA</h5>
+                <h6 class="font-open-sans font-regular right"><a href="{% url 'logout' %}">Log out</a></h6>
+            </div> 
+            <div class="div-user-icon">
+                <!-- https://fontawesome.com/icons/user?style=solid -->
+                <img src="{% static "img/user-icon.png" %}" alt="user-icon"/>
+            </div>
+        </div>
+            
+        
     </div>
 </div>
 {% endblock %}
