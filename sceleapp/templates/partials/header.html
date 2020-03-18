@@ -9,7 +9,7 @@
         <h2 class="font-open-sans font-semi-bold">Student Centered e-Learning Environment</h2>
         <h5 class="font-open-sans font-semi-bold">(Dummy Version for Research)</h5>
     </div>
-
+    {% if logged_in %}
     <div class="col-4 item-align-mid">
         <div class="float-right user-area">
             <div class="div-notif">
@@ -25,8 +25,7 @@
                 <img src="{% static "img/user-icon.png" %}" alt="user-icon"/>
             </div>
         </div>
-            
-        
     </div>
+    {% endif %}
 </div>
 {% endblock %}
