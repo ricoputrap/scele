@@ -11,7 +11,7 @@ from sceleapp.forms import RegisterForm
 
 def dashboard(request):
     if request.user.is_authenticated:
-        return render(request, 'dashboard.html')
+        return render(request, 'dashboard.html', {'logged_in': True})
     else:
         return login(request)
 
