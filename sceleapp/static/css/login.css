@@ -3,7 +3,8 @@ body {
 }
 
 #login-section {
-    padding: 1rem 2rem;
+    padding: 1rem 5rem;
+    color: #555555;
 }
 
 #login-section > div {
@@ -29,10 +30,18 @@ body {
     cursor: pointer;
     border-radius: 0;
     margin-top: 2rem;
+    padding: 0.5rem;
+    width: 100%;
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2), 0 2px 20px rgba(0, 0, 0, 0.19);
 }
 
 .block:hover {
     background-color: #77AE29;
     color: #fff;
+}
+
+input {
+    border: 0;
+    width: 100%;
+    padding: 0.7rem; /* 10px */
 }
