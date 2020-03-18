@@ -8,33 +8,37 @@
 
 
 {% block content %}
-<section id="login-section row">
-    <div>
-        <h2>Login</h2>
-        <form method="post">
-            {% csrf_token %}
-            {% for field in form %}
-                <p>
-                    {{ field.label_tag }}<br>
-                    {{ field }}
-                    <!-- {% if field.help_text %}
-                    <small style="color: grey">{{ field.help_text }}</small>
-                    {% endif %} -->
-                    {% for error in field.errors %}
-                    <p style="color: red">{{ error }}</p>
+<section id="login-section" class="font-open-sans">
+    <div class="row">
+        <div class="col">
+            <h2 class="text-center font-extra-bold">Login</h2>
+            <div class="form-box">
+                <form method="post">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <p>
+                            {{ field.label_tag }}<br>
+                            {{ field }}
+                            <!-- {% if field.help_text %}
+                            <small style="color: grey">{{ field.help_text }}</small>
+                            {% endif %} -->
+                            {% for error in field.errors %}
+                            <p style="color: red">{{ error }}</p>
+                            {% endfor %}
+                        </p>
                     {% endfor %}
-                </p>
-            {% endfor %}
-            <button type="submit">Log in</button>
-        </form>
-        {% if messages %}
-        <h3>Messages:</h3>
-        <ul class="messages">
-            {% for message in messages %}
-                <li class="{{ message.tags }}">{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
+                    <button type="submit">Log in</button>
+                </form>
+            </div>
+            <div class="form-box-footer"></div>
+        </div>
+        <div class="col">
+            <h2 class="text-center font-extra-bold">Is this your first time here?</h2>
+            <div class="form-box">
+                <p class="text-center font-regular">Silahkan buat akun dengan menekan tombol di bawah ini.</p>
+                <a class="btn block" href="{% url 'register' %}">Register</a>
+            </div>
+        </div>
     </div>
 </section>
 {% endblock %}

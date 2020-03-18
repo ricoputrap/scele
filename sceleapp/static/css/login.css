@@ -1,3 +1,38 @@
-#login-section {
+body {
     background-color: #F7F7DF;
+}
+
+#login-section {
+    padding: 1rem 2rem;
+}
+
+#login-section > div {
+    background-color: #FDFDF9;
+    padding: 2rem 1rem;
+}
+
+.form-box {
+    background-color: #EEEEEE;
+    padding: 2rem;
+    margin-top: 2rem;
+}
+
+.form-box-footer {
+    height: 4rem;
+    background-color: #dddddd;
+}
+
+.block {
+    display: block;
+    background-color: #8EC63F;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 0;
+    margin-top: 2rem;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2), 0 2px 20px rgba(0, 0, 0, 0.19);
+}
+
+.block:hover {
+    background-color: #77AE29;
+    color: #fff;
 }
