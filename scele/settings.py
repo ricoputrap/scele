@@ -124,7 +124,7 @@ USE_TZ = True
 STATIC_ROOT = os.path.join(BASE_DIR, 'sceleapp/static')
 STATIC_URL = '/static/' # we can access static files with '/static/' keyword in URL
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'staticfiles'),
 )
  # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/

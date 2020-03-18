@@ -9,6 +9,8 @@
     <!-- Add additional CSS in static file -->
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/general.css' %}">
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
     
     {% block head %}{% endblock %}
 </head>
@@ -19,7 +21,11 @@
         {% endblock %}
     </header>
     <content>{% block content %}{% endblock %}</content>
-    <footer>{% block footer %}{% endblock %}</footer>
+    <footer>
+        {% block footer %}
+            {% include "partials/footer.html" %}
+        {% endblock %}
+    </footer>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
