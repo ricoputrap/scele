@@ -1,14 +1,18 @@
+{% load static %}
+
 {% block header %}
 <div class="header-container row">
     <div class="logo-div text-center item-align-mid">
-        {% load static %}
-        <img src="{% static "img/univ-logo.png" %}" alt="univ-logo"/>
+        <a href="{% url 'dashboard' %}">
+            <img src="{% static "img/univ-logo.png" %}" alt="univ-logo"/>
+        </a>
     </div>
     
     <div class="header-title-container item-align-mid">
         <h2 class="font-open-sans font-semi-bold">Student Centered e-Learning Environment</h2>
         <h5 class="font-open-sans font-semi-bold">(Dummy Version for Research)</h5>
     </div>
+    {% if logged_in %}
     <div class="user-div item-align-mid">
         <div class="user-area">
             <div class="div-notif">
@@ -25,5 +29,7 @@
             </div>
         </div>
     </div>
+
+    {% endif %}
 </div>
 {% endblock %}
