@@ -13,7 +13,7 @@ def dashboard(request):
     if request.user.is_authenticated:
         return render(request, 'dashboard.html', {'logged_in': True})
     else:
-        return login(request)
+        return redirect('login')
 
 def login(request):
     if request.method == 'POST':
@@ -35,6 +35,7 @@ def login(request):
     return render(request, 'auth/login.html', {'form': form})
 
 def logout(request):
+    auth_logout(request)
     return redirect('login')
 
 # sourcecode: https://simpleisbetterthancomplex.com/tutorial/2017/02/18/how-to-create-user-sign-up-view.html
