@@ -1,11 +1,25 @@
 .header-container {
     background-color: #333333;
     color: #fff;
-    padding-left: 1rem;
+    padding-left: 2rem;
+}
+
+.header-container > div {
+    display: inline;
+}
+
+.logo-div {
+    margin-right: 1rem;
 }
 
 .header-title-container {
     padding: 0;
+}
+
+.user-div {
+    position: absolute;
+    right: 0;
+    padding: 5px 0;
 }
 
 .user-area {
