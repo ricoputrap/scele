@@ -45,3 +45,8 @@
     grid-row: 1;
     margin: 0 1rem;
 }
+
+.row {
+    margin-left: 0;
+    margin-right: 0;
+}

@@ -8,13 +8,13 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <!-- Add additional CSS in static file -->
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css/general.css' %}">
-    <link rel="stylesheet" href="{% static 'css/header.css' %}">
-    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base/general.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base/footer.css' %}">
     
     {% block head %}{% endblock %}
 </head>
-<body class="container-fluid">
+<body class="">
     <header>
         {% block header %}
             {% include "partials/header.html" %}
