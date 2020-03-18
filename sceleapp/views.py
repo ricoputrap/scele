@@ -1,6 +1,7 @@
 from django.contrib.auth import login as auth_login, authenticate, logout as auth_logout
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
 from django.shortcuts import render, redirect
@@ -9,11 +10,13 @@ from sceleapp.forms import RegisterForm
 
 # Create your views here.
 
+@login_required
 def dashboard(request):
-    if request.user.is_authenticated:
-        return render(request, 'dashboard.html', {'logged_in': True})
-    else:
-        return redirect('login')
+    # if request.user.is_authenticated:
+    user = request.user
+    return render(request, 'dashboard.html', {'logged_in': True, 'user_fullname': user.get_full_name()})
+    # else:
+    #     return redirect('login')
 
 def login(request):
     if request.method == 'POST':
