@@ -1,0 +1,39 @@
+html {
+    font-size: 14px;
+}
+
+body {
+    margin: 0;
+}
+
+.item-align-mid {
+    margin: auto 0;
+}
+
+
+
+/* Fonts */
+.font-open-sans {
+    font-family: 'Open Sans', sans-serif;
+}
+
+.font-regular {
+    font-weight: 400;
+}
+
+.font-semi-bold {
+    font-weight: 600;
+}
+
+.font-bold {
+    font-weight: 700;
+}
+
+.font-extra-bold {
+    font-weight: 800;
+}
+
+/* Alignment */
+.right {
+    float: right;
+}
