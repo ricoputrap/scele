@@ -19,24 +19,28 @@ def dashboard(request):
     #     return redirect('login')
 
 def login(request):
-    if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            usname = form.cleaned_data.get('username')
-            psword = form.cleaned_data.get('password')
-            user = authenticate(username=usname, password=psword)
-            if user is not None:
-                auth_login(request, user)
-                messages.info(request, f"You are logged in as {usname}")
-                return redirect("dashboard") # url link
+    if request.user.is_authenticated:
+        return redirect('dashboard')
+    else:
+        if request.method == 'POST':
+            form = AuthenticationForm(request, data=request.POST)
+            if form.is_valid():
+                usname = form.cleaned_data.get('username')
+                psword = form.cleaned_data.get('password')
+                user = authenticate(username=usname, password=psword)
+                if user is not None:
+                    auth_login(request, user)
+                    messages.info(request, f"You are logged in as {usname}")
+                    return redirect("dashboard") # url link
+                else:
+                    messages.error(request, "Invalid usernameor password")
             else:
                 messages.error(request, "Invalid usernameor password")
         else:
-            messages.error(request, "Invalid usernameor password")
-    else:
-        form = AuthenticationForm()
-    return render(request, 'auth/login.html', {'form': form})
+            form = AuthenticationForm()
+        return render(request, 'auth/login.html', {'form': form})
 
+@login_required
 def logout(request):
     auth_logout(request)
     return redirect('login')
@@ -47,8 +51,8 @@ def register(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             form.save()
-            uname = form.cleaned_data.get('username')
-            raw_password = form.cleaned_data.get('password1')
+            # uname = form.cleaned_data.get('username')
+            # raw_password = form.cleaned_data.get('password1')
             return redirect('login')
     else:
         form = RegisterForm()
