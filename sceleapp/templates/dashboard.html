@@ -7,12 +7,18 @@
 {% endblock %}
 
 {% block content %}
-<div class="breadcrumb-menu">
-    <a href="{% url 'dashboard' %}">Dashboard</a>
-    <p>></p>
-    <a href="{% url 'dashboard' %}">Dashboard</a>
-</div>
-
-<a href="{% url 'logout' %}">Logout</a>
+<section id="dashboard">
+    <div class="breadcrumb-menu">
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+    </div>
+    <div class="content">
+        <div class="section-line">
+            <img src="{% static "img/star-section-icon.png" %}" alt="notif-icon"/>
+            <div class="section-box">
+                <p class="font-open-sans font-bold">Course Overview</p>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}
 
