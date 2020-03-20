@@ -1,11 +1,21 @@
 html, body {
-    height: 100%;
     width: 100%;
     margin: 0;
+    font-size: 14px;
 }
 
 html {
-    font-size: 14px;
+    
+}
+
+body {
+    position: relative;
+    min-height: 100vh;
+    padding-bottom: 5rem;
+}
+
+content {
+    padding-bottom: 5rem;
 }
 
 .item-align-mid {
