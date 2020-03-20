@@ -35,13 +35,31 @@
 /* Class box */
 
 .class-box {
-    padding: 0.8rem 0.8rem 2rem;
+    padding: 0;
     margin: 1rem;
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2), 0 2px 20px rgba(0, 0, 0, 0.19);
+}
+
+.class-box-content {
+    padding: 0.8rem 0.8rem 2rem;
 }
 
 .class-img {
     background-color: #6C5CE7;
     height: calc(100vh * 3 / 12);
     margin-bottom: 0.8rem;
+}
+
+.blur {
+    filter: blur(2px);
+    -webkit-filter: blur(2px);
+    background-color: #C1B9B9;
+}
+
+.class-box > p {
+    position: absolute;;
+    top: 50%;
+    left: 10%;
+    transform: translate(-5%,-50%);
+    z-index: 1;
 }
