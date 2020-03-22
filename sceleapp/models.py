@@ -3,6 +3,9 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
+class Gamification(models.Model):
+	is_gamified = models.BooleanField(default=False)
+
 class UserPost(models.Model):
 	subject = models.CharField(max_length=50)
 	msg = models.TextField()

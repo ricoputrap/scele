@@ -1,7 +1,8 @@
 from django.contrib import admin
-from .models import UserPost, PostLike, GivenPostLike, UserReply, ReplyLike, GivenReplyLike, Notif, ReplyNotif, LikeNotif, Badge, UserBadge
+from .models import Gamification, UserPost, PostLike, GivenPostLike, UserReply, ReplyLike, GivenReplyLike, Notif, ReplyNotif, LikeNotif, Badge, UserBadge
 
 # Register your models here.
+admin.site.register(Gamification)
 admin.site.register(UserPost)
 admin.site.register(PostLike)
 admin.site.register(GivenPostLike)

@@ -8,12 +8,16 @@ from django.shortcuts import render, redirect
 
 from sceleapp.forms import RegisterForm
 
+from sceleapp.models import Gamification
+
 # Create your views here.
 
 @login_required
 def dashboard(request):
     user = request.user
-    return render(request, 'dashboard.html', {'logged_in': True, 'user_fullname': user.get_full_name()})
+    is_gamified = Gamification.objects.first().is_gamified
+    print("is_gamified", is_gamified)
+    return render(request, 'dashboard.html', {'logged_in': True, 'user_fullname': user.get_full_name(), 'is_gamified': is_gamified})
 
 def login(request):
     if request.user.is_authenticated:
@@ -44,13 +48,16 @@ def logout(request):
 
 # sourcecode: https://simpleisbetterthancomplex.com/tutorial/2017/02/18/how-to-create-user-sign-up-view.html
 def register(request):
-    if request.method == 'POST':
-        form = RegisterForm(request.POST)
-        if form.is_valid():
-            form.save()
-            # uname = form.cleaned_data.get('username')
-            # raw_password = form.cleaned_data.get('password1')
-            return redirect('login')
+    if request.user.is_authenticated:
+        return redirect('dashboard')
     else:
-        form = RegisterForm()
-    return render(request, 'auth/register.html', {'form': form})
+        if request.method == 'POST':
+            form = RegisterForm(request.POST)
+            if form.is_valid():
+                form.save()
+                # uname = form.cleaned_data.get('username')
+                # raw_password = form.cleaned_data.get('password1')
+                return redirect('login')
+        else:
+            form = RegisterForm()
+        return render(request, 'auth/register.html', {'form': form})
