@@ -45,11 +45,15 @@
                 <div class="col">
                     <h5 class="font-open-sans font-bold">User details</h5>
                     <hr>
-                    {% if is_gamified == True %}
                     <h6 class="font-open-sans font-bold">Badges from MPKT A Kelas Y</h6>
-                    {% else %}
-                    <h6 class="font-open-sans font-bold">Badges from MPKT A Kelas X</h6>
-                    {% endif %}
+                    <div id="badges-container">
+                        {% for i in badges %}
+                        <div>
+                            <img src="{% static "img/initiator-badge.png" %}" alt="user-icon"/>
+                            <p class="text-center">Initiator</p>
+                        </div>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
             {% endif %}
