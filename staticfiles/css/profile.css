@@ -1,0 +1,46 @@
+#profile {
+    padding: 1rem 2rem;
+}
+
+.breadcrumb-menu a, .breadcrumb-menu p {
+    display: inline;
+    color: #7B5A60;
+}
+
+.content {
+    padding: 1rem 0;
+}
+
+/* Picture & Name */
+
+#pictname {
+    padding: 0.5rem;
+    background-color: #f2f2f2;
+    border-radius: 5px;
+}
+
+#pictname img, #pictname h5 {
+    display: inline;
+}
+
+#pictname h5 {
+    margin-left: 1rem;
+}
+
+/* User Info Details */
+
+#details, #badges-area {
+    margin-top: 2rem;
+}
+
+#details hr, #badges-area hr {
+    margin-top: 0;
+}
+
+#details h6 {
+    margin-bottom: 0;
+}
+
+#details a {
+    color: #826D1C;
+}

@@ -16,7 +16,6 @@ from sceleapp.models import Gamification
 def dashboard(request):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
-    print("is_gamified", is_gamified)
     return render(request, 'dashboard.html', {'logged_in': True, 'user_fullname': user.get_full_name(), 'is_gamified': is_gamified})
 
 def login(request):
@@ -61,3 +60,9 @@ def register(request):
         else:
             form = RegisterForm()
         return render(request, 'auth/register.html', {'form': form})
+
+@login_required
+def view_profile(request):
+    user = request.user
+    is_gamified = Gamification.objects.first().is_gamified
+    return render(request, 'profile.html', {'logged_in': True, 'user': user, 'user_fullname': user.get_full_name(), 'is_gamified': is_gamified})

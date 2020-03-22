@@ -24,8 +24,10 @@
                 <h6 class="font-open-sans font-regular right"><a href="{% url 'logout' %}">Log out</a></h6>
             </div> 
             <div class="div-user-icon">
-                <!-- https://fontawesome.com/icons/user?style=solid -->
-                <img src="{% static "img/user-icon.png" %}" alt="user-icon"/>
+                <a href="{% url 'profile' %}">
+                    <!-- https://fontawesome.com/icons/user?style=solid -->
+                    <img src="{% static "img/user-icon.png" %}" alt="user-icon"/>
+                </a>
             </div>
         </div>
     </div>

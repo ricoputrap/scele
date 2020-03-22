@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} <title>My Profile</title>{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+{% endblock %}
+
+{% block content %}
+<section id="profile">
+    <div class="breadcrumb-menu font-open-sans">
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+        <p>></p>
+        <p>My Profile</p>
+    </div>
+    <div class="content row">
+        <div class="col-8">
+            <div id="pictname">
+                <!-- https://fontawesome.com/icons/user?style=solid -->
+                <img src="{% static "img/user-icon.png" %}" alt="user-icon"/>
+                <h5 class="font-open-sans font-bold">{{user_fullname}}</h5>
+            </div>
+            <div id="details" class="row">
+                <div class="col">
+                    <h5 class="font-open-sans font-bold">User details</h5>
+                    <hr>
+                    <h6 class="font-open-sans font-bold">Email</h6>
+                    <p>{{user.email}}</p>
+                    <h6 class="font-open-sans font-bold">Country</h6>
+                    <p>Indonesia</p>
+                </div>
+                <div class="col">
+                    <h5 class="font-open-sans font-bold">Course details</h5>
+                    <hr>
+                    <h6 class="font-open-sans font-bold">Course profiles</h6>
+                    {% if is_gamified == True %}
+                    <a href="#">MPKT A Kelas Y</a>
+                    {% else %}
+                    <a href="#">MPKT A Kelas X</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% if is_gamified == True %}
+            <div id="badges-area" class="row">
+                <div class="col">
+                    <h5 class="font-open-sans font-bold">User details</h5>
+                    <hr>
+                    {% if is_gamified == True %}
+                    <h6 class="font-open-sans font-bold">Badges from MPKT A Kelas Y</h6>
+                    {% else %}
+                    <h6 class="font-open-sans font-bold">Badges from MPKT A Kelas X</h6>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        <div class="col-4">
+            <p>oijioji</p>
+        </div>
+    </div>
+</section>
+    
+{% endblock content %}
+    
