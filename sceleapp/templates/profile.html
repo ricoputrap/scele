@@ -43,14 +43,16 @@
             {% if is_gamified == True %}
             <div id="badges-area" class="row">
                 <div class="col">
-                    <h5 class="font-open-sans font-bold">User details</h5>
+                    <h5 class="font-open-sans font-bold">Badges</h5>
                     <hr>
                     <h6 class="font-open-sans font-bold">Badges from MPKT A Kelas Y</h6>
                     <div id="badges-container">
                         {% for i in badges %}
                         <div>
-                            <img src="{% static "img/initiator-badge.png" %}" alt="user-icon"/>
-                            <p class="text-center">Initiator</p>
+                            <a href="">
+                                <img src="{% static "img/initiator-badge.png" %}" alt="user-icon"/>
+                            </a>                            
+                            <a href="" class="text-center">Initiator</a>
                         </div>
                         {% endfor %}
                     </div>

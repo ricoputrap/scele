@@ -53,5 +53,15 @@
 }
 
 #badges-container div {
-    margin: 0 1.5rem 2rem 1.5rem;
+    padding: 0 1.5rem 2rem 1.5rem;
+    max-width: 130px;
+}
+
+#badges-container a {
+    display: block;
+}
+
+#badges-container a {
+    margin-top: 0.5rem;
+    color: #7B5A60;
 }
