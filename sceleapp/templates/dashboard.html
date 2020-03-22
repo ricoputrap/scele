@@ -19,6 +19,21 @@
             </div>
         </div>
         <div class="row">
+            {% if is_gamified %}
+            <div class="col-12 col-sm-4 col-md-3 col-lg-2 class-box">
+                <div class="class-box-content">
+                    <div class="class-img--gamified"></div>
+                    <p class="text-center font-open-sans font-bold">MPKT A Kelas Y</p>
+                </div>
+            </div>
+            <div class="col-12 col-sm-4 col-md-3 col-lg-2 class-box">
+                <p class="text-center font-open-sans font-bold">Akses kelas ini telah ditutup</p>
+                <div class="class-box-content blur">
+                    <div class="class-img"></div>
+                    <p class="text-center font-open-sans font-bold">MPKT A Kelas X</p>
+                </div>
+            </div>
+            {% else %}
             <div class="col-12 col-sm-4 col-md-3 col-lg-2 class-box">
                 <div class="class-box-content">
                     <div class="class-img"></div>
@@ -26,12 +41,13 @@
                 </div>
             </div>
             <div class="col-12 col-sm-4 col-md-3 col-lg-2 class-box">
-                <p class="text-center font-open-sans font-bold">Kelas ini akan dibuka Senin, 30 Maret 2020</p>
+                <p class="text-center font-open-sans font-bold">Akses kelas ini dibuka Senin, 30 Maret 2020</p>
                 <div class="class-box-content blur">
-                    <div class="class-img"></div>
-                    <p class="text-center font-open-sans font-bold">MPKT A Kelas X</p>
+                    <div class="class-img--gamified"></div>
+                    <p class="text-center font-open-sans font-bold">MPKT A Kelas Y</p>
                 </div>
             </div>
+            {% endif %}
         </div>
     </div>
 </section>

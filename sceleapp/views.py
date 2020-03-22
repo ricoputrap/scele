@@ -12,11 +12,8 @@ from sceleapp.forms import RegisterForm
 
 @login_required
 def dashboard(request):
-    # if request.user.is_authenticated:
     user = request.user
     return render(request, 'dashboard.html', {'logged_in': True, 'user_fullname': user.get_full_name()})
-    # else:
-    #     return redirect('login')
 
 def login(request):
     if request.user.is_authenticated:

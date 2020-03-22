@@ -1,0 +1,59 @@
+body {
+    background-color: #F7F7DF;
+}
+
+input {
+    border: 0;
+    width: 100%;
+    padding: 0.7rem; /* 10px */
+}
+
+#register-box {
+    padding: 1rem 5rem 3rem;
+    color: #555555;
+}
+
+#register-box > div { 
+    background-color: #FDFDF9;
+    padding: 2rem 1rem;
+}
+
+.form-box {
+    background-color: #EEEEEE;
+    padding: 2rem;
+    margin-top: 2rem;
+}
+
+/* BUTTON */
+
+.btn {
+    border-radius: 0;
+    margin-top: 2rem;
+    padding: 0.5rem;
+    cursor: pointer;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2), 0 2px 20px rgba(0, 0, 0, 0.19);
+}
+
+.btn--block {
+    display: block;
+    width: 100%;
+}
+
+.btn--green {
+    background-color: #8EC63F;
+    color: #fff;
+}
+
+.btn--red {
+    background-color: #C23A34;
+    color: #fff;
+}
+
+.btn--green:hover {
+    background-color: #77AE29;
+    color: #fff;
+}
+.btn--red:hover {
+    background-color: #B82D27;
+    color: #fff;
+}

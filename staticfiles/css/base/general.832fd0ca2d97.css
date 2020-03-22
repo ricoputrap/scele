@@ -1,0 +1,48 @@
+html, body {
+    width: 100%;
+    margin: 0;
+    font-size: 14px;
+    color: #555555;
+}
+
+body {
+    position: relative;
+    min-height: 100vh;
+    padding-bottom: 5rem;
+}
+
+content {
+    padding-bottom: 5rem;
+}
+
+.item-align-mid {
+    margin: auto 0;
+}
+
+
+
+/* Fonts */
+.font-open-sans {
+    font-family: 'Open Sans', sans-serif;
+}
+
+.font-regular {
+    font-weight: 400;
+}
+
+.font-semi-bold {
+    font-weight: 600;
+}
+
+.font-bold {
+    font-weight: 700;
+}
+
+.font-extra-bold {
+    font-weight: 800;
+}
+
+/* Alignment */
+.right {
+    float: right;
+}
