@@ -79,3 +79,21 @@ def view_profile(request):
             {'logged_in': True, 'user': user, 
             'user_fullname': user.get_full_name(), 
             'is_gamified': is_gamified})
+
+def view_course(request):
+    user = request.user
+    is_gamified = Gamification.objects.first().is_gamified
+    if is_gamified:
+        badges = UserBadge.objects.filter(owner=user)
+        latest_badge = badges.last()
+        return render(request, 'course.html', 
+            {'logged_in': True, 'user': user, 
+            'user_fullname': user.get_full_name(), 
+            'is_gamified': is_gamified,
+            'badges': badges,
+            'latest_badge': latest_badge})
+    else:
+        return render(request, 'course.html', 
+            {'logged_in': True, 'user': user, 
+            'user_fullname': user.get_full_name(), 
+            'is_gamified': is_gamified})

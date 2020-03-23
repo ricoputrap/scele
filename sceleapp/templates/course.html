@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    {% if is_gamified %}
+        <title>Course: MPKT A Kelas Y</title>
+    {% else %}
+        <title>Course: MPKT A Kelas X</title>
+    {% endif %}
+{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/course.css' %}">
+{% endblock %}
+
+
+{% block content %}
+<section id="course">
+    <div class="breadcrumb-menu font-open-sans">
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+        <p>></p>
+        {% if is_gamified %}
+        <p>MPKT A Kelas Y</p>
+        {% else %}
+        <p>MPKT A Kelas X</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+    
