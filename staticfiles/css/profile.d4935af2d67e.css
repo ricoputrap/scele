@@ -132,11 +132,3 @@
 #activity-results {
     padding: 0 1rem;
 }
-
-#activity-results--nogamified.col-4 {
-    padding: 0;
-}
-
-#activity-results--nogamified p  {
-    margin: 0;
-} 

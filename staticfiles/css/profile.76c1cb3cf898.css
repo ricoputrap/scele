@@ -1,11 +1,3 @@
-/* GENERAL */
-
-.white {
-    color: #f2f2f2;
-}
-
-/* PROFILE SECTION */
-
 #profile {
     padding: 1rem 2rem;
     color: #7B5A60;
@@ -129,14 +121,3 @@
     margin: 0;
 }
 
-#activity-results {
-    padding: 0 1rem;
-}
-
-#activity-results--nogamified.col-4 {
-    padding: 0;
-}
-
-#activity-results--nogamified p  {
-    margin: 0;
-} 

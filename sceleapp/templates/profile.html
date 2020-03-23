@@ -61,11 +61,13 @@
             {% endif %}
         </div>
         <div class="col-4">
+            <!-- LATEST BADGE -->
+            {% if is_gamified == True %}
             <div class="box-info font-open-sans">
                 <div class="box-info__header">
                     <img src="{% static "img/star-section-2-icon.png" %}" alt="notif-icon"/>
                     <h6 class="font-bold">Latest badge</h6>
-                    <a class="right"  href="">View all</a>
+                    <!-- <a class="right"  href="">View all</a> -->
                 </div>
                 <hr>
                 <!-- <p>You have no badge to display</p> -->
@@ -74,6 +76,79 @@
                         <img src="{% static "img/initiator-badge.png" %}" alt="user-icon"/>
                     </a>                            
                     <a href="" class="text-center">Initiator</a>
+                </div>
+            </div>
+            {% endif %}
+            <!-- ACTIVITY RESULTS -->
+            <div class="box-info font-open-sans">
+                <div class="box-info__header">
+                    <img src="{% static "img/activity-icon.png" %}" alt="notif-icon"/>
+                    <h6 class="font-bold">Activity results</h6>
+                </div>
+                <hr>
+                <div id="activity-results">
+                    {% if is_gamified == True %}
+                    <table>
+                        <tr>
+                            <th colspan="3">Behavioral Engagement</th>
+                        </tr>
+                        <tr>
+                            <td>Posts</td>
+                            <td>:</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <td>Replies</td>
+                            <td>:</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <td class="white">A</td>
+                        </tr>
+                        <tr>
+                            <th colspan="3">Emotional Engagement</th>
+                        </tr>
+                        <tr>
+                            <td>Likes given</td>
+                            <td>:</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <td>Likes earned</td>
+                            <td>:</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <td class="white">A</td>
+                        </tr>
+                        <tr>
+                            <th colspan="3">Cognitive Engagement</th>
+                        </tr>
+                        <tr>
+                            <td>Grades</td>
+                            <td>:</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <td>Bonuses</td>
+                            <td>:</td>
+                            <td>0</td>
+                        </tr>
+                    </table>
+                    {% else %}
+                    <div id="activity-results--nogamified" class="row">
+                        <div class="col-4">
+                            <p>Posts</p>
+                            <p>Replies</p>
+                            <p>Grades</p>
+                        </div>
+                        <div class="col-8">
+                            <p>: 0</p>
+                            <p>: 0</p>
+                            <p>: 0</p>
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

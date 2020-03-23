@@ -1,3 +1,11 @@
+/* GENERAL */
+
+.white {
+    color: #f2f2f2;
+}
+
+/* PROFILE SECTION */
+
 #profile {
     padding: 1rem 2rem;
     color: #7B5A60;
@@ -74,6 +82,7 @@
     border-radius: 5px;
     margin-left: 3rem;
     margin-right: 3rem;
+    margin-bottom: 1rem;
 }
 
 .box-info a {
@@ -99,6 +108,7 @@
 
 .box-info__header img {
     margin-right: 0.5rem;
+    border-radius: 5px;
 }
 
 .box-info__header h6 {
@@ -119,3 +129,14 @@
     margin: 0;
 }
 
+#activity-results {
+    padding: 0 1rem;
+}
+
+#activity-results--nogamified div {
+    padding: 0;
+}
+
+#activity-results--nogamified p  {
+    margin: 0;
+} 
