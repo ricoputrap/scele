@@ -65,3 +65,57 @@
     margin-top: 0.5rem;
     color: #7B5A60;
 }
+
+/* BOX INFO: Latest Badge */
+
+.box-info {
+    padding: 1rem 0.5rem;
+    background-color: #f2f2f2;
+    border-radius: 5px;
+    margin-left: 3rem;
+    margin-right: 3rem;
+}
+
+.box-info a {
+    color: #826D1C;
+}
+
+.box-info hr {
+    margin: 3px 0.5rem 0.5rem;
+}
+
+.box-info p {
+    margin-left: 1rem;
+    margin-bottom: 0;
+}
+
+.box-info__header img, .box-info__header h6, .box-info__header a {
+    display: inline;
+}
+
+.box-info__header {
+    padding-right: 1rem;
+}
+
+.box-info__header img {
+    margin-right: 0.5rem;
+}
+
+.box-info__header h6 {
+    font-size: 15px;
+    margin: 0;
+}
+
+.box-info__header a {
+    margin: 5px;
+}
+
+.latest-badge a {
+    display: block;
+    margin-top: 0.5rem;
+}
+
+.latest-badge img {
+    margin: 0;
+}
+
