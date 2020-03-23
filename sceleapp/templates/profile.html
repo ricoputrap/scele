@@ -17,7 +17,7 @@
         <div class="col-8">
             <div id="pictname">
                 <!-- https://fontawesome.com/icons/user?style=solid -->
-                <img src="{% static "img/user-icon.png" %}" alt="user-icon"/>
+                <img src="{% static 'img/user-icon.png' %}" alt="user-icon"/>
                 <h5 class="font-open-sans font-bold">{{user_fullname}}</h5>
             </div>
             <div id="details" class="row">
@@ -47,12 +47,12 @@
                     <hr>
                     <h6 class="font-open-sans font-bold">Badges from MPKT A Kelas Y</h6>
                     <div id="badges-container">
-                        {% for i in badges %}
+                        {% for badge in badges %}
                         <div>
-                            <a href="">
-                                <img src="{% static "img/initiator-badge.png" %}" alt="user-icon"/>
+                            <a href="">                                     
+                                <img src="{% static badge.badge.img_loc %}" alt="">
                             </a>                            
-                            <a href="" class="text-center">Initiator</a>
+                            <a href="" class="text-center">{{badge.badge.name}}</a>
                         </div>
                         {% endfor %}
                     </div>
@@ -73,7 +73,7 @@
                 <!-- <p>You have no badge to display</p> -->
                 <div class="latest-badge">
                     <a href="" class="text-center">
-                        <img src="{% static "img/initiator-badge.png" %}" alt="user-icon"/>
+                        <img src="{% static "img/badges/initiator-badge.png" %}" alt="user-icon"/>
                     </a>                            
                     <a href="" class="text-center">Initiator</a>
                 </div>

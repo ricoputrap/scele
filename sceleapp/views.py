@@ -66,7 +66,7 @@ def view_profile(request):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
     if is_gamified:
-        badges = ['a', 'b', 'c', 'd', 'e', 'f', 'a', 'b', 'c', 'd', 'e', 'f']
+        badges = UserBadge.objects.filter(owner=user)
         return render(request, 'profile.html', 
             {'logged_in': True, 'user': user, 
             'user_fullname': user.get_full_name(), 
