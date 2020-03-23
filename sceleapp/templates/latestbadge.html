@@ -1,0 +1,16 @@
+{% load static %}
+<div class="box-info font-open-sans">
+    <div class="box-info__header">
+        <img src="{% static "img/star-section-2-icon.png" %}" alt="notif-icon"/>
+        <h6 class="font-bold">Latest badge</h6>
+        <!-- <a class="right"  href="">View all</a> -->
+    </div>
+    <hr>
+    <!-- <p>You have no badge to display</p> -->
+    <div class="latest-badge">
+        <a href="" class="text-center">
+            <img src="{% static latest_badge.badge.img_loc %}" alt="user-icon"/>
+        </a>                            
+        <a href="" class="text-center">{{latest_badge.badge.name}}</a>
+    </div>
+</div>

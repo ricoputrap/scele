@@ -47,14 +47,20 @@
                     <hr>
                     <h6 class="font-open-sans font-bold">Badges from MPKT A Kelas Y</h6>
                     <div id="badges-container">
-                        {% for badge in badges %}
-                        <div>
-                            <a href="">                                     
-                                <img src="{% static badge.badge.img_loc %}" alt="">
-                            </a>                            
-                            <a href="" class="text-center">{{badge.badge.name}}</a>
-                        </div>
-                        {% endfor %}
+                        
+                        {% if badges %}
+                            {% for badge in badges %}
+                            <div>
+                                <a href="">                                     
+                                    <img src="{% static badge.badge.img_loc %}" alt="">
+                                </a>                            
+                                <a href="" class="text-center">{{badge.badge.name}}</a>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p>You have no badge to display</p>
+                        {% endif %}
+                            
                     </div>
                 </div>
             </div>
@@ -70,13 +76,16 @@
                     <!-- <a class="right"  href="">View all</a> -->
                 </div>
                 <hr>
-                <!-- <p>You have no badge to display</p> -->
+                {% if latest_badge %}
                 <div class="latest-badge">
                     <a href="" class="text-center">
-                        <img src="{% static "img/badges/initiator-badge.png" %}" alt="user-icon"/>
+                        <img src="{% static latest_badge.badge.img_loc %}" alt="user-icon"/>
                     </a>                            
-                    <a href="" class="text-center">Initiator</a>
+                    <a href="" class="text-center">{{latest_badge.badge.name}}</a>
                 </div>
+                {% else %}
+                <p>You have no badge to display</p>
+                {% endif %}
             </div>
             {% endif %}
             <!-- ACTIVITY RESULTS -->
