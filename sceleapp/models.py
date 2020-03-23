@@ -130,8 +130,8 @@ class Badge(models.Model):
 class UserBadge(models.Model):
 	owner = models.ForeignKey(User, on_delete=models.CASCADE)
 	badge = models.ForeignKey(Badge, on_delete=models.CASCADE)
-	user_post = models.OneToOneField(UserPost, on_delete=models.SET_NULL, null=True, blank=True)
-	user_reply = models.OneToOneField(UserReply, on_delete=models.SET_NULL, null=True, blank=True)
+	user_post = models.ForeignKey(UserPost, on_delete=models.SET_NULL, null=True, blank=True)
+	user_reply = models.ForeignKey(UserReply, on_delete=models.SET_NULL, null=True, blank=True)
 
 	def __str__(self):
 		return 'Badge {0} owned by {1}'.format(self.badge, self.owner)
