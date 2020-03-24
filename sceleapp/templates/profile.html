@@ -34,9 +34,9 @@
                     <hr>
                     <h6 class="font-open-sans font-bold">Course profiles</h6>
                     {% if is_gamified == True %}
-                    <a href="#">MPKT A Kelas Y</a>
+                    <a href="{% url 'course' %}">MPKT A Kelas Y</a>
                     {% else %}
-                    <a href="#">MPKT A Kelas X</a>
+                    <a href="{% url 'course' %}">MPKT A Kelas X</a>
                     {% endif %}
                 </div>
             </div>

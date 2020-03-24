@@ -7,3 +7,40 @@
     display: inline;
     color: #7B5A60;
 }
+
+.content {
+    padding: 1rem 2rem;
+}
+
+.section-line {
+    width: 100%;
+    height: 2.7rem;
+    background-color: #F4F4F4;
+    margin-bottom: 1rem;
+    color: rgb(153, 144, 120);
+    font-size: 1.3rem;
+    padding-left: 0.5rem;
+    border-left-color: #E2A500;
+    border-left-style: solid;
+}
+
+.section-line p {
+    line-height: 2.7rem;
+}
+
+.menu-item {
+    margin-bottom: 0.5rem;
+}
+
+.menu-item a, .menu-item a:hover {
+    color: #7B5A60;
+    text-decoration: none;
+}
+
+.menu-item img, .menu-item p {
+    display: inline;
+}
+
+.menu-item img {
+    margin-right: 0.5rem;
+}

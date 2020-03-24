@@ -40,6 +40,11 @@
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2), 0 2px 20px rgba(0, 0, 0, 0.19);
 }
 
+.class-box a {
+    color: #7B5A60;
+    text-decoration: none;
+}
+
 .class-box > p {
     position: absolute;;
     top: 50%;
