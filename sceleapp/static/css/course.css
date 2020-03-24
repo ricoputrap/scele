@@ -17,7 +17,7 @@
     height: 2.7rem;
     background-color: #F4F4F4;
     margin-bottom: 1rem;
-    color: rgb(153, 144, 120);
+    color: #966B00;
     font-size: 1.3rem;
     padding-left: 0.5rem;
     border-left-color: #E2A500;
@@ -27,6 +27,31 @@
 .section-line p {
     line-height: 2.7rem;
 }
+
+/* INTRODUCTION */
+
+.intro {
+    color: #000;
+}
+
+.title {
+    font-size: 1.3rem;
+}
+
+.intro__content {
+    margin-bottom: 1rem;
+}
+
+.intro__content:last-of-type {
+    margin-bottom: 4rem;
+}
+
+.intro__content p {
+    margin: 0;
+}
+
+
+/* ACTIVITY */
 
 .menu-item {
     margin-bottom: 0.5rem;
