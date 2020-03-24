@@ -20,7 +20,50 @@
         <p>></p>
         <p>Forum</p>
     </div>
-
+    <div class="content font-open-sans">
+        <h2 class="font-bold">Forum</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit</p>
+        <a class="btn btn--green btn--green:hover" href="">Add a new discussion</a>
+        <table>
+            <thead>
+                <th class="first-col">Discussion</th>
+                <th>Started by</th>
+                <th class="text-center">Replies</th>
+                <th class="last-col text-right">Last post/reply</th>
+            </thead>
+            <tbody>
+                {% for post in posts %}
+                    <tr>
+                        <td class="first-col">
+                            <a href="">
+                                <div>
+                                    <p>{{post.subject}}</p>
+                                </div>
+                            </a>
+                        </td>
+                        <td>
+                            <a href="" class="creator-col">
+                                <img src="{% static 'img/user-icon.png' %}" alt="">
+                                <p>{{post.creator}}</p>
+                            </a>
+                        </td>
+                        <td class="text-center">
+                            <a href="">
+                                <p>{{post.subject}}</p>
+                            </a>
+                        </td>
+                        <td class="last-col text-right">
+                            <a href="">
+                                <p>{{post.subject}}</p>
+                                <p>{{post.created_at}}</p>
+                            </a>
+                        </td>
+                        
+                    </tr>
+                {% endfor %}   
+            </tbody>
+        </table>
+    </div>
 
 </section>
 {% endblock %}

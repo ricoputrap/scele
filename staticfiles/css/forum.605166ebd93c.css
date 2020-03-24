@@ -1,0 +1,37 @@
+#forum {
+    padding: 1rem 2rem;
+    color: #7B5A60;
+}
+
+.breadcrumb-menu a, .breadcrumb-menu p {
+    display: inline;
+    color: #7B5A60;
+}
+
+.content {
+    padding: 1rem 2rem;
+}
+
+.content table {
+    width: 100%;
+}
+
+/* BUTTON */
+
+.btn {
+    border-radius: 0;
+    margin-top: 1rem;
+    padding: 0.5rem 2rem;
+    cursor: pointer;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2), 0 2px 20px rgba(0, 0, 0, 0.19);
+}
+
+.btn--green {
+    background-color: #8EC63F;
+    color: #fff;
+}
+
+.btn--green:hover {
+    background-color: #77AE29;
+    color: #fff;
+}
