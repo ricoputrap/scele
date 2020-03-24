@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} <title>Forum Diskusi</title>{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/forum.css' %}">
+{% endblock %}
+
+
+{% block content %}
+<section id="forum">
+    <div class="breadcrumb-menu font-open-sans">
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+        <p>></p>
+        {% if is_gamified %}
+        <a href="{% url 'course' %}">MPKT A Kelas Y</a>
+        {% else %}
+        <a href="{% url 'course' %}">MPKT A Kelas X</a>
+        {% endif %}
+        <p>></p>
+        <p>Forum</p>
+    </div>
+
+
+</section>
+{% endblock %}
+    

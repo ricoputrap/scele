@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect
 
 from sceleapp.forms import RegisterForm
 
-from sceleapp.models import Gamification, UserBadge
+from sceleapp.models import Gamification, UserBadge, UserPost
 
 # Create your views here.
 
@@ -101,8 +101,17 @@ def view_course(request):
 def view_badge_detail(request, code):
     user = request.user
     badge = UserBadge.objects.get(owner=user, badge__code=code)
-    print(badge)
     return render(request, 'badge-detail.html', 
         {'logged-in': True, 'user': user,
         'user_fullname': user.get_full_name(),
         'badge': badge})
+
+def view_forum(request):
+    user = request.user
+    is_gamified = Gamification.objects.first().is_gamified
+    posts = UserPost.objects.all()
+    return render(request, 'forum.html', 
+        {'logged-in': True, 'user': user,
+        'user_fullname': user.get_full_name(),
+        'is_gamified': is_gamified,
+        'posts': posts})
