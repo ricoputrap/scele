@@ -16,6 +16,115 @@
         <p>></p>
         <p>Badge Details: Initiator</p>
     </div>
+    <div class="content row">
+        <div class="col-2 text-center">
+            <img src="{% static badge.badge.img_loc %}" alt="{{badge.badge.name}}">
+        </div>
+        <div class="col-10">
+            <!-- RECIPIENT DETAILS -->
+            <div class="details">
+                <h4 class="font-bold">Recipient details</h4>
+                <div class="row details__item">
+                    <div class="col-2">
+                        <p class="font-bold">Name</p>
+                    </div>
+                    <div class="col-10">
+                        <p>: {{user_fullname}}</p>
+                    </div>
+                </div>
+                <div class="row details__item">
+                    <div class="col-2">
+                        <p class="font-bold">Email</p>
+                    </div>
+                    <div class="col-10">
+                        <p>: {{user.email}}</p>
+                    </div>
+                </div>
+            </div>
+            <!-- ISSUER DETAILS -->
+            <div class="details">
+                <h4 class="font-bold">Issuer details</h4>
+                <div class="row details__item">
+                    <div class="col-2">
+                        <p class="font-bold">Name</p>
+                    </div>
+                    <div class="col-10">
+                        <p>: Rico Putra Pradana</p>
+                    </div>
+                </div>
+                <div class="row details__item">
+                    <div class="col-2">
+                        <p class="font-bold">Email</p>
+                    </div>
+                    <div class="col-10">
+                        <p>: rico.putra@ui.ac.id</p>
+                    </div>
+                </div>
+            </div>
+            <!-- BADGE DETAILS -->
+            <div class="details">
+                <h4 class="font-bold">Badge details</h4>
+                <div class="row details__item">
+                    <div class="col-2">
+                        <p class="font-bold">Name</p>
+                    </div>
+                    <div class="col-10">
+                        <p>: {{badge.badge.name}}</p>
+                    </div>
+                </div>
+                <div class="row details__item">
+                    <div class="col-2">
+                        <p class="font-bold">Description</p>
+                    </div>
+                    <div class="col-10">
+                        <p>: {{badge.badge.desc}}</p>
+                    </div>
+                </div>
+                <div class="row details__item">
+                    <div class="col-2">
+                        <p class="font-bold">Criteria</p>
+                    </div>
+                    <div class="col-10">
+                        <p>: {{badge.badge.criteria}}</p>
+                    </div>
+                </div>
+                <div class="row details__item">
+                    <div class="col-2">
+                        <p class="font-bold">Course</p>
+                    </div>
+                    <div class="col-10">
+                        <p>: MPKT A Kelas Y</p>
+                    </div>
+                </div>
+                <div class="row details__item">
+                    <div class="col-2">
+                        {% if badge.badge.activity_type == "p" %}
+                        <p class="font-bold">Post</p>
+                        {% elif badge.badge.activity_type == "r" %}
+                        <p class="font-bold">Reply</p>
+                        {% else %}
+                        <p class="font-bold">Post/Reply</p>
+                        {% endif %}
+                    </div>
+                    <div class="col-10">
+                        <p>:</p>
+                        {% if badge.badge.activity_type == "p" %}
+                        <a href="">{{badge.user_post}}</a>
+                        {% elif badge.badge.activity_type == "r" %}
+                        <a href="">{{badge.user_reply}}</a>
+                        {% else %}
+                            {% if badge.user_post %}
+                            <a href="">{{badge.user_post}}</a>
+                            {% elif badge.user_reply %}
+                            <a href="">{{badge.user_reply}}</a>
+                            {% endif %}
+                        {% endif %}
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 {% endblock %}
     

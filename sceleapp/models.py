@@ -19,7 +19,7 @@ class UserPost(models.Model):
 		ordering = ['-created_at']
 
 	def __str__(self):
-		return 'Post {0} created by {1}'.format(self.subject, self.creator.username)
+		return self.subject
 
 class PostLike(models.Model):
 	user_post = models.OneToOneField(UserPost, on_delete=models.SET_NULL, null=True, blank=True)
@@ -122,6 +122,7 @@ class Badge(models.Model):
 		('p', 'Create a post'),
 		('r', 'Create a reply'),
 		('l', 'Give a like'),
+		('n', 'Receive 3 likes'),
 	)
 	activity_type = models.CharField(max_length=1, choices=ACTIVITY_TYPES, default='p')
 

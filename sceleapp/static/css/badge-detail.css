@@ -1,0 +1,34 @@
+#badge-detail {
+    padding: 1rem 2rem;
+    color: #7B5A60;
+}
+
+.breadcrumb-menu a, .breadcrumb-menu p {
+    display: inline;
+    color: #7B5A60;
+}
+
+.content {
+    padding: 2rem 0;
+}
+
+.col-2, .col-10 {
+    padding: 0;
+}
+
+/* DETAILS */
+.details {
+    margin-bottom: 2rem;
+}
+
+.details__item p {
+    margin-bottom: 0.5rem;
+}
+
+.details__item a, .details__item a:hover {
+    color: #826D1C;
+}
+
+.details__item:last-of-type p, .details__item a {
+    display: inline;
+}
