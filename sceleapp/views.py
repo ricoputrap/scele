@@ -97,3 +97,5 @@ def view_course(request):
             {'logged_in': True, 'user': user, 
             'user_fullname': user.get_full_name(), 
             'is_gamified': is_gamified})
+
+# def view_badge_detail(request)

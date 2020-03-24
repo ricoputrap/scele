@@ -108,6 +108,7 @@ class LikeNotif(models.Model):
 		return '{0} likes'.format(self.like_quantity)
 
 class Badge(models.Model):
+	code = models.CharField(max_length=3, unique=True)
 	name = models.CharField(max_length=50)
 	desc = models.TextField()
 	criteria = models.TextField()

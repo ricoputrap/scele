@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}<title>Badge Detail</title>{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/badge-detail.css' %}">
+{% endblock %}
+
+
+{% block content %}
+<section id="badge-detail">
+    <div class="breadcrumb-menu font-open-sans">
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+        <p>></p>
+        <a href="{% url 'course' %}">MPKT A Kelas Y</a>
+        <p>></p>
+        <p>Badge Details: Initiator</p>
+    </div>
+</section>
+{% endblock %}
+    
