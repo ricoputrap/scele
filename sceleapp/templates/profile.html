@@ -51,10 +51,10 @@
                         {% if badges %}
                             {% for badge in badges %}
                             <div>
-                                <a href="">                                     
+                                <a href="{% url 'badge-detail' code=badge.badge.code %}">                                     
                                     <img src="{% static badge.badge.img_loc %}" alt="">
                                 </a>                            
-                                <a href="" class="text-center">{{badge.badge.name}}</a>
+                                <a href="{% url 'badge-detail' code=badge.badge.code %}" class="text-center">{{badge.badge.name}}</a>
                             </div>
                             {% endfor %}
                         {% else %}
@@ -78,10 +78,10 @@
                 <hr>
                 {% if latest_badge %}
                 <div class="latest-badge">
-                    <a href="" class="text-center">
+                    <a href="{% url 'badge-detail' code=latest_badge.badge.code %}" class="text-center">
                         <img src="{% static latest_badge.badge.img_loc %}" alt="user-icon"/>
                     </a>                            
-                    <a href="" class="text-center">{{latest_badge.badge.name}}</a>
+                    <a href="{% url 'badge-detail' code=latest_badge.badge.code %}" class="text-center">{{latest_badge.badge.name}}</a>
                 </div>
                 {% else %}
                 <p>You have no badge to display</p>
