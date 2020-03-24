@@ -98,4 +98,11 @@ def view_course(request):
             'user_fullname': user.get_full_name(), 
             'is_gamified': is_gamified})
 
-# def view_badge_detail(request)
+def view_badge_detail(request, code):
+    user = request.user
+    badge = UserBadge.objects.get(owner=user, badge__code=code)
+    print(badge)
+    return render(request, 'badge-detail.html', 
+        {'logged-in': True, 'user': user,
+        'user_fullname': user.get_full_name(),
+        'badge': badge})
