@@ -80,6 +80,7 @@ def view_profile(request):
             'user_fullname': user.get_full_name(), 
             'is_gamified': is_gamified})
 
+@login_required
 def view_course(request):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
@@ -98,6 +99,7 @@ def view_course(request):
             'user_fullname': user.get_full_name(), 
             'is_gamified': is_gamified})
 
+@login_required
 def view_badge_detail(request, code):
     user = request.user
     badge = UserBadge.objects.get(owner=user, badge__code=code)
@@ -106,6 +108,7 @@ def view_badge_detail(request, code):
         'user_fullname': user.get_full_name(),
         'badge': badge})
 
+@login_required
 def view_forum(request):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
