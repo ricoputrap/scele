@@ -104,7 +104,7 @@ def view_badge_detail(request, code):
     user = request.user
     badge = UserBadge.objects.get(owner=user, badge__code=code)
     return render(request, 'badge-detail.html', 
-        {'logged-in': True, 'user': user,
+        {'logged_in': True, 'user': user,
         'user_fullname': user.get_full_name(),
         'badge': badge})
 
@@ -115,12 +115,12 @@ def view_forum(request):
     posts = UserPost.objects.all()
     if posts.count() != 0:
         return render(request, 'forum.html', 
-            {'logged-in': True, 'user': user,
+            {'logged_in': True, 'user': user,
             'user_fullname': user.get_full_name(),
             'is_gamified': is_gamified,
             'posts': posts})
     return render(request, 'forum.html', 
-        {'logged-in': True, 'user': user,
+        {'logged_in': True, 'user': user,
         'user_fullname': user.get_full_name(),
         'is_gamified': is_gamified})
 
@@ -131,7 +131,7 @@ def view_post(request, id):
     post_id = int(id)
     post = UserPost.objects.get(id=post_id)
     return render(request, 'post.html', 
-        {'logged-in': True, 'user': user,
+        {'logged_in': True, 'user': user,
         'user_fullname': user.get_full_name(),
         'is_gamified': is_gamified,
         'post': post})

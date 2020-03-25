@@ -28,6 +28,20 @@
         <p>></p>
         <p>{{post.subject}}</p>
     </div>
+    <div class="content font-open-sans">
+        <h2 class="font-bold">Forum</h2>
+        <h4 class="font-bold">{{post.subject}}</h4>
+
+        <div class="box-item" id="post-item">
+            <img src="{% static 'img/user-icon.png' %}" alt="user-icon">
+            <div class="box-item__content">
+                <p class="font-bold">{{post.subject}}</p>
+                <p>by <a href="{% url 'profile' %}">{{user_fullname}}</a> - {{post.created_at}}</p>
+                <p class="box-item__content__msg">{{post.msg}}</p>
+                <p class="text-right"><a href="">Like</a>|<a href="">Reply</a></p>
+            </div>
+        </div>
+    </div>
 
 </section>
 {% endblock %}
