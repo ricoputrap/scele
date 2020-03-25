@@ -44,7 +44,7 @@ class UserReply(models.Model):
 	grade = models.IntegerField()
 	permalink = models.CharField(max_length=200)
 	is_gamified = models.BooleanField(default=False)
-	user_post = models.ForeignKey(UserPost, on_delete=models.CASCADE)
+	user_post = models.ForeignKey(UserPost, on_delete=models.CASCADE, null=True, blank=True)
 	creator = models.ForeignKey(User, on_delete=models.CASCADE)
 	host_reply = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
 

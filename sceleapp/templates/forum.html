@@ -45,7 +45,7 @@
                         <td>
                             <a href="" class="creator-col">
                                 <img src="{% static 'img/user-icon.png' %}" alt="">
-                                <p>{{post.creator}}</p>
+                                <p>{{post.creator|get_fullname}}</p>
                             </a>
                         </td>
                         <td class="text-center">
@@ -55,7 +55,7 @@
                         </td>
                         <td class="last-col text-right">
                             <a href="">
-                                <p>{{post.subject}}</p>
+                                <p>{{post|get_last_user}}</p>
                                 <p>{{post.created_at}}</p>
                             </a>
                         </td>

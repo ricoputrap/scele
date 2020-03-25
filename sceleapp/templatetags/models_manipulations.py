@@ -3,11 +3,36 @@ from sceleapp.models import UserPost, UserReply
 
 register = template.Library()
 
+def get_creator(value):
+    return value.creator
+
+@register.filter(name="get_fullname")
+def get_fullname(value):
+    return value.get_full_name()
+
 @register.filter(name="get_replies")
-def get_all_post_replies(value):
-    replies = UserReply.objects.filter(user_post=value)
-    return replies
+def get_replies(value):
+    # if value is UserPost:
+    if type(value) is UserPost:
+        return UserReply.objects.filter(user_post=value)
+    return UserReply.objects.filter(host_reply=value)
 
 @register.filter(name="get_replies_size")
-def get_post_replies_size(value):
-    return get_all_post_replies(value).count()
+def get_replies_size(value):
+    replies = get_replies(value)
+    replies_size = replies.count()
+    if replies_size > 0:
+        for reply in replies:
+            replies_size += get_replies_size(reply)
+    return replies_size
+
+@register.filter(name="get_last_reply")
+def get_last_reply(value):
+    return get_replies(value).last()
+
+@register.filter(name="get_last_user")
+def get_last_activity_user_fullname(value):
+    if get_replies_size(value) == 0:
+        return value.creator.get_full_name()
+    else:
+        return "x"
