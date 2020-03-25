@@ -123,3 +123,15 @@ def view_forum(request):
         {'logged-in': True, 'user': user,
         'user_fullname': user.get_full_name(),
         'is_gamified': is_gamified})
+
+@login_required
+def view_post(request, id):
+    user = request.user
+    is_gamified = Gamification.objects.first().is_gamified
+    post_id = int(id)
+    post = UserPost.objects.get(id=post_id)
+    return render(request, 'post.html', 
+        {'logged-in': True, 'user': user,
+        'user_fullname': user.get_full_name(),
+        'is_gamified': is_gamified,
+        'post': post})

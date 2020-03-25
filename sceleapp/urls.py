@@ -10,4 +10,5 @@ urlpatterns = [
     path('course/', views.view_course, name="course"),
     path('badge/<code>', views.view_badge_detail, name="badge-detail"),
     path('forum/', views.view_forum, name="forum"),
+    path('forum/post/<id>', views.view_post, name="post"),
 ]

@@ -38,30 +38,29 @@
                 {% for post in posts %}
                     <tr>
                         <td class="first-col">
-                            <a href="">
+                            <a href="{% url 'post' id=post.id %}">
                                 <div>
                                     <p>{{post.subject}}</p>
                                 </div>
                             </a>
                         </td>
                         <td>
-                            <a href="" class="creator-col">
+                            <a href="{% url 'post' id=post.id %}" class="creator-col">
                                 <img src="{% static 'img/user-icon.png' %}" alt="">
                                 <p>{{post.creator|get_fullname}}</p>
                             </a>
                         </td>
                         <td class="text-center">
-                            <a href="">
+                            <a href="{% url 'post' id=post.id %}">
                                 <p>{{post|get_replies_size}}</p>
                             </a>
                         </td>
                         <td class="last-col text-right">
-                            <a href="">
+                            <a href="{% url 'post' id=post.id %}">
                                 <p>{{post|get_last_user}}</p>
                                 <p>{{post.created_at}}</p>
                             </a>
                         </td>
-                        
                     </tr>
                 {% endfor %}   
             </tbody>
@@ -69,10 +68,7 @@
         {% else %}
         <p>(There are no discussion yet in this forum)</p>
         {% endif %}
-            
-        
     </div>
-
 </section>
 {% endblock %}
     

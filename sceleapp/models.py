@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+import uuid
 
 # Create your models here.
 
@@ -10,7 +11,7 @@ class UserPost(models.Model):
 	subject = models.CharField(max_length=50)
 	msg = models.TextField()
 	created_at = models.DateTimeField(auto_now=True)
-	grade = models.IntegerField()
+	grade = models.IntegerField(default=0)
 	permalink = models.CharField(max_length=200)
 	is_gamified = models.BooleanField(default=False)
 	creator = models.ForeignKey(User, on_delete=models.CASCADE) #creator gak mungkin dihapus
@@ -41,7 +42,7 @@ class UserReply(models.Model):
 	subject = models.CharField(max_length=50)
 	msg = models.TextField()
 	created_at = models.DateTimeField(auto_now=True)
-	grade = models.IntegerField()
+	grade = models.IntegerField(default=0)
 	permalink = models.CharField(max_length=200)
 	is_gamified = models.BooleanField(default=False)
 	user_post = models.ForeignKey(UserPost, on_delete=models.CASCADE, null=True, blank=True)
