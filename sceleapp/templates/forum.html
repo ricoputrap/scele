@@ -25,6 +25,8 @@
         <h2 class="font-bold">Forum</h2>
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit</p>
         <a class="btn btn--green btn--green:hover" href="">Add a new discussion</a>
+        
+        {% if posts %}
         <table>
             <thead>
                 <th class="first-col">Discussion</th>
@@ -64,6 +66,11 @@
                 {% endfor %}   
             </tbody>
         </table>
+        {% else %}
+        <p>(There are no discussion yet in this forum)</p>
+        {% endif %}
+            
+        
     </div>
 
 </section>

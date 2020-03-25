@@ -113,8 +113,13 @@ def view_forum(request):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
     posts = UserPost.objects.all()
+    if posts.count() != 0:
+        return render(request, 'forum.html', 
+            {'logged-in': True, 'user': user,
+            'user_fullname': user.get_full_name(),
+            'is_gamified': is_gamified,
+            'posts': posts})
     return render(request, 'forum.html', 
         {'logged-in': True, 'user': user,
         'user_fullname': user.get_full_name(),
-        'is_gamified': is_gamified,
-        'posts': posts})
+        'is_gamified': is_gamified})
