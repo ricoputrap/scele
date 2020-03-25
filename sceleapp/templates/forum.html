@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load models_manipulations %}
 
 {% block title %} <title>Forum Diskusi</title>{% endblock %}
 {% block head %}
@@ -49,7 +50,7 @@
                         </td>
                         <td class="text-center">
                             <a href="">
-                                <p>{{post.subject}}</p>
+                                <p>{{post|get_replies_size}}</p>
                             </a>
                         </td>
                         <td class="last-col text-right">
