@@ -135,3 +135,12 @@ def view_post(request, id):
         'user_fullname': user.get_full_name(),
         'is_gamified': is_gamified,
         'post': post})
+
+@login_required
+def add_post(request):
+    user = request.user
+    is_gamified = Gamification.objects.first().is_gamified
+    return render(request, 'add-post.html', 
+        {'logged_in': True, 'user': user,
+        'user_fullname': user.get_full_name(),
+        'is_gamified': is_gamified})

@@ -11,4 +11,5 @@ urlpatterns = [
     path('badge/<code>', views.view_badge_detail, name="badge-detail"),
     path('forum/', views.view_forum, name="forum"),
     path('forum/post/<id>', views.view_post, name="post"),
+    path('forum/addpost/', views.add_post, name="addpost"),
 ]
