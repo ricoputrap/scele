@@ -15,7 +15,7 @@
 
 {% block content %}
 <section id="addpost">
-    <div class="breadcrumb-menu font-open-sans">
+    <div class="breadcrumb-menu">
         <a href="{% url 'dashboard' %}">Dashboard</a>
         <p>></p>
         {% if is_gamified %}
@@ -27,6 +27,11 @@
         <a href="{% url 'forum' %}">Forum</a>
         <p>></p>
         <p>Add new discussion</p>
+    </div>
+    <div class="content font-open-sans">
+        <h2 class="font-bold">Forum</h2>
+        <h4 class="font-bold">Your new discussion</h4>
+        <hr>
     </div>
 </section>
 {% endblock %}
