@@ -12,9 +12,13 @@
     padding: 2rem 13rem 1rem 2rem;
 }
 
+#content-area {
+    margin-top: 2rem;
+}
+
 .box-item {
     background-color: #F9F9F9;
-    padding: 1rem;
+    padding: 1rem 0.5rem 0.5rem 1rem;
     border-left-color: #E2A500;
     border-left-style: solid;
     border-right: 1px solid #E3E3E3;
@@ -42,4 +46,8 @@
 .box-item__content__msg {
     margin-top: 1rem;
     margin-bottom: 1rem;
+}
+
+.box-item__content__footer p {
+    display: inline;
 }
