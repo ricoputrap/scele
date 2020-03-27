@@ -13,6 +13,10 @@ class RegisterForm(UserCreationForm):
         fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2',)
 
 class UserPostForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(UserPostForm, self).__init__(*args, **kwargs)
+        self.fields['msg'].label = "Message"
+
     msg = forms.CharField(widget=forms.Textarea(attrs={'id':'msg'}))
 
     class Meta:
