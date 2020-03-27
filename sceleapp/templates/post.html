@@ -38,7 +38,7 @@
                 <div class="box-item__content">
                     <p class="font-bold">{{post.subject}}</p>
                     <p>by <a href="{% url 'profile' %}">{{user_fullname}}</a> - {{post.created_at}}</p>
-                    <p class="box-item__content__msg">{{post.msg}}</p>
+                    <p class="box-item__content__msg">{{post.msg|safe}}</p>
                     <p><span><a href="">Like</a></span><span class="right"><a href="">Like</a> | <a href="">Reply</a></span></p>
                     <!-- <div class="box-item__content__footer">
                         <p><a href="">Like</a></p>

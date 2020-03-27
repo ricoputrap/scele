@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from sceleapp.models import UserPost
 
 class RegisterForm(UserCreationForm):
     first_name = forms.CharField(max_length=30)
@@ -10,3 +11,10 @@ class RegisterForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2',)
+
+class UserPostForm(forms.ModelForm):
+    msg = forms.CharField(widget=forms.Textarea(attrs={'id':'msg'}))
+
+    class Meta:
+        model = UserPost
+        fields = ('subject', 'msg')

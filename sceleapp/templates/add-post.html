@@ -9,7 +9,14 @@
     {% endif %}
 {% endblock %}
 {% block head %}
+    {{form.media}}
     <link rel="stylesheet" href="{% static 'css/add-post.css' %}">
+    <script src="{% static 'tinymce/tinymce.min.js' %}" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+          selector: '#msg'
+        });
+      </script>
 {% endblock %}
 
 
@@ -32,6 +39,19 @@
         <h2 class="font-bold">Forum</h2>
         <h4 class="font-bold">Your new discussion</h4>
         <hr>
+        {% csrf_token %}
+        
+        {% for field in form %}
+            <p>
+                {{ field.label_tag }}<br>
+                {{ field }}
+                {% for error in field.errors %}
+                  <p style="color: red">{{ error }}</p>
+                {% endfor %}
+            </p>
+        {% endfor %}
+        <button type="submit" class="btn btn--block btn--green">Submit</button>
+
     </div>
 </section>
 {% endblock %}

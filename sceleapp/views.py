@@ -6,7 +6,7 @@ from django.contrib import messages
 
 from django.shortcuts import render, redirect
 
-from sceleapp.forms import RegisterForm
+from sceleapp.forms import RegisterForm, UserPostForm
 
 from sceleapp.models import Gamification, UserBadge, UserPost
 
@@ -140,7 +140,9 @@ def view_post(request, id):
 def add_post(request):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
+    form = UserPostForm()
     return render(request, 'add-post.html', 
         {'logged_in': True, 'user': user,
         'user_fullname': user.get_full_name(),
-        'is_gamified': is_gamified})
+        'is_gamified': is_gamified,
+        'form': form})
