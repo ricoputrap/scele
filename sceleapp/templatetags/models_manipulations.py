@@ -3,8 +3,9 @@ from sceleapp.models import UserPost, UserReply
 
 register = template.Library()
 
-def get_creator(value):
-    return value.creator
+@register.filter(name="get_creator")
+def get_creator_name(value):
+    return value.creator.get_full_name()
 
 @register.filter(name="get_fullname")
 def get_fullname(value):
