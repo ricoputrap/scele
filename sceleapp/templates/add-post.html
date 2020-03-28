@@ -14,7 +14,12 @@
     <script src="{% static 'tinymce/tinymce.min.js' %}" referrerpolicy="origin"></script>
     <script>
         tinymce.init({
-          selector: '#msg'
+          selector: '#msg',
+          setup: function(editor) {
+              editor.on('change', function(e) {
+                  editor.save();
+              });
+          }
         });
       </script>
 {% endblock %}
@@ -50,14 +55,16 @@
                         {{ field }}   
                     </div>
                 </div>
+                {% for error in field.errors %}
+                    <p style="color: red">{{ error }}</p>
+                {% endfor %}
             {% endfor %}
             <div class="btn-area">
                 <button type="submit" class="btn btn--green ">Post to forum</button>
                 <a href="{% url 'forum' %}" class="btn btn--red ">Cancel</a>
             </div>
-            <p class="footer-required">There are required fields in this form marked by <span>*</span></p>
+            <!-- <p class="footer-required">There are required fields in this form marked by <span>*</span></p> -->
         </form>
     </div>
 </section>
 {% endblock %}
-    

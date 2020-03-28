@@ -140,9 +140,27 @@ def view_post(request, id):
 def add_post(request):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
-    form = UserPostForm()
-    return render(request, 'add-post.html', 
-        {'logged_in': True, 'user': user,
-        'user_fullname': user.get_full_name(),
-        'is_gamified': is_gamified,
-        'form': form})
+    if request.method == 'POST':
+        form = UserPostForm(request.POST)
+        print('masuk')
+        if form.is_valid():
+            print('valid')
+            subject = form.cleaned_data.get('subject')
+            msg = form.cleaned_data.get('msg')
+            permalink = "a"
+            newPost = UserPost()
+            newPost.subject = subject
+            newPost.msg = msg
+            newPost.permalink = permalink
+            newPost.is_gamified = is_gamified
+            newPost.creator = user
+            print(newPost)
+            newPost.save()
+        return redirect('forum')
+    else:
+        form = UserPostForm()
+        return render(request, 'add-post.html', 
+            {'logged_in': True, 'user': user,
+            'user_fullname': user.get_full_name(),
+            'is_gamified': is_gamified,
+            'form': form})
