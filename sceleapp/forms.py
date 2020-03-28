@@ -16,7 +16,9 @@ class UserPostForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(UserPostForm, self).__init__(*args, **kwargs)
         self.fields['msg'].label = "Message"
+        self.label_suffix = "*"
 
+    subject = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     msg = forms.CharField(widget=forms.Textarea(attrs={'id':'msg'}))
 
     class Meta:

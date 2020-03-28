@@ -11,3 +11,68 @@
 .content {
     padding: 2rem 15rem 1rem 2rem;
 }
+
+/* FORM */
+
+form  {
+    padding-left: 3rem;
+}
+
+form .row-input {
+    margin-bottom: 1rem;
+}
+
+form label {
+    float: right;
+}
+
+form span, form .footer-required span {
+    color: #FF1111;
+}
+
+.content input {
+    width: 80%;
+}
+
+form .footer-required {
+    margin-top: 1rem;
+    margin-left: 7rem;
+}
+
+/* BUTTON */
+
+.btn-area {
+    margin-top: 2.5rem;
+    padding: 2rem 7rem;
+    background-color: #F5F5F5;
+}
+
+.btn {
+    border-radius: 0;
+    padding: 0.5rem 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2), 0 2px 20px rgba(0, 0, 0, 0.19);
+}
+
+.btn:last-of-type {
+    margin-left: 0.5rem;
+}
+
+.btn--green {
+    background-color: #8EC63F;
+    color: #fff;
+}
+
+.btn--red {
+    background-color: #C23A34;
+    color: #fff;
+}
+
+.btn--green:hover {
+    background-color: #77AE29;
+    color: #fff;
+}
+.btn--red:hover {
+    background-color: #B82D27;
+    color: #fff;
+}
