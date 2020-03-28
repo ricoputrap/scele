@@ -29,7 +29,24 @@ def get_replies_size(value):
 
 @register.filter(name="get_last_reply")
 def get_last_reply(value):
-    return get_replies(value).last()
+    replies = UserReply.objects.filter(user_post=value)
+    last_reply = replies.last()
+    deepest = []
+    for rep in replies:
+        deepest = get_deepest_replies(deepest, rep)
+    for reply in deepest:
+        if reply.created_at > last_reply.created_at:
+            last_reply = reply
+    return last_reply
+
+def get_deepest_replies(deepest_replies, rep):
+    replies = UserReply.objects.filter(host_reply=rep)
+    if replies.count() == 0:
+        deepest_replies.append(rep)
+    else:
+        for reply in replies:
+            get_deepest_replies(deepest_replies, reply)
+    return deepest_replies
 
 @register.filter(name="get_last_user")
 def get_last_activity_user_fullname(value):
