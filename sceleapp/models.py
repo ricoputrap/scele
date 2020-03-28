@@ -8,7 +8,7 @@ class Gamification(models.Model):
 	is_gamified = models.BooleanField(default=False)
 
 class UserPost(models.Model):
-	subject = models.CharField(max_length=50)
+	subject = models.CharField(max_length=100)
 	msg = models.TextField()
 	created_at = models.DateTimeField(auto_now=True)
 	grade = models.IntegerField(default=0)
@@ -39,7 +39,7 @@ class GivenPostLike(models.Model):
 		return '{0} gave {1} likes'.format(self.liker.username, self.post_like.quantity)
 
 class UserReply(models.Model):
-	subject = models.CharField(max_length=50)
+	subject = models.CharField(max_length=100)
 	msg = models.TextField()
 	created_at = models.DateTimeField(auto_now=True)
 	grade = models.IntegerField(default=0)
