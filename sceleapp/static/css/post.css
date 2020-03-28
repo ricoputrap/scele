@@ -18,14 +18,22 @@
 
 .box-item {
     background-color: #F9F9F9;
-    padding: 1rem 0.5rem 0.5rem 1rem;
+    padding: 0.5rem 0.5rem 0.5rem 1rem;
     border-left-color: #E2A500;
     border-left-style: solid;
     border-right: 1px solid #E3E3E3;
     border-top: 1px solid #E3E3E3;
     border-bottom: 1px solid #E3E3E3;
-    display: flex;
     width: 100%;
+}
+
+.box-item__main-content {
+    display: flex;
+}
+
+.box-item a, .box-item a:hover {
+    color: #966B00;
+    text-decoration: none;
 }
 
 .box-item img {
@@ -39,13 +47,12 @@
 }
 
 .box-item__content p:not(.box-item__content__msg) {
-    vertical-align: top;
     margin: 0;
 }
 
 .box-item__content__msg {
     margin-top: 1rem;
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
 }
 
 .box-item__content__footer p {

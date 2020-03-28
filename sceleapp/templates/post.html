@@ -34,17 +34,20 @@
 
         <div id="content-area">
             <div class="box-item" id="post-item">
-                <img src="{% static 'img/user-icon.png' %}" alt="user-icon">
-                <div class="box-item__content">
-                    <p class="font-bold">{{post.subject}}</p>
-                    <p>by <a href="{% url 'profile' %}">{{user_fullname}}</a> - {{post.created_at}}</p>
-                    <p class="box-item__content__msg">{{post.msg|safe}}</p>
-                    <p><span><a href="">Like</a></span><span class="right"><a href="">Like</a> | <a href="">Reply</a></span></p>
-                    <!-- <div class="box-item__content__footer">
-                        <p><a href="">Like</a></p>
-                        <p ><a href="" class="text-right">Like</a> | <a href="">Reply</a></p>
-                    </div> -->
-                    
+                <div class="box-item__main-content">
+                    <img src="{% static 'img/user-icon.png' %}" alt="user-icon">
+                    <div class="box-item__content">
+                        <div id="box-item__content__header">
+                            <p class="font-bold">{{post.subject}}</p>
+                            <p>by <a href="{% url 'profile' %}">{{user_fullname}}</a> - {{post.created_at}}</p>
+                        </div>
+                        <div class="box-item__content__msg">{{post.msg|safe}}</div>
+                        
+                    </div>
+                </div>
+                <div class="box-item__content__footer">
+                    <a href="">Like</a>
+                    <div class="right"><a href="">Like</a> | <a href="">Reply</a></div>
                 </div>
             </div>
         </div>
