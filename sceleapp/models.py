@@ -50,10 +50,10 @@ class UserReply(models.Model):
 	host_reply = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
 
 	class Meta:
-		ordering = ['-created_at']
+		ordering = ['created_at']
 
 	def __str__(self):
-		return 'Reply {0} created by {1}'.format(self.subject,  self.creator.username)
+		return '{0} created by {1} at {2}'.format(self.subject,  self.creator.username, self.created_at)
 
 class ReplyLike(models.Model):
 	user_reply = models.OneToOneField(UserReply, on_delete=models.SET_NULL, null=True, blank=True)

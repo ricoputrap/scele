@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect
 
 from sceleapp.forms import RegisterForm, UserPostForm
 
-from sceleapp.models import Gamification, UserBadge, UserPost
+from sceleapp.models import Gamification, UserBadge, UserPost, UserReply
 
 # Create your views here.
 
@@ -130,11 +130,31 @@ def view_post(request, id):
     is_gamified = Gamification.objects.first().is_gamified
     post_id = int(id)
     post = UserPost.objects.get(id=post_id)
+    replies = UserReply.objects.filter(user_post=post)
+    if replies.count() > 0:
+        deepest = []
+        for rep in replies:
+            print("start for rep id: ", rep.id)
+            deepest = get_deepest_replies(deepest, rep)
+        for reply in deepest:
+                print('rep: ', reply)
+        
+    # for reply in replies:
+    #     print(reply.id)
     return render(request, 'post.html', 
         {'logged_in': True, 'user': user,
         'user_fullname': user.get_full_name(),
         'is_gamified': is_gamified,
         'post': post})
+
+def get_deepest_replies(deepest_replies, rep):
+    replies = UserReply.objects.filter(host_reply=rep)
+    if replies.count() == 0:
+        deepest_replies.append(rep)
+    else:
+        for reply in replies:
+            get_deepest_replies(deepest_replies, reply)
+    return deepest_replies
 
 @login_required
 def add_post(request):
