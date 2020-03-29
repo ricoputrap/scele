@@ -140,18 +140,12 @@ def swap(posts, i, j):
 # of pivot 
 # ref: https://www.geeksforgeeks.org/python-program-for-quicksort/
 def partition(posts, low, high):
-    print('partition ', posts, 'with low: ', low, 'and high: ', high)
     i = low - 1                     # index of smaller element
     pivot_post = posts[high]
-    print('pivot_post: ', pivot_post)
     if has_replies(pivot_post):
         pivot = get_last_reply(pivot_post).created_at
-        print('pivot: ', pivot)
     else:
         pivot = pivot_post.created_at
-        print('pivot: ', pivot)
-
-    
 
     for j in range(low, high):
         # If current element is smaller than or equal to pivot
@@ -210,23 +204,18 @@ def get_deepest_replies(deepest_replies, rep):
             get_deepest_replies(deepest_replies, reply)
     return deepest_replies
 
-# def get_replies(all_replies, parent, lv):
-#     if type(parent) is UserPost:
-#         replies = UserReply.objects.filter(user_post=parent)
-#     else:
-#         replies = UserReply.objects.filter(host_reply=parent)
-    
-#     for rep in replies:
-#         reply = Reply(rep, lv, parent)
-#         all_replies.append(reply)
-#         if reply.has
-
 @login_required
 def view_post(request, id):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
     post_id = int(id)
     post = UserPost.objects.get(id=post_id)
+    if has_replies(post):
+        reps = UserReply.objects.filter(user_post=post)
+        replies = get_replies([], post, 0)
+        print('size: ', len(replies))
+        for rep in replies:
+            print(rep.obj, ' | lv: ', rep.lv)
     return render(request, 'post.html', 
         {'logged_in': True, 'user': user,
         'user_fullname': user.get_full_name(),
@@ -239,7 +228,18 @@ class Reply:
         self.lv = lv
         self.parent = parent
 
-
+def get_replies(all_replies, parent, lv):
+    if type(parent) is UserPost:
+        replies = UserReply.objects.filter(user_post=parent)
+    else:
+        replies = UserReply.objects.filter(host_reply=parent)
+    
+    for rep in replies:
+        reply = Reply(rep, lv, parent)
+        all_replies.append(reply)
+        if has_replies(rep):
+            get_replies(all_replies, rep, lv+1)
+    return all_replies
 
 @login_required
 def add_post(request):
