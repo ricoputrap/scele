@@ -181,9 +181,11 @@ def sort_post(posts, low, high):
         sort_post(posts, low, pi-1)
         sort_post(posts, pi+1, high)
     
-def has_replies(post):
-    replies = UserReply.objects.filter(user_post=post)
-    print('replies of post ', post, ': ', replies)
+def has_replies(parent):
+    if type(parent) is UserPost:
+        replies = UserReply.objects.filter(user_post=parent)
+    else:
+        replies = UserReply.objects.filter(host_reply=parent)
     if replies.count() > 0:
         return True
     return False
@@ -208,6 +210,17 @@ def get_deepest_replies(deepest_replies, rep):
             get_deepest_replies(deepest_replies, reply)
     return deepest_replies
 
+# def get_replies(all_replies, parent, lv):
+#     if type(parent) is UserPost:
+#         replies = UserReply.objects.filter(user_post=parent)
+#     else:
+#         replies = UserReply.objects.filter(host_reply=parent)
+    
+#     for rep in replies:
+#         reply = Reply(rep, lv, parent)
+#         all_replies.append(reply)
+#         if reply.has
+
 @login_required
 def view_post(request, id):
     user = request.user
@@ -219,6 +232,14 @@ def view_post(request, id):
         'user_fullname': user.get_full_name(),
         'is_gamified': is_gamified,
         'post': post})
+
+class Reply:
+    def __init__(self, obj, lv, parent):
+        self.obj = obj
+        self.lv = lv
+        self.parent = parent
+
+
 
 @login_required
 def add_post(request):
