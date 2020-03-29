@@ -20,7 +20,7 @@ class UserPost(models.Model):
 		ordering = ['-created_at']
 
 	def __str__(self):
-		return self.subject
+		return '{0} created by {1} at {2}'.format(self.subject,  self.creator.username, self.created_at)
 
 class PostLike(models.Model):
 	user_post = models.OneToOneField(UserPost, on_delete=models.SET_NULL, null=True, blank=True)

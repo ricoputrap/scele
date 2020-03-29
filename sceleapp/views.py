@@ -112,8 +112,11 @@ def view_badge_detail(request, code):
 def view_forum(request):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
-    posts = UserPost.objects.all()
-    if posts.count() != 0:
+    posts = list(UserPost.objects.all())
+    len_posts = len(posts)
+    if len_posts > 0:
+        sort_post(posts, 0, len_posts-1)
+        posts.reverse()
         return render(request, 'forum.html', 
             {'logged_in': True, 'user': user,
             'user_fullname': user.get_full_name(),
@@ -123,6 +126,87 @@ def view_forum(request):
         {'logged_in': True, 'user': user,
         'user_fullname': user.get_full_name(),
         'is_gamified': is_gamified})
+
+
+def swap(posts, i, j):
+    temp = posts[i]
+    posts[i] = posts[j]
+    posts[j] = temp
+
+# This function takes last element as pivot, places 
+# the pivot element at its correct position in sorted 
+# array, and places all smaller (smaller than pivot) 
+# to left of pivot and all greater elements to right 
+# of pivot 
+# ref: https://www.geeksforgeeks.org/python-program-for-quicksort/
+def partition(posts, low, high):
+    print('partition ', posts, 'with low: ', low, 'and high: ', high)
+    i = low - 1                     # index of smaller element
+    pivot_post = posts[high]
+    print('pivot_post: ', pivot_post)
+    if has_replies(pivot_post):
+        pivot = get_last_reply(pivot_post).created_at
+        print('pivot: ', pivot)
+    else:
+        pivot = pivot_post.created_at
+        print('pivot: ', pivot)
+
+    
+
+    for j in range(low, high):
+        # If current element is smaller than or equal to pivot
+        if has_replies(posts[j]):
+            last_reply_created = get_last_reply(posts[j]).created_at
+            if last_reply_created < pivot:
+                i += 1
+                swap(posts, i, j)
+        else:
+            if posts[j].created_at < pivot:
+                i += 1
+                swap(posts, i, j)
+
+    i += 1
+    swap(posts, i, high)
+    return i
+
+# posts --> list to be sorted, 
+# low  --> Starting index 
+# high  --> Ending index 
+# ref: https://www.geeksforgeeks.org/python-program-for-quicksort/
+def sort_post(posts, low, high):
+    if low < high:
+        # pi is partitioning index, arr[p] is now at right place
+        pi = partition(posts, low, high)
+        # Separately sort elements before partition and after partition
+        sort_post(posts, low, pi-1)
+        sort_post(posts, pi+1, high)
+    
+def has_replies(post):
+    replies = UserReply.objects.filter(user_post=post)
+    print('replies of post ', post, ': ', replies)
+    if replies.count() > 0:
+        return True
+    return False
+
+def get_last_reply(post):
+    replies = UserReply.objects.filter(user_post=post)
+    last_reply = replies.last()
+    deepest = []
+    for rep in replies:
+        deepest = get_deepest_replies(deepest, rep)
+    for reply in deepest:
+        if reply.created_at > last_reply.created_at:
+            last_reply = reply
+    return last_reply
+
+def get_deepest_replies(deepest_replies, rep):
+    replies = UserReply.objects.filter(host_reply=rep)
+    if replies.count() == 0:
+        deepest_replies.append(rep)
+    else:
+        for reply in replies:
+            get_deepest_replies(deepest_replies, reply)
+    return deepest_replies
 
 @login_required
 def view_post(request, id):
