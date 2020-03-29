@@ -60,7 +60,7 @@
                         <td class="last-col text-right">
                             <a href="{% url 'post' id=post.id %}">
                                 <p>{{post|get_last_user}}</p>
-                                <p>{{post.created_at}}</p>
+                                <p>{{post|get_last_updated}}</p>
                             </a>
                         </td>
                     </tr>

@@ -53,4 +53,11 @@ def get_last_activity_user_fullname(value):
     if get_replies_size(value) == 0:
         return value.creator.get_full_name()
     else:
-        return "x"
+        return get_last_reply(value).creator.get_full_name()
+
+@register.filter(name="get_last_updated")
+def get_last_updated(value):
+    if get_replies_size(value) == 0:
+        return value.created_at
+    else:
+        return get_last_reply(value).created_at
