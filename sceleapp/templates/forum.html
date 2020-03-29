@@ -47,10 +47,20 @@
                             </a>
                         </td>
                         <td>
-                            <a href="{% url 'post' id=post.id %}" class="creator-col">
+                            
+                            {% if post.creator == user %}
+                            <a href="{% url 'profile' %}" class="creator-col">
                                 <img src="{% static 'img/user-icon.png' %}" alt="">
                                 <p>{{post.creator|get_fullname}}</p>
                             </a>
+                            {% else %}
+                            <div class="creator-col">
+                                <img src="{% static 'img/user-icon.png' %}" alt="">
+                                <p>{{post.creator|get_fullname}}</p>
+                            </div>
+                            {% endif %}
+                                
+                            
                         </td>
                         <td class="text-center">
                             <a href="{% url 'post' id=post.id %}">

@@ -48,6 +48,10 @@ tbody td {
     vertical-align: top;
 }
 
+tbody tr:nth-child(odd):hover {
+    background-color: #F5F5F5;
+}
+
 tbody tr:nth-child(odd) td {
     background-color: #F9F9F9;
 }
