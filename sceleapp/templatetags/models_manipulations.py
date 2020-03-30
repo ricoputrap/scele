@@ -122,55 +122,8 @@ def get_reply_box(reply, active_user):
     
     tags += '">Show Parent</a> | <a href="">Like</a> | <a href="">Reply</a></div>' + \
             '</div></div>'
-
-    # tags += '''<div class="box-item__content__footer">
-    #                 <a href="">Like</a>
-    #                 <div class="right"><a href="">Show Parent</a> | <a href="">Like</a> | <a href="">Reply</a></div>
-    #             </div></div>'''
-                #     {% if post.creator == user %}
-                #     <a href="{% url 'profile' %}">{{user_fullname}}</a>
-                #     {% else %}
-                #         {{post|get_creator}}
-                #     {% endif %}
-                #     </span>
-                #     - {{post.created_at}}
-                # </p>
-    return tags
     
+    for i in range(reply.lv):
+        tags = add_indent(tags)
 
-'''
-<div class="box-item" id="reply-0">
-    <div class="box-item__main-content">
-        
-        {% if post.creator == user %}
-        <a href="{% url 'profile' %}">
-            <img src="{% static 'img/user-icon.png' %}" alt="user-icon">
-        </a>
-        {% else %}
-        <img src="{% static 'img/user-icon.png' %}" alt="user-icon">
-        {% endif %}
-            
-        <div class="box-item__content">
-            <div id="box-item__content__header">
-                <p class="font-bold">{{post.subject}}</p>
-                <p>by 
-                    <span>
-                    {% if post.creator == user %}
-                    <a href="{% url 'profile' %}">{{user_fullname}}</a>
-                    {% else %}
-                        {{post|get_creator}}
-                    {% endif %}
-                    </span>
-                    - {{post.created_at}}
-                </p>
-                    
-            </div>
-            <div class="box-item__content__msg">{{post.msg|safe}}</div>
-        </div>
-    </div>
-    <div class="box-item__content__footer">
-        <a href="">Like</a>
-        <div class="right"><a href="">Show Parent</a> | <a href="">Like</a> | <a href="">Reply</a></div>
-    </div>
-</div>
-'''
+    return tags

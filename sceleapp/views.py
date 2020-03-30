@@ -216,7 +216,7 @@ def view_post(request, id):
             'post': post}
     if has_replies(post):
         reps = UserReply.objects.filter(user_post=post)
-        replies = get_replies([], post, 0)
+        replies = get_replies([], post, 1)
         context['replies'] = replies
     return render(request, 'post.html', context)
 
