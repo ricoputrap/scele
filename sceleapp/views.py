@@ -210,23 +210,38 @@ def view_post(request, id):
     is_gamified = Gamification.objects.first().is_gamified
     post_id = int(id)
     post = UserPost.objects.get(id=post_id)
+    context = {'logged_in': True, 'user': user,
+            'user_fullname': user.get_full_name(),
+            'is_gamified': is_gamified,
+            'post': post}
     if has_replies(post):
         reps = UserReply.objects.filter(user_post=post)
         replies = get_replies([], post, 0)
-        print('size: ', len(replies))
-        for rep in replies:
-            print(rep.obj, ' | lv: ', rep.lv)
-    return render(request, 'post.html', 
-        {'logged_in': True, 'user': user,
-        'user_fullname': user.get_full_name(),
-        'is_gamified': is_gamified,
-        'post': post})
+        context['replies'] = replies
+    return render(request, 'post.html', context)
 
 class Reply:
     def __init__(self, obj, lv, parent):
         self.obj = obj
         self.lv = lv
         self.parent = parent
+        self.comp_id = 'rep-' + str(lv) + '-' + str(obj.id)
+
+def get_reply_box(reply, parent):
+    tags = '''
+        <div class="box-item" id={{reply.comp_id}}>
+            <div class="box-item__main-content">
+                {% if reply.obj.creator == user %}
+                    <a href="{% url \'profile\' %}">
+                        <img src="{% static 'img/user-icon.png' %}" alt="user-icon">
+                    </a>
+                {% else %}
+                    <img src="{% static 'img/user-icon.png' %}" alt="user-icon">
+                {% endif %}
+            </div>
+        </div>
+            '''
+    return tags
 
 def get_replies(all_replies, parent, lv):
     if type(parent) is UserPost:

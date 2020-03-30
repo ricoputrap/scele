@@ -32,7 +32,7 @@
     <div class="content font-open-sans">
         <h2 class="font-bold">Forum</h2>
         <h4 class="font-bold">{{post.subject}}</h4>
-        <p>{{post|get_last_reply}}</p>
+        <!-- <p>{{post|get_last_reply}}</p> -->
 
         <div id="content-area">
             <div class="box-item" id="post-item">
@@ -59,7 +59,6 @@
                                 </span>
                                 - {{post.created_at}}
                             </p>
-                                
                         </div>
                         <div class="box-item__content__msg">{{post.msg|safe}}</div>
                     </div>
@@ -69,6 +68,50 @@
                     <div class="right"><a href="">Like</a> | <a href="">Reply</a></div>
                 </div>
             </div>
+            <div>
+                
+                {% if replies %}
+                    {{replies|get_replies_tags:user|safe}}
+                {% endif %}
+                    
+            </div>
+
+            <!-- <div class="indent">
+                <div class="box-item" id="reply-0">
+                    <div class="box-item__main-content" id={{post.id}}>
+                        
+                        {% if post.creator == user %}
+                        <a href="{% url 'profile' %}">
+                            <img src="{% static 'img/user-icon.png' %}" alt="user-icon">
+                        </a>
+                        {% else %}
+                        <img src="{% static 'img/user-icon.png' %}" alt="user-icon">
+                        {% endif %}
+                            
+                        <div class="box-item__content">
+                            <div id="box-item__content__header">
+                                <p class="font-bold">{{post.subject}}</p>
+                                <p>by 
+                                    <span>
+                                    {% if post.creator == user %}
+                                    <a href="{% url 'profile' %}">{{user_fullname}}</a>
+                                    {% else %}
+                                        {{post|get_creator}}
+                                    {% endif %}
+                                    </span>
+                                    - {{post.created_at}}
+                                </p>
+                                    
+                            </div>
+                            <div class="box-item__content__msg">{{post.msg|safe}}</div>
+                        </div>
+                    </div>
+                    <div class="box-item__content__footer">
+                        <a href="">Like</a>
+                        <div class="right"><a href="">Show Parent</a> | <a href="">Like</a> | <a href="">Reply</a></div>
+                    </div>
+                </div>
+            </div> -->
         </div>
     </div>
 </section>
