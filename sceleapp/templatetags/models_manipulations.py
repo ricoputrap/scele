@@ -78,6 +78,12 @@ def add_indent(tags):
     indented_tags = '<div class="indent">' + tags + "</div>"
     return indented_tags
 
+def get_post(reply):
+    if reply.user_post:
+        return reply.user_post
+    else:
+        return get_post(reply.host_reply)
+
 def get_reply_box(reply, active_user):
     profile_url = reverse('profile')
     profile_img = static('img/user-icon.png')
@@ -85,6 +91,13 @@ def get_reply_box(reply, active_user):
     creator_fulname = creator.get_full_name()
     user_fullname = active_user.get_full_name()
     parent = reply.parent
+    if type(parent) is UserPost:
+        parent_type = '0'
+    else:
+        parent_type = '1'
+
+    post = get_post(reply.obj)
+    reply_url = reverse('addreply', kwargs={'post_id': post.id, 'parent_type': parent_type, 'parent_id': parent.id})
 
     tags = '<div class="box-item" id="' + str(reply.comp_id) + '">' + \
                 '<div class="box-item__main-content">'
@@ -120,7 +133,7 @@ def get_reply_box(reply, active_user):
         parent_comp_id = 'rep-' + str(reply.lv - 1) + '-' + str(parent.id)
         tags += parent_comp_id
     
-    tags += '">Show Parent</a> | <a href="">Like</a> | <a href="">Reply</a></div>' + \
+    tags += '">Show Parent</a> | <a href="">Like</a> | <a href="' + str(reply_url) + '">Reply</a></div>' + \
             '</div></div>'
     
     for i in range(reply.lv):

@@ -215,7 +215,7 @@ def view_post(request, id):
             'is_gamified': is_gamified,
             'post': post}
     if has_replies(post):
-        reps = UserReply.objects.filter(user_post=post)
+        # reps = UserReply.objects.filter(user_post=post)
         replies = get_replies([], post, 1)
         context['replies'] = replies
     return render(request, 'post.html', context)
