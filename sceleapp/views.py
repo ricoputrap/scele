@@ -6,7 +6,7 @@ from django.contrib import messages
 
 from django.shortcuts import render, redirect
 
-from sceleapp.forms import RegisterForm, UserPostForm
+from sceleapp.forms import RegisterForm, UserPostForm, UserReplyForm
 
 from sceleapp.models import Gamification, UserBadge, UserPost, UserReply
 
@@ -262,9 +262,7 @@ def add_post(request):
     is_gamified = Gamification.objects.first().is_gamified
     if request.method == 'POST':
         form = UserPostForm(request.POST)
-        print('masuk')
         if form.is_valid():
-            print('valid')
             subject = form.cleaned_data.get('subject')
             msg = form.cleaned_data.get('msg')
             permalink = "a"
@@ -294,14 +292,34 @@ def add_reply(request, post_id, parent_type, parent_id):
         parent = UserPost.objects.get(id=parent_id)
     else:
         parent = UserReply.objects.get(id=parent_id)
-
-    print(parent)
-    return render(request, 'add-reply.html',
-        {'logged_in': True, 'user': user,
-        'user_fullname': user.get_full_name(),
-        'is_gamified': is_gamified,
-        'parent': parent, 
-        'post': post})
+    
+    if request.method == 'POST':
+        form = UserReplyForm(request.POST)
+        if form.is_valid():
+            subject = form.cleaned_data.get('subject')
+            msg = form.cleaned_data.get('msg')
+            permalink = "a"
+            newRep = UserReply()
+            newRep.subject = subject
+            newRep.msg = msg
+            newRep.permalink = permalink
+            newRep.is_gamified = is_gamified
+            newRep.creator = user
+            if parent_type == '0':
+                newRep.user_post = post
+            else:
+                newRep.host_reply = UserReply.objects.get(id=parent_id)
+            newRep.save()
+        return redirect('post', id=post.id)
+    else:
+        form = UserReplyForm()
+        return render(request, 'add-reply.html',
+            {'logged_in': True, 'user': user,
+            'user_fullname': user.get_full_name(),
+            'is_gamified': is_gamified,
+            'parent': parent, 
+            'post': post,
+            'form': form})
 
     # if request.method == 'POST':
     #     form = User

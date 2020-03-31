@@ -43,6 +43,32 @@
             <p>></p>
             <p>Add reply</p>
         </div>
+        <div class="content font-open-sans">
+            <h2 class="font-bold">Forum</h2>
+            <h4 class="font-bold">Your new discussion</h4>
+            <hr>
+            <form method="post">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="row row-input">
+                        <div class="col-1">
+                            <label class="font-semi-bold" for="{{ field.name }}">{{ field.label }}<span>*</span></label>
+                        </div>
+                        <div class="col-11">
+                            {{ field }}   
+                        </div>
+                    </div>
+                    {% for error in field.errors %}
+                        <p style="color: red">{{ error }}</p>
+                    {% endfor %}
+                {% endfor %}
+                <div class="btn-area">
+                    <button type="submit" class="btn btn--green ">Post to forum</button>
+                    <a href="{% url 'forum' %}" class="btn btn--red ">Cancel</a>
+                </div>
+                <p class="footer-required">There are required fields in this form marked by <span>*</span></p>
+            </form>
+        </div>
     </section>
 {% endblock %}
     

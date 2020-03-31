@@ -91,13 +91,8 @@ def get_reply_box(reply, active_user):
     creator_fulname = creator.get_full_name()
     user_fullname = active_user.get_full_name()
     parent = reply.parent
-    if type(parent) is UserPost:
-        parent_type = '0'
-    else:
-        parent_type = '1'
-
     post = get_post(reply.obj)
-    reply_url = reverse('addreply', kwargs={'post_id': post.id, 'parent_type': parent_type, 'parent_id': parent.id})
+    reply_url = reverse('addreply', kwargs={'post_id': post.id, 'parent_type': '1', 'parent_id': reply.obj.id})
 
     tags = '<div class="box-item" id="' + str(reply.comp_id) + '">' + \
                 '<div class="box-item__main-content">'
