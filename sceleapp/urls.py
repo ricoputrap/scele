@@ -12,4 +12,5 @@ urlpatterns = [
     path('forum/', views.view_forum, name="forum"),
     path('forum/post/<id>', views.view_post, name="post"),
     path('forum/addpost/', views.add_post, name="addpost"),
+    path('forum/addreply/<parent_type>/<parent_id>', views.add_reply, name="addreply"),
 ]

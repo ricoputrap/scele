@@ -284,3 +284,23 @@ def add_post(request):
             'user_fullname': user.get_full_name(),
             'is_gamified': is_gamified,
             'form': form})
+
+@login_required
+def add_reply(request, parent_type, parent_id):
+    user = request.user
+    is_gamified = Gamification.objects.first().is_gamified
+    
+    if parent_type == '0':
+        parent = UserPost.objects.get(id=parent_id)
+    else:
+        parent = UserReply.objects.get(id=parent_id)
+
+    print(parent)
+    return render(request, 'add-reply.html',
+        {'logged_in': True, 'user': user,
+        'user_fullname': user.get_full_name(),
+        'is_gamified': is_gamified,
+        'parent': parent})
+
+    # if request.method == 'POST':
+    #     form = User

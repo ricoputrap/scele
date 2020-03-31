@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    {% if is_gamified %}
+        <title>MPKT A Kelas Y - Forum: {{parent.subject}} - Add reply</title>
+    {% else %}
+        <title>MPKT A Kelas X - Forum: {{parent.subject}} - Add reply</title>
+    {% endif %}
+{% endblock %}
+
+{% block head %}
+    {{form.media}}
+    <link rel="stylesheet" href="{% static 'css/add-reply.css' %}">
+    <script src="{% static 'tinymce/tinymce.min.js' %}" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+          selector: '#msg',
+          setup: function(editor) {
+              editor.on('change', function(e) {
+                  editor.save();
+              });
+          }
+        });
+      </script>
+{% endblock %}
