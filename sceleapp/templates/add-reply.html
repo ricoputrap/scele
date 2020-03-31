@@ -24,3 +24,25 @@
         });
       </script>
 {% endblock %}
+
+
+{% block content %}
+    <section id="addreply">
+        <div class="breadcrumb-menu">
+            <a href="{% url 'dashboard' %}">Dashboard</a>
+            <p>></p>
+            {% if is_gamified %}
+            <a href="{% url 'course' %}">MPKT A Kelas Y</a>
+            {% else %}
+            <a href="{% url 'course' %}">MPKT A Kelas X</a>
+            {% endif %}
+            <p>></p>
+            <a href="{% url 'forum' %}">Forum</a>
+            <p>></p>
+            <a href="{% url 'post' id=post.id %}">{{post.subject}}</a>
+            <p>></p>
+            <p>Add reply</p>
+        </div>
+    </section>
+{% endblock %}
+    
