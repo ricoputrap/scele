@@ -317,7 +317,8 @@ def add_reply(request, post_id, parent_type, parent_id):
             {'logged_in': True, 'user': user,
             'user_fullname': user.get_full_name(),
             'is_gamified': is_gamified,
-            'parent': parent, 
+            'parent': parent,
+            'parent_type': parent_type, 
             'post': post,
             'form': form})
 

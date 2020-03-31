@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load models_manipulations %}
 
 {% block title %}
     {% if is_gamified %}
@@ -45,7 +46,43 @@
         </div>
         <div class="content font-open-sans">
             <h2 class="font-bold">Forum</h2>
-            <h4 class="font-bold">Your new discussion</h4>
+
+            <div class="box-item" id="post-item">
+                <div class="box-item__main-content">
+                    
+                    {% if parent.creator == user %}
+                    <a href="{% url 'profile' %}">
+                        <img src="{% static 'img/user-icon.png' %}" alt="user-icon">
+                    </a>
+                    {% else %}
+                    <img src="{% static 'img/user-icon.png' %}" alt="user-icon">
+                    {% endif %}
+                        
+                    <div class="box-item__content">
+                        <div id="box-item__content__header">
+                            <p class="font-bold">{{parent.subject}}</p>
+                            <p>by 
+                                <span>
+                                {% if parent.creator == user %}
+                                <a href="{% url 'profile' %}">{{user_fullname}}</a>
+                                {% else %}
+                                    {{parent|get_creator}}
+                                {% endif %}
+                                </span>
+                                - {{parent.created_at}}
+                            </p>
+                        </div>
+                        <div class="box-item__content__msg">{{parent.msg|safe}}</div>
+                    </div>
+                </div>
+                <div class="box-item__content__footer">
+                    <a href="">Like</a>
+                    <div class="right"><a href="">Show Parent</a></div>
+                </div>
+            </div>
+
+
+            <h4 class="font-bold">Your reply</h4>
             <hr>
             <form method="post">
                 {% csrf_token %}
