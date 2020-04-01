@@ -109,7 +109,7 @@
                     <div class="col-10">
                         <p>:</p>
                         {% if badge.badge.activity_type == "p" %}
-                        <a href="">{{badge.user_post}}</a>
+                        <a href="{% url 'post' id=badge.user_post.id %}">{{badge.user_post}}</a>
                         {% elif badge.badge.activity_type == "r" %}
                         <a href="">{{badge.user_reply}}</a>
                         {% else %}
