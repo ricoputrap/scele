@@ -49,6 +49,7 @@
 
 .box-item__content {
     width: 100%;
+    word-break: break-word;
 }
 
 .box-item__content p:not(.box-item__content__msg) {
