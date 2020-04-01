@@ -104,10 +104,12 @@ def view_course(request):
 @login_required
 def view_course_badges(request):
     user = request.user
+    is_gamified = Gamification.objects.first().is_gamified
     badges = Badge.objects.all()
     return render(request, 'course-badges.html',
         {'logged_in': True, 'user': user,
         'user_fullname': user.get_full_name(),
+        'is_gamified': is_gamified,
         'badges': badges})
 
 @login_required
