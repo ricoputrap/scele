@@ -68,11 +68,13 @@ def view_profile(request):
     if is_gamified:
         badges = UserBadge.objects.filter(owner=user)
         latest_badge = badges.last()
+        reversed_badges = list(badges)
+        reversed_badges.reverse()
         return render(request, 'profile.html', 
             {'logged_in': True, 'user': user, 
             'user_fullname': user.get_full_name(), 
             'is_gamified': is_gamified,
-            'badges': badges,
+            'badges': reversed_badges,
             'latest_badge': latest_badge})
     else:
         return render(request, 'profile.html', 
