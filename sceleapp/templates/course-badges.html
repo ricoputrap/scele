@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    {% if is_gamified %}
+        <title>MPKT A Kelas Y: Badges</title>
+    {% else %}
+        <title>MPKT A Kelas X: Badges</title>
+    {% endif %}
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/course-badges.css' %}">
+{% endblock %}
+
+
+{% block content %}
+<section id="course-badges">
+    <div class="breadcrumb-menu">
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+        <p>></p>
+        {% if is_gamified %}
+        <a href="{% url 'course' %}">MPKT A Kelas Y</a>
+        {% else %}
+        <a href="{% url 'course' %}">MPKT A Kelas X</a>
+        {% endif %}
+        <p>></p>
+        <p>Badges</p>
+    </div>
+</section>
+{% endblock %}
