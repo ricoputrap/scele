@@ -109,14 +109,14 @@
                     <div class="col-10">
                         <p>:</p>
                         {% if badge.badge.activity_type == "p" %}
-                        <a href="{% url 'post' id=badge.user_post.id %}">{{badge.user_post}}</a>
+                        <a href="{% url 'post' id=badge.user_post.id %}">{{badge.user_post}} created at {{badge.user_post.created_at}}</a>
                         {% elif badge.badge.activity_type == "r" %}
-                        <a href="">{{badge.user_reply}}</a>
+                        <a href="">{{badge.user_reply}} created at {{badge.user_reply.created_at}}</a>
                         {% else %}
                             {% if badge.user_post %}
-                            <a href="">{{badge.user_post}}</a>
+                            <a href="">{{badge.user_post}} created at {{badge.user_post.created_at}}</a>
                             {% elif badge.user_reply %}
-                            <a href="">{{badge.user_reply}}</a>
+                            <a href="">{{badge.user_reply}} created at {{badge.user_reply.created_at}}</a>
                             {% endif %}
                         {% endif %}
                         
