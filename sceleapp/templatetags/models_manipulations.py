@@ -135,3 +135,7 @@ def get_reply_box(reply, active_user):
         tags = add_indent(tags)
 
     return tags
+
+@register.filter(name="list_size")
+def get_list_size(value):
+    return len(value)

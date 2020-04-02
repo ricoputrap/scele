@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load models_manipulations %}
 
 {% block title %}
     {% if is_gamified %}
@@ -26,6 +27,28 @@
         {% endif %}
         <p>></p>
         <p>Badges</p>
+    </div>
+    <div class="content">
+        <h2 class="font-bold">
+            {% if is_gamified %}
+            MPKT A Kelas Y
+            {% else %}
+            MPKT A Kelas X
+            {% endif %}</h2>
+        <h4 class="font-bold">Number of badges available: {{badges|list_size}}</h4>
+        <hr>
+        <div class="badges-selector font-bold">
+            <p>
+                <span id="badge-participation" class="text-center active">Participation</span>
+                <span id="badge-skill" class="text-center">Skill</span>
+            </p>
+            <!-- <div id="badge-participation" class="text-center">
+                Participation
+            </div>
+            <div id="badge-skill" class="text-center">
+                Skill
+            </div> -->
+        </div>
     </div>
 </section>
 {% endblock %}
