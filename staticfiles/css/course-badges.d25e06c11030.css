@@ -1,0 +1,48 @@
+#course-badges {
+    padding: 1rem 2rem;
+    color: #555;
+}
+
+.breadcrumb-menu a, .breadcrumb-menu p {
+    display: inline;
+    color: #7B5A60;
+}
+
+.content {
+    padding: 2rem 10rem 1rem 2rem;
+}
+
+#badge-participation, #badge-skill {
+    display: inline-block;
+    padding: 0.7rem;
+    color: #FFF6F6;
+    min-width: 9rem;
+}
+
+#badge-participation {
+    background-color: #77AE29;
+    border-radius: 7px 0 0 7px;
+}
+
+#badge-skill {
+    background-color: #8EC63F;
+    border-radius: 0 7px 7px 0;
+}
+
+.active {
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+/* TABEL */
+table, th, td {
+    border: solid 1px #DDDDDD;
+    color: #000;
+}
+
+th {
+    background-color: #F9F9F9;
+}
+
+td {
+    padding: 2rem;
+}
