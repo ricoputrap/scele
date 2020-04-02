@@ -8,9 +8,13 @@ from django.shortcuts import render, redirect
 
 from sceleapp.forms import RegisterForm, UserPostForm, UserReplyForm
 
-from sceleapp.models import Gamification, UserBadge, UserPost, UserReply, Badge
+from sceleapp.models import Gamification, UserBadge, UserPost, UserReply, Badge, Notif
 
 # Create your views here.
+
+def get_notif(user, is_gamified):
+    notifs = Notif.objects.filter(receiver=user, is_gamified=is_gamified)
+    return notifs
 
 @login_required
 def dashboard(request):
@@ -86,20 +90,21 @@ def view_profile(request):
 def view_course(request):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
+    notifs = get_notif(user, is_gamified)
+    new_notif_count = notifs.filter(is_new=True).count()
+    context = {'logged_in': True, 'user': user, 
+            'user_fullname': user.get_full_name(), 
+            'is_gamified': is_gamified,
+            'notifs': notifs,
+            'new_notif_count': new_notif_count}
     if is_gamified:
         badges = UserBadge.objects.filter(owner=user)
         latest_badge = badges.last()
-        return render(request, 'course.html', 
-            {'logged_in': True, 'user': user, 
-            'user_fullname': user.get_full_name(), 
-            'is_gamified': is_gamified,
-            'badges': badges,
-            'latest_badge': latest_badge})
+        context['badges'] = badges
+        context['latest_badge'] = latest_badge
+        return render(request, 'course.html', context)
     else:
-        return render(request, 'course.html', 
-            {'logged_in': True, 'user': user, 
-            'user_fullname': user.get_full_name(), 
-            'is_gamified': is_gamified})
+        return render(request, 'course.html', context)
 
 @login_required
 def view_course_badges(request):

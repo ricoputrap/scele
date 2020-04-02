@@ -91,6 +91,9 @@ class Notif(models.Model):
 	user_reply = models.ForeignKey(UserReply, on_delete=models.SET_NULL, null=True, blank=True)
 	receiver = models.ForeignKey(User, on_delete=models.CASCADE)  # receiver gak mungkin dihapus
 
+	class Meta:
+		ordering = ['-created_at']
+
 	def __str__(self):
 		return '{0} got notif "{1}"'.format(self.receiver, self.title)
 
