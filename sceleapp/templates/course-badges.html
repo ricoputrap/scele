@@ -40,11 +40,29 @@
         <div class="badges-selector font-bold">
             <p id="badge-participation" class="text-center active">Participation</p>
             <p id="badge-skill" class="text-center">Skills</p>
-            <!-- <p>
-                <span id="badge-participation" class="text-center active">Participation</span>
-                <span id="badge-skill" class="text-center">Skill</span>
-            </p> -->
         </div>
+        <table>
+            <thead class="text-center">
+                <th>Image</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Criteria</th>
+                <th>Issued to me</th>
+            </thead>
+            <tbody>
+                {% for badge in badges %}
+                    <tr>
+                        <td class="text-center">
+                            <img src="{% static badge.img_loc %}" alt="badge.name">
+                        </td>
+                        <td class="text-center">{{badge.name}}</td>
+                        <td>{{badge.desc}}</td>
+                        <td>{{badge.criteria|safe}}</td>
+                        <td class="text-center"></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </section>
 {% endblock %}
