@@ -29,25 +29,21 @@
         <p>Badges</p>
     </div>
     <div class="content">
-        <h2 class="font-bold">
+        <h3 class="font-bold">
             {% if is_gamified %}
-            MPKT A Kelas Y
+            MPKT A Kelas Y: Badges
             {% else %}
-            MPKT A Kelas X
-            {% endif %}</h2>
+            MPKT A Kelas X: Badges
+            {% endif %}</h3>
         <h4 class="font-bold">Number of badges available: {{badges|list_size}}</h4>
         <hr>
         <div class="badges-selector font-bold">
-            <p>
+            <p id="badge-participation" class="text-center active">Participation</p>
+            <p id="badge-skill" class="text-center">Skills</p>
+            <!-- <p>
                 <span id="badge-participation" class="text-center active">Participation</span>
                 <span id="badge-skill" class="text-center">Skill</span>
-            </p>
-            <!-- <div id="badge-participation" class="text-center">
-                Participation
-            </div>
-            <div id="badge-skill" class="text-center">
-                Skill
-            </div> -->
+            </p> -->
         </div>
     </div>
 </section>
