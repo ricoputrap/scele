@@ -15,9 +15,10 @@
     {% if logged_in %}
     <div class="user-div item-align-mid">
         <div class="user-area">
-            <div class="div-notif">
+            <div id="div-notif">
                 <!-- https://fontawesome.com/icons/bell?style=solid -->
                 <img class="align-top" src="{% static "img/notif-icon.png" %}" alt="notif-icon"/>
+                <span class="notif-num">3</span>
             </div>
             <div class="div-name">
                 <h5 class="font-open-sans font-semi-bold">{{user_fullname}}</h5>
