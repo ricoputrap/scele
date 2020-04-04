@@ -50,8 +50,12 @@
                 <th>Issued to me</th>
             </thead>
             <tbody>
-                {% for badge in badges %}
-                    <tr>
+                {% for badge in badges %} 
+                    {% if badge.receiving_type == 's'  %}
+                    <tr class="skill-badge collapse">
+                    {% else %}
+                    <tr class="participatory-badge">
+                    {% endif %}
                         <td class="text-center">
                             <img src="{% static badge.img_loc %}" alt="badge.name">
                         </td>
@@ -65,4 +69,8 @@
         </table>
     </div>
 </section>
+{% endblock %}
+
+{% block script %}
+<script src="{% static 'js/course-badges.js' %}"></script>
 {% endblock %}
