@@ -65,7 +65,7 @@
                 </div>
                 <div class="box-item__content__footer">
                     <a href="">Like</a>
-                    <div class="right"><a href="">Like</a> | <a href="{% url 'addreply' post_id=post.id parent_type='0' parent_id=post.id %}">Reply</a></div>
+                    <div class="right"><a href="" class="btn-like">Like</a> | <a href="{% url 'addreply' post_id=post.id parent_type='0' parent_id=post.id %}">Reply</a></div>
                 </div>
             </div>
             <div>
@@ -116,4 +116,7 @@
     </div>
 </section>
 {% endblock %}
-    
+{% block script %}
+<script src="{% static 'js/post.js' %}"></script>
+<script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+{% endblock %}

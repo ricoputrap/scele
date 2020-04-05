@@ -3,12 +3,16 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.http import JsonResponse
+from django.forms.models import model_to_dict
+import json
+
 
 from django.shortcuts import render, redirect
 
 from sceleapp.forms import RegisterForm, UserPostForm, UserReplyForm
 
-from sceleapp.models import Gamification, UserBadge, UserPost, UserReply, Badge, Notif
+from sceleapp.models import Gamification, UserBadge, UserPost, UserReply, Badge, Notif, PostLike, GivenPostLike, ReplyLike, GivenReplyLike
 
 # Create your views here.
 
@@ -340,5 +344,25 @@ def add_reply(request, post_id, parent_type, parent_id):
             'post': post,
             'form': form})
 
-    # if request.method == 'POST':
-    #     form = User
+def add_like(request):
+    res = dict()
+    data = request.POST
+    like_type = data['like_type']
+    obj_id = int(data['obj_id'])
+    user = request.user
+    if like_type == 'p':
+        userpost = UserPost.objects.get(id=obj_id)
+        postlikes = PostLike.objects.all()
+        if postlikes:
+            postlike = postlikes.get(user_post=userpost)
+            if postlike:
+                postlike.quantity += 1
+        else:
+            postlike = PostLike()
+            postlike.user_post = userpost
+            postlike.quantity = 1
+            postlike.is_gamified = userpost.is_gamified
+        postlike.save()
+        dict_postlike = model_to_dict(postlike)
+        res['postlike'] = json.dumps(dict_postlike)
+    return JsonResponse({'res': res})
