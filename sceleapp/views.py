@@ -234,7 +234,14 @@ def view_post(request, id):
     is_gamified = Gamification.objects.first().is_gamified
     post_id = int(id)
     post = UserPost.objects.get(id=post_id)
-    total_likes = PostLike.objects.get(user_post=post).quantity
+    try:
+        total_likes = PostLike.objects.get(user_post=post).quantity
+        user_has_liked = has_liked_post(user, post)
+    except ObjectDoesNotExist:
+        total_likes = 0
+        user_has_liked = False
+    
+    print('has liked: ', user_has_liked)
     context = {'logged_in': True, 'user': user,
             'user_fullname': user.get_full_name(),
             'is_gamified': is_gamified,
@@ -347,6 +354,14 @@ def add_reply(request, post_id, parent_type, parent_id):
             'parent_type': parent_type, 
             'post': post,
             'form': form})
+
+def has_liked_post(user, post):
+    postlike = PostLike.objects.get(user_post=post)
+    try:
+        user_has_liked = GivenPostLike.objects.get(post_like=postlike, liker=user)
+        return True
+    except ObjectDoesNotExist:
+        return False
 
 def create_new_postlike(userpost, isgamified):
     postlike = PostLike()
