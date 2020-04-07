@@ -346,12 +346,19 @@ def add_reply(request, post_id, parent_type, parent_id):
             'post': post,
             'form': form})
 
-def create_new_like(userpost, isgamified):
+def create_new_postlike(userpost, isgamified):
     postlike = PostLike()
     postlike.user_post = userpost
     postlike.quantity = 1
     postlike.is_gamified = isgamified
     return postlike
+
+def create_new_replylike(userreply, isgamified):
+    replylike = ReplyLike()
+    replylike.user_reply = userreply
+    replylike.quantity = 1
+    replylike.is_gamified = isgamified
+    return replylike
 
 def add_like(request):
     user = request.user
@@ -366,12 +373,12 @@ def add_like(request):
         postlikes = PostLike.objects.all()
         if postlikes:
             try:
-                postlike = PostLike.objects.get(user_post=userpost)
+                postlike = postlikes.get(user_post=userpost)
                 postlike.quantity += 1
             except ObjectDoesNotExist:
-                postlike = create_new_like(userpost, is_gamified)
+                postlike = create_new_postlike(userpost, is_gamified)
         else:
-            postlike = create_new_like(userpost, is_gamified)
+            postlike = create_new_postlike(userpost, is_gamified)
         postlike.save()
         dict_postlike = model_to_dict(postlike)
         res['postlike'] = json.dumps(dict_postlike)
@@ -379,15 +386,14 @@ def add_like(request):
         userreply = UserReply.objects.get(id=obj_id)
         replylikes = ReplyLike.objects.all()
         if replylikes:
-            replylike = replylikes.get(user_reply=userreply)
-            if replylike:
+            try:
+                replylike = replylikes.get(user_reply=userreply)
                 replylike.quantity += 1
+            except ObjectDoesNotExist:
+                replylike = create_new_replylike(userreply, is_gamified)
         else:
-            replylike = ReplyLike()
-            replylike.user_reply = userreply
-            replylike.quantity = 1
-            replylike.is_gamified = is_gamified
-        # replylike.save()
+            replylike = create_new_replylike(userreply, is_gamified)
+        replylike.save()
         dict_replylike = model_to_dict(replylike)
         res['replylike'] = dict_replylike
     return JsonResponse({'res': res})

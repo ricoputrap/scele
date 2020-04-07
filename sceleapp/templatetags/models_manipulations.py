@@ -128,7 +128,7 @@ def get_reply_box(reply, active_user):
         parent_comp_id = 'rep-' + str(reply.lv - 1) + '-' + str(parent.id)
         tags += parent_comp_id
     
-    tags += '">Show Parent</a> | <a href="" class="btn-like">Like</a> | <a href="' + str(reply_url) + '">Reply</a></div>' + \
+    tags += '">Show Parent</a> | <a href="" class="btn-like" data-obj_id="' + str(reply.obj.id) + '">Like</a> | <a href="' + str(reply_url) + '">Reply</a></div>' + \
             '</div></div>'
     
     for i in range(reply.lv):
