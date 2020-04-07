@@ -353,12 +353,26 @@ def create_new_postlike(userpost, isgamified):
     postlike.is_gamified = isgamified
     return postlike
 
+def record_postliker(liker, postlike):
+    postliker_rec = GivenPostLike()
+    postliker_rec.liker = liker
+    postliker_rec.post_like = postlike
+    postliker_rec.save()
+    return postliker_rec
+
 def create_new_replylike(userreply, isgamified):
     replylike = ReplyLike()
     replylike.user_reply = userreply
     replylike.quantity = 1
     replylike.is_gamified = isgamified
     return replylike
+
+def record_replyliker(liker, replylike):
+    repliker_rec = GivenReplyLike()
+    repliker_rec.liker = liker
+    repliker_rec.reply_like = replylike
+    repliker_rec.save()
+    return repliker_rec
 
 def add_like(request):
     user = request.user
@@ -380,6 +394,8 @@ def add_like(request):
         else:
             postlike = create_new_postlike(userpost, is_gamified)
         postlike.save()
+        record_liker = record_postliker(user, postlike)
+        print('liker: ', record_liker)
         dict_postlike = model_to_dict(postlike)
         res['postlike'] = json.dumps(dict_postlike)
     else:
@@ -394,6 +410,8 @@ def add_like(request):
         else:
             replylike = create_new_replylike(userreply, is_gamified)
         replylike.save()
+        record_liker = record_replyliker(user, replylike)
+        print('liker: ', record_liker)
         dict_replylike = model_to_dict(replylike)
         res['replylike'] = dict_replylike
     return JsonResponse({'res': res})
