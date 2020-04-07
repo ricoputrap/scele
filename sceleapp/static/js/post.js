@@ -27,6 +27,7 @@ $(document).ready(function() {
         like_type = 'p';
       }
       var obj_id = $(this).data('obj_id');
+      console.log(obj_id)
       
       $.ajax({
           url: 'addlike/',
@@ -38,8 +39,18 @@ $(document).ready(function() {
                 xhr.setRequestHeader("X-CSRFToken", csrftoken);
             }
           },
-          success: function (data) {
-            console.log(data)
+          success: (data) => {
+            console.log(data);
+            var new_quantity = data['likes'].quantity;
+            if (new_quantity > 1) {
+              $('.likes-count').text(new_quantity + ' likes');
+            }
+            else {
+              $('.likes-count').text('1 like');
+            }
+            $('.likes-count').removeClass('hidden');
+            $(this).text('Unlike');
+            $(this).addClass('liked')
           }
         });
         return false;

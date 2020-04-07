@@ -66,13 +66,17 @@
                 <div class="box-item__content__footer">
                     
                     {% if total_likes > 0 %}
-                    <a href="">{{total_likes}} likes</a>
+                    <a href="" class="likes-count">{{total_likes}} likes</a>
                     {% else %}
-                    <a href="" class="hidden">0 like</a>
+                    <a href="" class="likes-count hidden">0 like</a>
                     {% endif %}
                         
                     
-                    <div class="right"><a href="" class="btn-like" id="postlike" data-obj_id="{{post.id}}">Like</a> | <a href="{% url 'addreply' post_id=post.id parent_type='0' parent_id=post.id %}">Reply</a></div>
+                    <div class="right">
+                        <a href="" class="btn-like" id="postlike" data-obj_id="{{post.id}}">Like</a>
+                         | 
+                        <a href="{% url 'addreply' post_id=post.id parent_type='0' parent_id=post.id %}">Reply</a>
+                    </div>
                 </div>
             </div>
             <div>

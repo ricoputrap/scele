@@ -234,7 +234,7 @@ def view_post(request, id):
     is_gamified = Gamification.objects.first().is_gamified
     post_id = int(id)
     post = UserPost.objects.get(id=post_id)
-    total_likes = PostLike.objects.filter(user_post=post).count()
+    total_likes = PostLike.objects.get(user_post=post).quantity
     context = {'logged_in': True, 'user': user,
             'user_fullname': user.get_full_name(),
             'is_gamified': is_gamified,
@@ -379,7 +379,6 @@ def record_replyliker(liker, replylike):
 def add_like(request):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
-    res = dict()
     data = request.POST
     like_type = data['like_type']
     obj_id = int(data['obj_id'])
@@ -397,9 +396,8 @@ def add_like(request):
             postlike = create_new_postlike(userpost, is_gamified)
         postlike.save()
         record_liker = record_postliker(user, postlike)
-        print('liker: ', record_liker)
         dict_postlike = model_to_dict(postlike)
-        res['postlike'] = json.dumps(dict_postlike)
+        return JsonResponse({'likes': dict_postlike})
     else:
         userreply = UserReply.objects.get(id=obj_id)
         replylikes = ReplyLike.objects.all()
@@ -413,7 +411,5 @@ def add_like(request):
             replylike = create_new_replylike(userreply, is_gamified)
         replylike.save()
         record_liker = record_replyliker(user, replylike)
-        print('liker: ', record_liker)
         dict_replylike = model_to_dict(replylike)
-        res['replylike'] = dict_replylike
-    return JsonResponse({'res': res})
+        return JsonResponse({'likes': dict_replylike})
