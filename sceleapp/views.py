@@ -240,13 +240,12 @@ def view_post(request, id):
     except ObjectDoesNotExist:
         total_likes = 0
         user_has_liked = False
-    
-    print('has liked: ', user_has_liked)
     context = {'logged_in': True, 'user': user,
             'user_fullname': user.get_full_name(),
             'is_gamified': is_gamified,
             'post': post,
-            'total_likes': total_likes}
+            'total_likes': total_likes,
+            'user_has_liked': user_has_liked}
     if has_replies(post):
         # reps = UserReply.objects.filter(user_post=post)
         replies = get_replies([], post, 1)
