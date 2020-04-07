@@ -9,6 +9,8 @@ import json
 
 
 from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404
+from django.core.exceptions import ObjectDoesNotExist
 
 from sceleapp.forms import RegisterForm, UserPostForm, UserReplyForm
 
@@ -344,25 +346,48 @@ def add_reply(request, post_id, parent_type, parent_id):
             'post': post,
             'form': form})
 
+def create_new_like(userpost, isgamified):
+    postlike = PostLike()
+    postlike.user_post = userpost
+    postlike.quantity = 1
+    postlike.is_gamified = isgamified
+    return postlike
+
 def add_like(request):
+    user = request.user
+    is_gamified = Gamification.objects.first().is_gamified
     res = dict()
     data = request.POST
     like_type = data['like_type']
     obj_id = int(data['obj_id'])
-    user = request.user
+    
     if like_type == 'p':
         userpost = UserPost.objects.get(id=obj_id)
         postlikes = PostLike.objects.all()
         if postlikes:
-            postlike = postlikes.get(user_post=userpost)
-            if postlike:
+            try:
+                postlike = PostLike.objects.get(user_post=userpost)
                 postlike.quantity += 1
+            except ObjectDoesNotExist:
+                postlike = create_new_like(userpost, is_gamified)
         else:
-            postlike = PostLike()
-            postlike.user_post = userpost
-            postlike.quantity = 1
-            postlike.is_gamified = userpost.is_gamified
+            postlike = create_new_like(userpost, is_gamified)
         postlike.save()
         dict_postlike = model_to_dict(postlike)
         res['postlike'] = json.dumps(dict_postlike)
+    else:
+        userreply = UserReply.objects.get(id=obj_id)
+        replylikes = ReplyLike.objects.all()
+        if replylikes:
+            replylike = replylikes.get(user_reply=userreply)
+            if replylike:
+                replylike.quantity += 1
+        else:
+            replylike = ReplyLike()
+            replylike.user_reply = userreply
+            replylike.quantity = 1
+            replylike.is_gamified = is_gamified
+        # replylike.save()
+        dict_replylike = model_to_dict(replylike)
+        res['replylike'] = dict_replylike
     return JsonResponse({'res': res})
