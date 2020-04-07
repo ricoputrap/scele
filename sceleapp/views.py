@@ -234,10 +234,12 @@ def view_post(request, id):
     is_gamified = Gamification.objects.first().is_gamified
     post_id = int(id)
     post = UserPost.objects.get(id=post_id)
+    total_likes = PostLike.objects.filter(user_post=post).count()
     context = {'logged_in': True, 'user': user,
             'user_fullname': user.get_full_name(),
             'is_gamified': is_gamified,
-            'post': post}
+            'post': post,
+            'total_likes': total_likes}
     if has_replies(post):
         # reps = UserReply.objects.filter(user_post=post)
         replies = get_replies([], post, 1)

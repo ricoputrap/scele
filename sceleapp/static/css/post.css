@@ -16,6 +16,10 @@
     margin-top: 2rem;
 }
 
+.hidden {
+    visibility: hidden;
+}
+
 .box-item {
     background-color: #F9F9F9;
     padding: 0.5rem 0.5rem 0.5rem 1rem;
