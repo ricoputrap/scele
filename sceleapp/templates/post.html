@@ -65,8 +65,10 @@
                 </div>
                 <div class="box-item__content__footer">
                     
-                    {% if total_likes > 0 %}
+                    {% if total_likes > 1 %}
                     <a href="" class="likes-count" id="postliker" data-obj_id="{{post.id}}" data-toggle="modal" data-target="#likersModal">{{total_likes}} likes</a>
+                    {% elif total_likes == 1 %}
+                    <a href="" class="likes-count" id="postliker" data-obj_id="{{post.id}}" data-toggle="modal" data-target="#likersModal">1 like</a>
                     {% else %}
                     <a href="" class="likes-count hidden" id="postliker" data-obj_id="{{post.id}}" data-toggle="modal" data-target="#likersModal">0 like</a>
                     {% endif %}
