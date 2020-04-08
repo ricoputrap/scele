@@ -116,6 +116,43 @@ $(document).ready(function() {
         like_counter.text('0 like');
         like_counter.addClass('hidden');
       }
-      
+    }
+
+    $('.likes-count').click(function(e){
+      e.preventDefault();
+      var like_type = 'r';
+      if ($(this).is('#postliker')) {
+        like_type = 'p';
+      }
+      var obj_id = $(this).data('obj_id');
+      viewLikers($(this), like_type, obj_id);
+    });
+
+    function viewLikers(obj, like_type, obj_id) {
+      $.ajax({
+        url: 'viewlikers/',
+        data: {'like_type':like_type, 'obj_id':obj_id },
+        type: 'post',
+        dataType: 'json',
+        beforeSend: function(xhr, settings) {
+          if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+              xhr.setRequestHeader("X-CSRFToken", csrftoken);
+          }
+        },
+        success: (data) => {
+          console.log(data)
+          // var new_quantity = data['likes'].quantity;
+          // if (like_type === 'p'){
+          //   var like_counter = $('#post-item .likes-count');
+          // }
+          // else {
+          //   obj_attr = '#' + obj_id + ' .likes-count';
+          //   var like_counter = $(obj_attr);
+          // }
+          // updateLikeCounter(like_counter, new_quantity);
+          // obj.text('Unlike');
+          // obj.addClass('liked')
+        }
+      });
     }
 });

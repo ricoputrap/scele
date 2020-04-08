@@ -16,4 +16,5 @@ urlpatterns = [
     path('forum/addreply/<post_id>/<parent_type>/<parent_id>', views.add_reply, name="addreply"),
     path('forum/post/addlike/', views.add_like, name="addlike"),
     path('forum/post/unlike/', views.unlike, name="unlike"),
+    path('forum/post/viewlikers/', views.view_likers, name="viewlikers"),
 ]

@@ -11,6 +11,7 @@ import json
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
+from django.core import serializers
 
 from sceleapp.forms import RegisterForm, UserPostForm, UserReplyForm
 
@@ -433,3 +434,23 @@ def unlike(request):
         postlikes = PostLike.objects.filter(user_post=userpost)
     
     return JsonResponse({'new_quantity': new_quantity})
+
+def view_likers(request):
+    user = request.user
+    is_gamified = Gamification.objects.first().is_gamified
+    data = request.POST
+    like_type = data['like_type']
+    print('like_type: ', like_type)
+    obj_id = int(data['obj_id'])
+
+    if like_type == 'p':
+        userpost = UserPost.objects.get(id=obj_id)
+        postlike = PostLike.objects.get(user_post=userpost)
+        recorded_likes = list(GivenPostLike.objects.filter(post_like=postlike))
+        # res = serializers.serialize('json', recorded_likes)
+        res = json.dumps(recorded_likes)
+        # if recorded_likes.count() > 1:
+        #     res = serializers.serialize('json', recorded_likes)
+        # else:
+        #     res = model_to_dict(recorded_likes[0])
+    return JsonResponse({'response': res})
