@@ -446,11 +446,10 @@ def view_likers(request):
     if like_type == 'p':
         userpost = UserPost.objects.get(id=obj_id)
         postlike = PostLike.objects.get(user_post=userpost)
+        print('postlike: ', postlike)
         recorded_likes = list(GivenPostLike.objects.filter(post_like=postlike))
-        # res = serializers.serialize('json', recorded_likes)
-        res = json.dumps(recorded_likes)
-        # if recorded_likes.count() > 1:
-        #     res = serializers.serialize('json', recorded_likes)
-        # else:
-        #     res = model_to_dict(recorded_likes[0])
-    return JsonResponse({'response': res})
+        list_rec_likes_dict = dict()
+        for obj in recorded_likes:
+            rec = model_to_dict(obj)
+            list_rec_likes_dict[obj.id] = rec
+    return JsonResponse({'response': list_rec_likes_dict})
