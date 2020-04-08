@@ -82,9 +82,7 @@ $(document).ready(function() {
           }
         },
         success: (data) => {
-          console.log('sukses')
           var new_quantity = data['new_quantity'];
-          console.log(new_quantity)
           if (like_type === 'p'){
             var like_counter = $('#post-item .likes-count');
           }

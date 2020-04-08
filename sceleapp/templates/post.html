@@ -66,7 +66,7 @@
                 <div class="box-item__content__footer">
                     
                     {% if total_likes > 0 %}
-                    <a href="" class="likes-count">{{total_likes}} likes</a>
+                    <a href="" class="likes-count" data-toggle="modal" data-target="#likersModal">{{total_likes}} likes</a>
                     {% else %}
                     <a href="" class="likes-count hidden">0 like</a>
                     {% endif %}
@@ -85,52 +85,30 @@
                 </div>
             </div>
             <div>
-                
                 {% if replies %}
                     {{replies|get_replies_tags:user|safe}}
                 {% endif %}
-                    
             </div>
-
-            <!-- <div class="indent">
-                <div class="box-item" id="reply-0">
-                    <div class="box-item__main-content" id={{post.id}}>
-                        
-                        {% if post.creator == user %}
-                        <a href="{% url 'profile' %}">
-                            <img src="{% static 'img/user-icon.png' %}" alt="user-icon">
-                        </a>
-                        {% else %}
-                        <img src="{% static 'img/user-icon.png' %}" alt="user-icon">
-                        {% endif %}
-                            
-                        <div class="box-item__content">
-                            <div id="box-item__content__header">
-                                <p class="font-bold">{{post.subject}}</p>
-                                <p>by 
-                                    <span>
-                                    {% if post.creator == user %}
-                                    <a href="{% url 'profile' %}">{{user_fullname}}</a>
-                                    {% else %}
-                                        {{post|get_creator}}
-                                    {% endif %}
-                                    </span>
-                                    - {{post.created_at}}
-                                </p>
-                                    
-                            </div>
-                            <div class="box-item__content__msg">{{post.msg|safe}}</div>
-                        </div>
-                    </div>
-                    <div class="box-item__content__footer">
-                        <a href="">Like</a>
-                        <div class="right"><a href="">Show Parent</a> | <a href="">Like</a> | <a href="">Reply</a></div>
-                    </div>
-                </div>
-            </div> -->
         </div>
     </div>
 </section>
+
+<!-- Modal -->
+<div class="modal fade" id="likersModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title w-100 text-center font-bold" id="exampleModalLongTitle">Likes</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        ...
+    </div>
+    </div>
+</div>
+</div>
 {% endblock %}
 {% block script %}
 <script src="{% static 'js/post.js' %}"></script>
