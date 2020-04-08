@@ -36,7 +36,7 @@ class GivenPostLike(models.Model):
 	
 
 	def __str__(self):
-		return '{0} gave {1} likes'.format(self.liker.username, self.post_like.quantity)
+		return '{0} gave 1 likes on post {1}'.format(self.liker.username, self.post_like.user_post.subject)
 
 class UserReply(models.Model):
 	subject = models.CharField(max_length=100)

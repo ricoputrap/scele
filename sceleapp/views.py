@@ -418,15 +418,18 @@ def unlike(request):
     data = request.POST
     like_type = data['like_type']
     obj_id = int(data['obj_id'])
+    new_quantity = 0
 
     if like_type == 'p':
         userpost = UserPost.objects.get(id=obj_id)
         postlike = PostLike.objects.get(user_post=userpost)
         if postlike.quantity > 1:
             postlike.quantity -= 1
+            postlike.save()
+            new_quantity = postlike.quantity
+            GivenPostLike.objects.get(liker=user, post_like=postlike).delete()
         else:
             postlike.delete()
         postlikes = PostLike.objects.filter(user_post=userpost)
-        print(postlikes)
     
-    return JsonResponse({'postlikes': 'x'})
+    return JsonResponse({'new_quantity': new_quantity})

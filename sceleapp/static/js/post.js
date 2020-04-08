@@ -83,17 +83,18 @@ $(document).ready(function() {
         },
         success: (data) => {
           console.log('sukses')
-          // var new_quantity = data['likes'].quantity;
-          // if (like_type === 'p'){
-          //   var like_counter = $('#post-item .likes-count');
-          // }
-          // else {
-          //   obj_attr = '#' + obj_id + ' .likes-count';
-          //   var like_counter = $(obj_attr);
-          // }
-          // updateLikeCounter(like_counter, new_quantity);
-          // obj.text('Unlike');
-          // obj.addClass('liked')
+          var new_quantity = data['new_quantity'];
+          console.log(new_quantity)
+          if (like_type === 'p'){
+            var like_counter = $('#post-item .likes-count');
+          }
+          else {
+            obj_attr = '#' + obj_id + ' .likes-count';
+            var like_counter = $(obj_attr);
+          }
+          updateLikeCounter(like_counter, new_quantity);
+          obj.text('Like');
+          obj.removeClass('liked')
         }
       });
     }
@@ -104,12 +105,19 @@ $(document).ready(function() {
      * @param {*} new_quantity the new quantity of likes earned on the post
      */
     function updateLikeCounter(like_counter, new_quantity) {
-      if (new_quantity > 1) {
-        like_counter.text(new_quantity + ' likes');
+      if (new_quantity > 0) {
+        if (new_quantity === 1) {
+          like_counter.text('1 like');
+        }
+        else {
+          like_counter.text(new_quantity + ' likes');
+        }
+        like_counter.removeClass('hidden');
       }
       else {
-        like_counter.text('1 like');
+        like_counter.text('0 like');
+        like_counter.addClass('hidden');
       }
-      like_counter.removeClass('hidden');
+      
     }
 });
