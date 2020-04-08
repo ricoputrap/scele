@@ -122,6 +122,10 @@
 </div>
 {% endblock %}
 {% block script %}
+<script>
+    var pic = "{% static 'img/user-icon.png' %}";
+    var profile_url = "{% url 'profile' %}";
+</script>
 <script src="{% static 'js/post.js' %}"></script>
 <script src="{% static 'js/bootstrap/jquery-3.4.1.min.js' %}"></script>
 {% endblock %}

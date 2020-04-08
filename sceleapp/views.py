@@ -447,9 +447,10 @@ def view_likers(request):
         userpost = UserPost.objects.get(id=obj_id)
         postlike = PostLike.objects.get(user_post=userpost)
         print('postlike: ', postlike)
-        recorded_likes = list(GivenPostLike.objects.filter(post_like=postlike))
-        list_rec_likes_dict = dict()
+        recorded_likes = GivenPostLike.objects.filter(post_like=postlike)
+        likers = dict()
         for obj in recorded_likes:
-            rec = model_to_dict(obj)
-            list_rec_likes_dict[obj.id] = rec
-    return JsonResponse({'response': list_rec_likes_dict})
+            liker = obj.liker.get_full_name()
+            # rec = model_to_dict(obj)
+            likers[obj.id] = liker
+    return JsonResponse({'response': likers})

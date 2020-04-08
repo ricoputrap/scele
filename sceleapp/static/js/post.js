@@ -141,6 +141,18 @@ $(document).ready(function() {
         },
         success: (data) => {
           console.log(data['response'])
+          var likers = data['response']
+          var content = "";
+          $.each(likers, function(key, val) {
+            content += '<div class="liker-item">' + 
+                          '<a href="#">' +
+                          // '<a href="' + profile_url + '">' +
+                            '<img src="' + pic + '" alt="user-icon">' +
+                          '</a>' +
+                          '<p>' + val + '</p>' +
+                        '</div>';
+          });
+          $('.modal-body').html(content);
           // var new_quantity = data['likes'].quantity;
           // if (like_type === 'p'){
           //   var like_counter = $('#post-item .likes-count');
