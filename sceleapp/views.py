@@ -450,18 +450,23 @@ def view_likers(request):
     is_gamified = Gamification.objects.first().is_gamified
     data = request.POST
     like_type = data['like_type']
-    print('like_type: ', like_type)
-    print('obj id: ', data['obj_id'])
     obj_id = int(data['obj_id'])
+    likers = dict()
 
     if like_type == 'p':
         userpost = UserPost.objects.get(id=obj_id)
         postlike = PostLike.objects.get(user_post=userpost)
-        print('postlike: ', postlike)
         recorded_likes = GivenPostLike.objects.filter(post_like=postlike)
-        likers = dict()
         for obj in recorded_likes:
             liker = obj.liker.get_full_name()
             # rec = model_to_dict(obj)
             likers[obj.id] = liker
+    else:
+        userreply = UserReply.objects.get(id=obj_id)
+        replylike = ReplyLike.objects.get(user_reply=userreply)
+        recorded_likes = GivenReplyLike.objects.filter(reply_like=replylike)
+        for obj in recorded_likes:
+            liker = obj.liker.get_full_name()
+            likers[obj.id] = liker
+
     return JsonResponse({'response': likers})

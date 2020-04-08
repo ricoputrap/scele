@@ -136,11 +136,11 @@ def get_reply_box(reply, active_user):
     tags += '<div class="box-item__content__footer">'
 
     if total_likes > 1:
-        likes_counter = '<a href="" class="likes-count" id="postliker" data-obj_id="' + str(reply.obj.id) + '" data-toggle="modal" data-target="#likersModal">' + str(total_likes) + ' likes</a>'
+        likes_counter = '<a href="" class="likes-count" data-obj_id="' + str(reply.obj.id) + '" data-toggle="modal" data-target="#likersModal">' + str(total_likes) + ' likes</a>'
     elif total_likes == 1:
-        likes_counter = '<a href="" class="likes-count" id="postliker" data-obj_id="' + str(reply.obj.id) + '" data-toggle="modal" data-target="#likersModal">1 like</a>'
+        likes_counter = '<a href="" class="likes-count" data-obj_id="' + str(reply.obj.id) + '" data-toggle="modal" data-target="#likersModal">1 like</a>'
     else:
-        likes_counter = '<a href="" class="likes-count hidden" id="postliker" data-obj_id="' + str(reply.obj.id) + '" data-toggle="modal" data-target="#likersModal">0 like</a>'
+        likes_counter = '<a href="" class="likes-count hidden" data-obj_id="' + str(reply.obj.id) + '" data-toggle="modal" data-target="#likersModal">0 like</a>'
     
     tags += likes_counter + '<div class="right"><a href="#'
 
