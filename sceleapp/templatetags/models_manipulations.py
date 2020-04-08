@@ -108,9 +108,6 @@ def get_reply_box(reply, active_user):
     except ObjectDoesNotExist:
         total_likes = 0
         user_has_liked = False
-    print(reply.obj)
-    print('total: ', total_likes)
-    print('has liked: ', user_has_liked)
 
     tags = '<div class="box-item" id="' + str(reply.comp_id) + '">' + \
                 '<div class="box-item__main-content">'
@@ -136,9 +133,16 @@ def get_reply_box(reply, active_user):
             '<div class="box-item__content__msg">' + str(reply.obj.msg) + '</div></div></div>'
 
     # footer
-    tags += '<div class="box-item__content__footer">' + \
-                '<a href="" class="likes-count">Like</a>' + \
-                '<div class="right"><a href="#'
+    tags += '<div class="box-item__content__footer">'
+
+    if total_likes > 1:
+        likes_counter = '<a href="" class="likes-count" id="postliker" data-obj_id="' + str(reply.obj.id) + '" data-toggle="modal" data-target="#likersModal">' + str(total_likes) + ' likes</a>'
+    elif total_likes == 1:
+        likes_counter = '<a href="" class="likes-count" id="postliker" data-obj_id="' + str(reply.obj.id) + '" data-toggle="modal" data-target="#likersModal">1 like</a>'
+    else:
+        likes_counter = '<a href="" class="likes-count hidden" id="postliker" data-obj_id="' + str(reply.obj.id) + '" data-toggle="modal" data-target="#likersModal">0 like</a>'
+    
+    tags += likes_counter + '<div class="right"><a href="#'
 
     if type(parent) is UserPost:
         tags += 'post-item'
@@ -146,8 +150,14 @@ def get_reply_box(reply, active_user):
         parent_comp_id = 'rep-' + str(reply.lv - 1) + '-' + str(parent.id)
         tags += parent_comp_id
     
-    tags += '">Show Parent</a> | <a href="" class="btn-like" data-obj_id="' + str(reply.obj.id) + '">Like</a> | <a href="' + str(reply_url) + '">Reply</a></div>' + \
-            '</div></div>'
+    tags += '">Show Parent</a> | '
+
+    if user_has_liked:
+        btn_like = '<a href="" class="btn-like liked" id="postlike" data-obj_id="' + str(reply.obj.id) + '">Unlike</a>'
+    else:
+        btn_like = '<a href="" class="btn-like" id="postlike" data-obj_id="' + str(reply.obj.id) + '">Like</a>'
+    
+    tags += btn_like + ' | <a href="' + str(reply_url) + '">Reply</a></div></div></div>'
     
     for i in range(reply.lv):
         tags = add_indent(tags)
