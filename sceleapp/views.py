@@ -418,6 +418,7 @@ def unlike(request):
     is_gamified = Gamification.objects.first().is_gamified
     data = request.POST
     like_type = data['like_type']
+    print('type: ', like_type)
     obj_id = int(data['obj_id'])
     new_quantity = 0
 
@@ -431,7 +432,16 @@ def unlike(request):
             GivenPostLike.objects.get(liker=user, post_like=postlike).delete()
         else:
             postlike.delete()
-        postlikes = PostLike.objects.filter(user_post=userpost)
+    else:
+        userreply = UserReply.objects.get(id=obj_id)
+        replylike = ReplyLike.objects.get(user_reply=userreply)
+        if replylike.quantity > 1:
+            replylike.quantity -= 1
+            replylike.save()
+            new_quantity = replylike.quantity
+            GivenReplyLike.objects.get(liker=user, reply_like=replylike).delete()
+        else:
+            replylike.delete()
     
     return JsonResponse({'new_quantity': new_quantity})
 

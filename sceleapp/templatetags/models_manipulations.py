@@ -153,9 +153,9 @@ def get_reply_box(reply, active_user):
     tags += '">Show Parent</a> | '
 
     if user_has_liked:
-        btn_like = '<a href="" class="btn-like liked" id="postlike" data-obj_id="' + str(reply.obj.id) + '">Unlike</a>'
+        btn_like = '<a href="" class="btn-like liked" data-obj_id="' + str(reply.obj.id) + '">Unlike</a>'
     else:
-        btn_like = '<a href="" class="btn-like" id="postlike" data-obj_id="' + str(reply.obj.id) + '">Like</a>'
+        btn_like = '<a href="" class="btn-like" data-obj_id="' + str(reply.obj.id) + '">Like</a>'
     
     tags += btn_like + ' | <a href="' + str(reply_url) + '">Reply</a></div></div></div>'
     
