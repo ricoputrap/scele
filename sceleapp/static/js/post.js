@@ -21,6 +21,28 @@ $(document).ready(function() {
       return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
     }
 
+    $('.btn-like').click(function(e) {
+      e.preventDefault();
+      var like_type = 'r';
+      if ($(this).is('#postlike')) {
+        like_type = 'p';
+      }
+      var obj_id = $(this).data('obj_id');
+      if ($(this).is('.liked')){
+        console.log('has liked');
+      }
+      else {
+        addlike($(this), like_type, obj_id);
+      }
+      
+    });
+
+    /**
+     * Add a like on a post/reply
+     * @param {*} obj the html element that was clicked: anchor tag on 'Like"
+     * @param {*} like_type the type of the element that was liked: p (post) or r (reply)
+     * @param {*} obj_id the ID of a like anchor & the box item
+     */
     function addlike(obj, like_type, obj_id){
       $.ajax({
         url: 'addlike/',
@@ -35,35 +57,35 @@ $(document).ready(function() {
         success: (data) => {
           var new_quantity = data['likes'].quantity;
           if (like_type === 'p'){
-            if (new_quantity > 1) {
-              $('#post-item .likes-count').text(new_quantity + ' likes');
-            }
-            else {
-              $('#post-item .likes-count').text('1 like');
-            }
-            $('#post-item .likes-count').removeClass('hidden');
+            var like_counter = $('#post-item .likes-count');
           }
           else {
-
+            obj_attr = '#' + obj_id + ' .likes-count';
+            var like_counter = $(obj_attr);
           }
+          updateLikeCounter(like_counter, new_quantity);
           obj.text('Unlike');
           obj.addClass('liked')
         }
       });
     }
 
-    $('.btn-like').click(function(e) {
-      e.preventDefault();
-      if ($(this).is('.liked')){
-        console.log('has liked');
-        return;
+    function unlike(obj, like_type, obj_id) {
+      
+    }
+
+    /**
+     * update the like counter of a post/reply box
+     * @param {*} like_counter the like counter displayed on the left-bottom corner of the box
+     * @param {*} new_quantity the new quantity of likes earned on the post
+     */
+    function updateLikeCounter(like_counter, new_quantity) {
+      if (new_quantity > 1) {
+        like_counter.text(new_quantity + ' likes');
       }
-      var like_type = 'r';
-      if ($(this).is('#postlike')) {
-        like_type = 'p';
+      else {
+        like_counter.text('1 like');
       }
-      var obj_id = $(this).data('obj_id');
-      console.log(obj_id)
-      addlike($(this), like_type, obj_id);
-    });
+      like_counter.removeClass('hidden');
+    }
 });

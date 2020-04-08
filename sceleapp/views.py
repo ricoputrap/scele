@@ -257,7 +257,7 @@ class Reply:
         self.obj = obj
         self.lv = lv
         self.parent = parent
-        self.comp_id = 'rep-' + str(lv) + '-' + str(obj.id)
+        self.comp_id = str(obj.id)
 
 def get_replies(all_replies, parent, lv):
     if type(parent) is UserPost:

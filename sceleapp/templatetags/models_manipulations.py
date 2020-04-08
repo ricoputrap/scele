@@ -119,7 +119,7 @@ def get_reply_box(reply, active_user):
 
     # footer
     tags += '<div class="box-item__content__footer">' + \
-                '<a href="">Like</a>' + \
+                '<a href="" class="likes-count">Like</a>' + \
                 '<div class="right"><a href="#'
 
     if type(parent) is UserPost:
