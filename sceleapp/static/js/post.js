@@ -140,7 +140,7 @@ $(document).ready(function() {
           }
         },
         success: (data) => {
-          console.log(data)
+          console.log(data['response'])
           // var new_quantity = data['likes'].quantity;
           // if (like_type === 'p'){
           //   var like_counter = $('#post-item .likes-count');
