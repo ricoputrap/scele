@@ -33,7 +33,7 @@ class PostLike(models.Model):
 class GivenPostLike(models.Model):
 	liker = models.ForeignKey(User, on_delete=models.CASCADE) # liker gak mungkin dihapus
 	post_like = models.ForeignKey(PostLike, on_delete=models.CASCADE)
-	pk = models.UniqueConstraint(fields=['liker', 'post_like'], name='given_post_like_pk')
+	
 
 	def __str__(self):
 		return '{0} gave {1} likes'.format(self.liker.username, self.post_like.quantity)
@@ -66,7 +66,7 @@ class ReplyLike(models.Model):
 class GivenReplyLike(models.Model):
 	liker = models.ForeignKey(User, on_delete=models.CASCADE) # liker gak mungkin dihapus
 	reply_like = models.ForeignKey(ReplyLike, on_delete=models.CASCADE)
-	pk = models.UniqueConstraint(fields=['liker', 'reply_like'], name='given_reply_like_pk')
+	
 
 	def __str__(self):
 		return '{0} gave {1} likes'.format(self.liker, self.reply_like.quantity)
