@@ -48,6 +48,18 @@ $(document).ready(function() {
             else {
               $('.likes-count').text('1 like');
             }
+            console.log('type: ' + like_type);
+            if (like_type === 'p'){
+              if (new_quantity > 1) {
+                $('#post-item .likes-count').text(new_quantity + ' likes');
+              }
+              else {
+                $('#post-item .likes-count').text('1 like');
+              }
+            }
+            else {
+              
+            }
             $('.likes-count').removeClass('hidden');
             $(this).text('Unlike');
             $(this).addClass('liked')
