@@ -93,51 +93,67 @@ def view_profile(request):
             'user_fullname': user.get_full_name(), 
             'is_gamified': is_gamified})
 
+def count_postlikes_earned(user):
+    postlikes_earned_count = 0
+    userposts = UserPost.objects.filter(creator=user)
+    for post in userposts:
+        try:
+            postlikes_earned_count += PostLike.objects.get(user_post=post).quantity
+        except ObjectDoesNotExist:
+            continue
+    return postlikes_earned_count
+
+def count_replylikes_earned(user):
+    replylikes_earned_count = 0
+    userreplies = UserReply.objects.filter(creator=user)
+    for reply in userreplies:
+        try:
+            replylikes_earned_count += ReplyLike.objects.get(user_reply=reply).quantity
+        except ObjectDoesNotExist:
+            continue
+    return replylikes_earned_count
+
+def populate_activity_results(user, context):
+    posts_count = UserPost.objects.filter(creator=user).count()
+    context['posts_count'] = posts_count
+
+    replies_count = UserReply.objects.filter(creator=user).count()
+    context['replies_count'] = replies_count
+
+    postlikes_given_count = GivenPostLike.objects.filter(liker=user).count()
+    replylikes_given_count = GivenReplyLike.objects.filter(liker=user).count()
+    likes_given_count = postlikes_given_count + replylikes_given_count
+    context['likes_given_count'] = likes_given_count
+
+    return context
+
 @login_required
 def view_course(request):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
     notifs = get_notif(user, is_gamified)
     new_notif_count = notifs.filter(is_new=True).count()
-    posts_count = UserPost.objects.filter(creator=user).count()
-    replies_count = UserReply.objects.filter(creator=user).count()
-    postlikes_given_count = GivenPostLike.objects.filter(liker=user).count()
-    replylikes_given_count = GivenReplyLike.objects.filter(liker=user).count()
-    likes_given_count = postlikes_given_count + replylikes_given_count
+
     context = {'logged_in': True, 'user': user, 
             'user_fullname': user.get_full_name(), 
             'is_gamified': is_gamified,
             'notifs': notifs,
-            'new_notif_count': new_notif_count,
-            'posts_count': posts_count,
-            'replies_count': replies_count,
-            'likes_given_count': likes_given_count}
+            'new_notif_count': new_notif_count}
+
+    context = populate_activity_results(user, context)
+
     if is_gamified:
         badges = UserBadge.objects.filter(owner=user)
         latest_badge = badges.last()
         context['badges'] = badges
         context['latest_badge'] = latest_badge
 
-        postlikes_earned_count = 0
-        userposts = UserPost.objects.filter(creator=user)
-        for post in userposts:
-            try:
-                postlikes_earned_count += PostLike.objects.get(user_post=post).quantity
-            except ObjectDoesNotExist:
-                continue
-        replylikes_earned_count = 0
-        userreplies = UserReply.objects.filter(creator=user)
-        for reply in userreplies:
-            try:
-                replylikes_earned_count += ReplyLike.objects.get(user_reply=reply).quantity
-            except ObjectDoesNotExist:
-                continue
+        postlikes_earned_count = count_postlikes_earned(user)
+        replylikes_earned_count = count_replylikes_earned(user)
         likes_earned_count = postlikes_earned_count + replylikes_earned_count
         context['likes_earned_count'] = likes_earned_count
         
-        return render(request, 'course.html', context)
-    else:
-        return render(request, 'course.html', context)
+    return render(request, 'course.html', context)
 
 @login_required
 def view_course_badges(request):
