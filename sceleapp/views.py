@@ -259,22 +259,6 @@ class Reply:
         self.parent = parent
         self.comp_id = 'rep-' + str(lv) + '-' + str(obj.id)
 
-def get_reply_box(reply, parent):
-    tags = '''
-        <div class="box-item" id={{reply.comp_id}}>
-            <div class="box-item__main-content">
-                {% if reply.obj.creator == user %}
-                    <a href="{% url \'profile\' %}">
-                        <img src="{% static 'img/user-icon.png' %}" alt="user-icon">
-                    </a>
-                {% else %}
-                    <img src="{% static 'img/user-icon.png' %}" alt="user-icon">
-                {% endif %}
-            </div>
-        </div>
-            '''
-    return tags
-
 def get_replies(all_replies, parent, lv):
     if type(parent) is UserPost:
         replies = UserReply.objects.filter(user_post=parent)
