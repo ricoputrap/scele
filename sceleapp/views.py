@@ -99,16 +99,42 @@ def view_course(request):
     is_gamified = Gamification.objects.first().is_gamified
     notifs = get_notif(user, is_gamified)
     new_notif_count = notifs.filter(is_new=True).count()
+    posts_count = UserPost.objects.filter(creator=user).count()
+    replies_count = UserReply.objects.filter(creator=user).count()
+    postlikes_given_count = GivenPostLike.objects.filter(liker=user).count()
+    replylikes_given_count = GivenReplyLike.objects.filter(liker=user).count()
+    likes_given_count = postlikes_given_count + replylikes_given_count
     context = {'logged_in': True, 'user': user, 
             'user_fullname': user.get_full_name(), 
             'is_gamified': is_gamified,
             'notifs': notifs,
-            'new_notif_count': new_notif_count}
+            'new_notif_count': new_notif_count,
+            'posts_count': posts_count,
+            'replies_count': replies_count,
+            'likes_given_count': likes_given_count}
     if is_gamified:
         badges = UserBadge.objects.filter(owner=user)
         latest_badge = badges.last()
         context['badges'] = badges
         context['latest_badge'] = latest_badge
+
+        postlikes_earned_count = 0
+        userposts = UserPost.objects.filter(creator=user)
+        for post in userposts:
+            try:
+                postlikes_earned_count += PostLike.objects.get(user_post=post).quantity
+            except ObjectDoesNotExist:
+                continue
+        replylikes_earned_count = 0
+        userreplies = UserReply.objects.filter(creator=user)
+        for reply in userreplies:
+            try:
+                replylikes_earned_count += ReplyLike.objects.get(user_reply=reply).quantity
+            except ObjectDoesNotExist:
+                continue
+        likes_earned_count = postlikes_earned_count + replylikes_earned_count
+        context['likes_earned_count'] = likes_earned_count
+        
         return render(request, 'course.html', context)
     else:
         return render(request, 'course.html', context)
