@@ -441,6 +441,7 @@ def view_likers(request):
     data = request.POST
     like_type = data['like_type']
     print('like_type: ', like_type)
+    print('obj id: ', data['obj_id'])
     obj_id = int(data['obj_id'])
 
     if like_type == 'p':
