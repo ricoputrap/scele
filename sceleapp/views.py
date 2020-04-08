@@ -113,17 +113,28 @@ def count_replylikes_earned(user):
             continue
     return replylikes_earned_count
 
-def populate_activity_results(user, context):
-    posts_count = UserPost.objects.filter(creator=user).count()
+def populate_activity_results(user, context, is_gamified):
+    posts = UserPost.objects.filter(creator=user, is_gamified=is_gamified)
+    posts_count = posts.count()
     context['posts_count'] = posts_count
 
-    replies_count = UserReply.objects.filter(creator=user).count()
+    replies = UserReply.objects.filter(creator=user, is_gamified=is_gamified)
+    replies_count = replies.count()
     context['replies_count'] = replies_count
 
-    postlikes_given_count = GivenPostLike.objects.filter(liker=user).count()
-    replylikes_given_count = GivenReplyLike.objects.filter(liker=user).count()
+    postlikes_given_count = GivenPostLike.objects.filter(liker=user, is_gamified=is_gamified).count()
+    replylikes_given_count = GivenReplyLike.objects.filter(liker=user, is_gamified=is_gamified).count()
     likes_given_count = postlikes_given_count + replylikes_given_count
     context['likes_given_count'] = likes_given_count
+
+    grades = 0
+    if posts_count > 0:
+        for post in posts:
+            grades += post.grade
+    if replies_count > 0:
+        for reply in replies:
+            grades += reply.grade
+    context['grades'] = grades
 
     return context
 
@@ -140,7 +151,7 @@ def view_course(request):
             'notifs': notifs,
             'new_notif_count': new_notif_count}
 
-    context = populate_activity_results(user, context)
+    context = populate_activity_results(user, context, is_gamified)
 
     if is_gamified:
         badges = UserBadge.objects.filter(owner=user)
@@ -331,7 +342,6 @@ def add_post(request):
             newPost.permalink = permalink
             newPost.is_gamified = is_gamified
             newPost.creator = user
-            print(newPost)
             newPost.save()
         return redirect('forum')
     else:
@@ -460,7 +470,6 @@ def unlike(request):
     is_gamified = Gamification.objects.first().is_gamified
     data = request.POST
     like_type = data['like_type']
-    print('type: ', like_type)
     obj_id = int(data['obj_id'])
     new_quantity = 0
 
