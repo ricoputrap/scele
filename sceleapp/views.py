@@ -411,3 +411,22 @@ def add_like(request):
         record_liker = record_replyliker(user, replylike)
         dict_replylike = model_to_dict(replylike)
         return JsonResponse({'likes': dict_replylike})
+
+def unlike(request):
+    user = request.user
+    is_gamified = Gamification.objects.first().is_gamified
+    data = request.POST
+    like_type = data['like_type']
+    obj_id = int(data['obj_id'])
+
+    if like_type == 'p':
+        userpost = UserPost.objects.get(id=obj_id)
+        postlike = PostLike.objects.get(user_post=userpost)
+        if postlike.quantity > 1:
+            postlike.quantity -= 1
+        else:
+            postlike.delete()
+        postlikes = PostLike.objects.filter(user_post=userpost)
+        print(postlikes)
+    
+    return JsonResponse({'postlikes': 'x'})

@@ -29,7 +29,7 @@ $(document).ready(function() {
       }
       var obj_id = $(this).data('obj_id');
       if ($(this).is('.liked')){
-        console.log('has liked');
+        unlike($(this), like_type, obj_id);
       }
       else {
         addlike($(this), like_type, obj_id);
@@ -71,7 +71,31 @@ $(document).ready(function() {
     }
 
     function unlike(obj, like_type, obj_id) {
-      
+      $.ajax({
+        url: 'unlike/',
+        data: {'like_type':like_type, 'obj_id':obj_id },
+        type: 'post',
+        dataType: 'json',
+        beforeSend: function(xhr, settings) {
+          if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+              xhr.setRequestHeader("X-CSRFToken", csrftoken);
+          }
+        },
+        success: (data) => {
+          console.log('sukses')
+          // var new_quantity = data['likes'].quantity;
+          // if (like_type === 'p'){
+          //   var like_counter = $('#post-item .likes-count');
+          // }
+          // else {
+          //   obj_attr = '#' + obj_id + ' .likes-count';
+          //   var like_counter = $(obj_attr);
+          // }
+          // updateLikeCounter(like_counter, new_quantity);
+          // obj.text('Unlike');
+          // obj.addClass('liked')
+        }
+      });
     }
 
     /**
