@@ -1,8 +1,9 @@
 from django import template
-from sceleapp.models import UserPost, UserReply
+from sceleapp.models import UserPost, UserReply, ReplyLike, GivenReplyLike
 from django.templatetags.static import static
 from django.shortcuts import redirect
 from django.urls import reverse
+from django.core.exceptions import ObjectDoesNotExist
 
 register = template.Library()
 
@@ -84,6 +85,14 @@ def get_post(reply):
     else:
         return get_post(reply.host_reply)
 
+def has_liked(user, reply):
+    replylike = ReplyLike.objects.get(user_reply=reply)
+    try:
+        user_has_liked = GivenReplyLike.objects.get(reply_like=replylike, liker=user)
+        return True
+    except ObjectDoesNotExist:
+        return False
+
 def get_reply_box(reply, active_user):
     profile_url = reverse('profile')
     profile_img = static('img/user-icon.png')
@@ -93,6 +102,15 @@ def get_reply_box(reply, active_user):
     parent = reply.parent
     post = get_post(reply.obj)
     reply_url = reverse('addreply', kwargs={'post_id': post.id, 'parent_type': '1', 'parent_id': reply.obj.id})
+    try:
+        total_likes = ReplyLike.objects.get(user_reply=reply.obj).quantity
+        user_has_liked = has_liked(active_user, reply.obj)
+    except ObjectDoesNotExist:
+        total_likes = 0
+        user_has_liked = False
+    print(reply.obj)
+    print('total: ', total_likes)
+    print('has liked: ', user_has_liked)
 
     tags = '<div class="box-item" id="' + str(reply.comp_id) + '">' + \
                 '<div class="box-item__main-content">'
