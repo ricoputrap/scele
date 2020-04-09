@@ -104,6 +104,7 @@ def get_reply_box(reply, active_user):
     parent = reply.parent
     post = get_post(reply.obj)
     reply_url = reverse('addreply', kwargs={'post_id': post.id, 'parent_type': '1', 'parent_id': reply.obj.id})
+    edit_reply_url = reverse('edit-reply', kwargs={'id': reply.obj.id})
     try:
         total_likes = ReplyLike.objects.get(user_reply=reply.obj).quantity
         user_has_liked = has_liked(active_user, reply.obj)
@@ -160,7 +161,7 @@ def get_reply_box(reply, active_user):
         tags += '<a href="" class="btn-like" data-obj_id="' + str(reply.obj.id) + '">Like</a> | '
     
     if is_updateable(reply.obj):
-        tags += '<a href="" class="btn-edit" data-obj_id="' + str(reply.obj.id) + '">Edit</a> | ' + \
+        tags += '<a href="' + str(edit_reply_url) + '" class="btn-edit" data-obj_id="' + str(reply.obj.id) + '">Edit</a> | ' + \
                         '<a href="" class="btn-delete" data-obj_id="' + str(reply.obj.id) + '">Delete</a> | '
 
     tags += '<a href="' + str(reply_url) + '">Reply</a></div></div></div>'
