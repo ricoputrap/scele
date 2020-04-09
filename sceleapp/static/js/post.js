@@ -168,6 +168,13 @@ $(document).ready(function() {
       });
     }
 
+    // EDIT ITEM
+    $('.btn-edit').click(function(e){
+      e.preventDefault();
+      if ($(this).is('#postedit')) {
+        window.location.replace(edit_post_url);
+      }
+    });
 
     $('.btn-delete').click(function(e){
       e.preventDefault();
