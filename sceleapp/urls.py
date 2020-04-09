@@ -14,6 +14,7 @@ urlpatterns = [
     path('forum/addpost/', views.add_post, name="addpost"),
     path('forum/post/<id>', views.view_post, name="post"),
     path('forum/post/edit/<id>', views.edit_post, name="edit-post"),
+    path('forum/reply/edit/<id>', views.edit_reply, name="edit-reply"),
     path('forum/deleteitem/', views.delete_item, name="deleteitem"),
     path('forum/addreply/<post_id>/<parent_type>/<parent_id>', views.add_reply, name="addreply"),
     path('forum/post/addlike/', views.add_like, name="addlike"),

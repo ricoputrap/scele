@@ -353,6 +353,43 @@ def add_post(request):
             'is_gamified': is_gamified,
             'form': form})
 
+def get_post(reply):
+    if reply.user_post:
+        return reply.user_post
+    else:
+        return get_post(reply.host_reply)
+
+@login_required
+def edit_reply(request, id):
+    user = request.user
+    is_gamified = Gamification.objects.first().is_gamified
+    reply = UserReply.objects.get(id=id)
+    post = get_post(reply)
+    if reply.user_post:
+        parent = reply.user_post
+    else:
+        parent = reply.host_reply
+    
+    if request.method == 'POST':
+        form = UserReplyForm(request.POST)
+        if form.is_valid():
+            subject = form.cleaned_data.get('subject')
+            msg = form.cleaned_data.get('msg')
+            reply.subject = subject
+            reply.msg = msg
+            reply.save()
+        return redirect('post', id=post.id)
+    else:
+        form = UserReplyForm(instance=reply)
+        return render(request, 'edit-reply.html',
+            {'logged_in': True, 'user': user,
+            'user_fullname': user.get_full_name(),
+            'is_gamified': is_gamified,
+            'parent': parent,
+            'post': post,
+            'form': form})
+
+
 @login_required
 def add_reply(request, post_id, parent_type, parent_id):
     user = request.user
@@ -413,6 +450,7 @@ def edit_post(request, id):
             'user_fullname': user.get_full_name(),
             'is_gamified': is_gamified,
             'form': form})
+
 
 
 def delete_post(obj_id):
