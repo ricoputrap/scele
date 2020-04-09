@@ -155,12 +155,13 @@ def get_reply_box(reply, active_user):
     tags += '">Show Parent</a> | '
 
     if user_has_liked:
-        tags += '<a href="" class="btn-like liked" data-obj_id="' + str(reply.obj.id) + '">Unlike</a> |'
+        tags += '<a href="" class="btn-like liked" data-obj_id="' + str(reply.obj.id) + '">Unlike</a> | '
     else:
-        tags += '<a href="" class="btn-like" data-obj_id="' + str(reply.obj.id) + '">Like</a> |'
+        tags += '<a href="" class="btn-like" data-obj_id="' + str(reply.obj.id) + '">Like</a> | '
     
     if is_updateable(reply.obj):
-        tags += '<a href="" class="btn-delete" data-obj_id="' + str(reply.obj.id) + '">Delete</a> |'
+        tags += '<a href="" class="btn-edit" id="postedit" data-obj_id="' + str(reply.obj.id) + '">Edit</a> | ' + \
+                        '<a href="" class="btn-delete" data-obj_id="' + str(reply.obj.id) + '">Delete</a> | '
 
     tags += '<a href="' + str(reply_url) + '">Reply</a></div></div></div>'
     
