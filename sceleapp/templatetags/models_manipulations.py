@@ -4,6 +4,8 @@ from django.templatetags.static import static
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils import timezone
+from datetime import timedelta
 
 register = template.Library()
 
@@ -167,3 +169,10 @@ def get_reply_box(reply, active_user):
 @register.filter(name="list_size")
 def get_list_size(value):
     return len(value)
+
+@register.filter(name="is_updateable")
+def is_updateable(value):
+    now = timezone.now()
+    selisih = now - value.created_at
+    max_delta = timedelta(minutes=30)
+    return selisih <= max_delta

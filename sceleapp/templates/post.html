@@ -82,8 +82,10 @@
                             <a href="" class="btn-like" id="postlike" data-obj_id="{{post.id}}">Like</a>
                         {% endif %}
                         |
+                        {% if post|is_updateable %}
                         <a href="" class="btn-delete" id="postdelete" data-obj_id="{{post.id}}">Delete</a>
-                         | 
+                        |
+                        {% endif %}
                         <a href="{% url 'addreply' post_id=post.id parent_type='0' parent_id=post.id %}">Reply</a>
                     </div>
                 </div>
