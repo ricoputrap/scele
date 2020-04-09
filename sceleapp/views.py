@@ -392,6 +392,7 @@ def add_reply(request, post_id, parent_type, parent_id):
             'post': post,
             'form': form})
 
+@login_required
 def edit_post(request, id):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
@@ -413,6 +414,7 @@ def edit_post(request, id):
             'is_gamified': is_gamified,
             'form': form})
 
+
 def delete_post(obj_id):
     UserPost.objects.get(id=obj_id).delete()
     return JsonResponse({'response':'sukses'})
@@ -421,6 +423,7 @@ def delete_reply(obj_id):
     UserReply.objects.get(id=obj_id).delete()
     return JsonResponse({'response':'sukses'})
 
+@login_required
 def delete_item(request):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
@@ -469,6 +472,7 @@ def record_replyliker(liker, replylike):
     repliker_rec.save()
     return repliker_rec
 
+@login_required
 def add_like(request):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
@@ -507,6 +511,7 @@ def add_like(request):
         dict_replylike = model_to_dict(replylike)
         return JsonResponse({'likes': dict_replylike})
 
+@login_required
 def unlike(request):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
@@ -538,6 +543,7 @@ def unlike(request):
     
     return JsonResponse({'new_quantity': new_quantity})
 
+@login_required
 def view_likers(request):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
