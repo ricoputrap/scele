@@ -72,7 +72,9 @@
                 <div class="box-info__header">
                     <img src="{% static 'img/star-section-2-icon.png' %}" alt="notif-icon"/>
                     <h6 class="font-bold">Your latest badge</h6>
+                    {% if latest_badge %}
                     <a class="right"  href="{% url 'profile' %}">View all</a>
+                    {% endif %}
                 </div>
                 <hr>
                 {% if latest_badge %}
