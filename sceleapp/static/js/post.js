@@ -167,4 +167,34 @@ $(document).ready(function() {
         }
       });
     }
+
+
+    $('.btn-delete').click(function(e){
+      e.preventDefault();
+      var obj_id = $(this).data('obj_id');
+      if ($(this).is('#postdelete')) {
+        deletePost(obj_id)
+      }
+      else {
+
+      }
+    })
+
+    function deletePost(obj_id){
+      $.ajax({
+        url: del_post_url,
+        data: {'obj_id':obj_id },
+        type: 'post',
+        dataType: 'json',
+        beforeSend: function(xhr, settings) {
+          if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+              xhr.setRequestHeader("X-CSRFToken", csrftoken);
+          }
+        },
+        success: (data) => {
+          console.log(data)
+          window.location.replace(forum_url);
+        }
+      });
+    }
 });

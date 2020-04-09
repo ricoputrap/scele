@@ -81,6 +81,8 @@
                         {% else %}
                             <a href="" class="btn-like" id="postlike" data-obj_id="{{post.id}}">Like</a>
                         {% endif %}
+                        |
+                        <a href="" class="btn-delete" id="postdelete" data-obj_id="{{post.id}}">Delete</a>
                          | 
                         <a href="{% url 'addreply' post_id=post.id parent_type='0' parent_id=post.id %}">Reply</a>
                     </div>
@@ -116,6 +118,8 @@
 <script>
     var pic = "{% static 'img/user-icon.png' %}";
     var profile_url = "{% url 'profile' %}";
+    var del_post_url = "{% url 'deletepost' %}";
+    var forum_url = "{% url 'forum' %}";
 </script>
 <script src="{% static 'js/post.js' %}"></script>
 <script src="{% static 'js/bootstrap/jquery-3.4.1.min.js' %}"></script>

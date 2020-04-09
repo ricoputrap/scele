@@ -430,6 +430,14 @@ def record_replyliker(liker, replylike):
     repliker_rec.save()
     return repliker_rec
 
+def delete_post(request):
+    user = request.user
+    is_gamified = Gamification.objects.first().is_gamified
+    data = request.POST
+    obj_id = int(data['obj_id'])
+    UserPost.objects.get(id=obj_id).delete()
+    return JsonResponse({'response':'sukses'})
+
 def add_like(request):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
