@@ -172,18 +172,17 @@ $(document).ready(function() {
     $('.btn-delete').click(function(e){
       e.preventDefault();
       var obj_id = $(this).data('obj_id');
+      var item_type = 'r'
       if ($(this).is('#postdelete')) {
-        deletePost(obj_id)
+        item_type = 'p';
       }
-      else {
-
-      }
+      delete_item(obj_id, item_type)
     })
 
-    function deletePost(obj_id){
+    function delete_item(obj_id, item_type){
       $.ajax({
         url: del_post_url,
-        data: {'obj_id':obj_id },
+        data: {'obj_id':obj_id, 'item_type': item_type},
         type: 'post',
         dataType: 'json',
         beforeSend: function(xhr, settings) {
@@ -193,7 +192,12 @@ $(document).ready(function() {
         },
         success: (data) => {
           console.log(data)
-          window.location.replace(forum_url);
+          if (item_type === 'p') {
+            window.location.replace(forum_url);
+          }
+          else {
+            window.location.replace(post_url);
+          }
         }
       });
     }
