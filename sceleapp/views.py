@@ -406,11 +406,12 @@ def has_liked_post(user, post):
     except ObjectDoesNotExist:
         return False
 
-def create_new_postlike(userpost, isgamified):
+def create_new_postlike(user, userpost, isgamified):
     postlike = PostLike()
     postlike.user_post = userpost
     postlike.quantity = 1
     postlike.is_gamified = isgamified
+    postlike.post_owner = user
     return postlike
 
 def record_postliker(liker, postlike):
@@ -420,11 +421,12 @@ def record_postliker(liker, postlike):
     postliker_rec.save()
     return postliker_rec
 
-def create_new_replylike(userreply, isgamified):
+def create_new_replylike(user, userreply, isgamified):
     replylike = ReplyLike()
     replylike.user_reply = userreply
     replylike.quantity = 1
     replylike.is_gamified = isgamified
+    replylike.reply_owner = user
     return replylike
 
 def record_replyliker(liker, replylike):
@@ -449,9 +451,9 @@ def add_like(request):
                 postlike = postlikes.get(user_post=userpost)
                 postlike.quantity += 1
             except ObjectDoesNotExist:
-                postlike = create_new_postlike(userpost, is_gamified)
+                postlike = create_new_postlike(user, userpost, is_gamified)
         else:
-            postlike = create_new_postlike(userpost, is_gamified)
+            postlike = create_new_postlike(user, userpost, is_gamified)
         postlike.save()
         record_liker = record_postliker(user, postlike)
         dict_postlike = model_to_dict(postlike)
@@ -464,9 +466,9 @@ def add_like(request):
                 replylike = replylikes.get(user_reply=userreply)
                 replylike.quantity += 1
             except ObjectDoesNotExist:
-                replylike = create_new_replylike(userreply, is_gamified)
+                replylike = create_new_replylike(user, userreply, is_gamified)
         else:
-            replylike = create_new_replylike(userreply, is_gamified)
+            replylike = create_new_replylike(user, userreply, is_gamified)
         replylike.save()
         record_liker = record_replyliker(user, replylike)
         dict_replylike = model_to_dict(replylike)

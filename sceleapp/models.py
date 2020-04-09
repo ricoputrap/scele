@@ -40,7 +40,7 @@ class PostLike(models.Model):
 	user_post = models.OneToOneField(UserPost, on_delete=models.SET_NULL, null=True, blank=True)
 	quantity = models.IntegerField()
 	is_gamified = models.BooleanField(default=False)
-	# post_owner = models.OneToOneField(User, on_delete=models.CASCADE, default=user_post.creator)
+	post_owner = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
 
 	def __str__(self):
 		if self.user_post:
@@ -77,7 +77,7 @@ class ReplyLike(models.Model):
 	user_reply = models.OneToOneField(UserReply, on_delete=models.SET_NULL, null=True, blank=True)
 	quantity = models.IntegerField()
 	is_gamified = models.BooleanField(default=False)
-	# reply_owner = models.OneToOneField(User, on_delete=models.CASCADE, default=user_reply.creator)
+	reply_owner = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
 
 	def __str__(self):
 		if self.user_reply is None:
