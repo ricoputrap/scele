@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    {% if is_gamified %}
+        <title>MPKT A Kelas Y - Forum: Edit post</title>
+    {% else %}
+        <title>MPKT A Kelas X - Forum: Edit post</title>
+    {% endif %}
+{% endblock %}
+{% block head %}
+    {{form.media}}
+    <link rel="stylesheet" href="{% static 'css/edit-post.css' %}">
+    <script src="{% static 'tinymce/tinymce.min.js' %}" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+          selector: '#msg',
+          setup: function(editor) {
+              editor.on('change', function(e) {
+                  editor.save();
+              });
+          }
+        });
+      </script>
+{% endblock %}
+{% block content %}
+<section id="editpost">
+    <div class="breadcrumb-menu">
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+        <p>></p>
+        {% if is_gamified %}
+        <a href="{% url 'course' %}">MPKT A Kelas Y</a>
+        {% else %}
+        <a href="{% url 'course' %}">MPKT A Kelas X</a>
+        {% endif %}
+        <p>></p>
+        <a href="{% url 'forum' %}">Forum</a>
+        <p>></p>
+        <p>Edit post</p>
+    </div>
+    <div class="content font-open-sans">
+        <h2 class="font-bold">Forum</h2>
+        <h4 class="font-bold">Edit your post</h4>
+        <hr>
+        <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="row row-input">
+                    <div class="col-1">
+                        <label class="font-semi-bold" for="{{ field.name }}">{{ field.label }}<span>*</span></label>
+                    </div>
+                    <div class="col-11">
+                        {{ field }}   
+                    </div>
+                </div>
+                {% for error in field.errors %}
+                    <p style="color: red">{{ error }}</p>
+                {% endfor %}
+            {% endfor %}
+            <div class="btn-area">
+                <button type="submit" class="btn btn--green ">Post to forum</button>
+                <a href="{% url 'forum' %}" class="btn btn--red ">Cancel</a>
+            </div>
+            <p class="footer-required">There are required fields in this form marked by <span>*</span></p>
+        </form>
+    </div>
+</section>
+{% endblock %}

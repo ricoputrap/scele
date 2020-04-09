@@ -392,6 +392,45 @@ def add_reply(request, post_id, parent_type, parent_id):
             'post': post,
             'form': form})
 
+def edit_post(request, id):
+    user = request.user
+    is_gamified = Gamification.objects.first().is_gamified
+    post = UserPost.objects.get(id=id)
+    if request.method == 'POST':
+        form = UserPostForm(request.POST)
+        if form.is_valid():
+            subject = form.cleaned_data.get('subject')
+            msg = form.cleaned_data.get('msg')
+            post.subject = subject
+            post.msg = msg
+            post.save()
+        return redirect('post', id=id)
+    else:
+        form = UserPostForm(instance=post)
+        return render(request, 'edit-post.html', 
+            {'logged_in': True, 'user': user,
+            'user_fullname': user.get_full_name(),
+            'is_gamified': is_gamified,
+            'form': form})
+
+def delete_post(obj_id):
+    UserPost.objects.get(id=obj_id).delete()
+    return JsonResponse({'response':'sukses'})
+
+def delete_reply(obj_id):
+    UserReply.objects.get(id=obj_id).delete()
+    return JsonResponse({'response':'sukses'})
+
+def delete_item(request):
+    user = request.user
+    is_gamified = Gamification.objects.first().is_gamified
+    data = request.POST
+    obj_id = int(data['obj_id'])
+    item_type = data['item_type']
+    if item_type == 'p':
+        return delete_post(obj_id)
+    return delete_reply(obj_id)
+
 def has_liked_post(user, post):
     postlike = PostLike.objects.get(user_post=post)
     try:
@@ -429,24 +468,6 @@ def record_replyliker(liker, replylike):
     repliker_rec.reply_like = replylike
     repliker_rec.save()
     return repliker_rec
-
-def delete_post(obj_id):
-    UserPost.objects.get(id=obj_id).delete()
-    return JsonResponse({'response':'sukses'})
-
-def delete_reply(obj_id):
-    UserReply.objects.get(id=obj_id).delete()
-    return JsonResponse({'response':'sukses'})
-
-def delete_item(request):
-    user = request.user
-    is_gamified = Gamification.objects.first().is_gamified
-    data = request.POST
-    obj_id = int(data['obj_id'])
-    item_type = data['item_type']
-    if item_type == 'p':
-        return delete_post(obj_id)
-    return delete_reply(obj_id)
 
 def add_like(request):
     user = request.user
