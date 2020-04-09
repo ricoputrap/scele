@@ -102,22 +102,16 @@ def view_profile(request):
 
 def count_postlikes_earned(user):
     postlikes_earned_count = 0
-    userposts = UserPost.objects.filter(creator=user)
-    for post in userposts:
-        try:
-            postlikes_earned_count += PostLike.objects.get(user_post=post).quantity
-        except ObjectDoesNotExist:
-            continue
+    postlikes = PostLike.objects.filter(post_owner=user)
+    for postlike in postlikes:
+        postlikes_earned_count += postlike.quantity
     return postlikes_earned_count
 
 def count_replylikes_earned(user):
     replylikes_earned_count = 0
-    userreplies = UserReply.objects.filter(creator=user)
-    for reply in userreplies:
-        try:
-            replylikes_earned_count += ReplyLike.objects.get(user_reply=reply).quantity
-        except ObjectDoesNotExist:
-            continue
+    replylikes = ReplyLike.objects.filter(reply_owner=user)
+    for replylike in replylikes:
+        replylikes_earned_count += replylike.quantity
     return replylikes_earned_count
 
 def populate_activity_results(user, context, is_gamified):
