@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Gamification, UserPost, PostLike, GivenPostLike, UserReply, ReplyLike, GivenReplyLike, Notif, ReplyNotif, LikeNotif, Badge, UserBadge
+from .models import Gamification, UserPost, PostLike, GivenPostLike, UserReply, ReplyLike, GivenReplyLike, Notif, ReplyNotif, LikeNotif, Badge, UserBadge, UserParticipation
 
 # Register your models here.
 admin.site.register(Gamification)
@@ -14,3 +14,4 @@ admin.site.register(ReplyNotif)
 admin.site.register(LikeNotif)
 admin.site.register(Badge)
 admin.site.register(UserBadge)
+admin.site.register(UserParticipation)

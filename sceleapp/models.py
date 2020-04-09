@@ -4,6 +4,20 @@ import uuid
 
 # Create your models here.
 
+
+class UserParticipation(models.Model):
+	user = models.OneToOneField(User, on_delete=models.CASCADE)
+	has_posted = models.BooleanField(default=False)
+	has_replied = models.BooleanField(default=False)
+	has_liked = models.BooleanField(default=False)
+	has_been_liked_3_times = models.BooleanField(default=False) 
+
+	class Meta:
+		ordering = ['user']
+
+	def __str__(self):
+		return "Participation of {0}: [has_posted: {1}, has_replied: {2}, has_liked: {3}, has_been_liked_3_times: {4}]".format(self.user.first_name, self.has_posted, self.has_replied, self.has_liked, self.has_been_liked_3_times)
+	
 class Gamification(models.Model):
 	is_gamified = models.BooleanField(default=False)
 
@@ -26,9 +40,13 @@ class PostLike(models.Model):
 	user_post = models.OneToOneField(UserPost, on_delete=models.SET_NULL, null=True, blank=True)
 	quantity = models.IntegerField()
 	is_gamified = models.BooleanField(default=False)
+	# post_owner = models.OneToOneField(User, on_delete=models.CASCADE, default=user_post.creator)
 
 	def __str__(self):
-		return '{0} likes on post "{1}"'.format(self.quantity, self.user_post.subject)
+		if self.user_post:
+			return '{0} likes on post "{1}"'.format(self.quantity, self.user_post.subject)
+		else:
+			return '{0} likes on post'.format(self.quantity)
 
 class GivenPostLike(models.Model):
 	liker = models.ForeignKey(User, on_delete=models.CASCADE) # liker gak mungkin dihapus
@@ -36,7 +54,7 @@ class GivenPostLike(models.Model):
 	is_gamified = models.BooleanField(default=False)
 
 	def __str__(self):
-		return '{0} gave 1 likes on post {1}'.format(self.liker.username, self.post_like.user_post.subject)
+		return '{0} gave {1}likes'.format(self.liker.username, self.post_like.quantity)
 
 class UserReply(models.Model):
 	subject = models.CharField(max_length=100)
@@ -59,9 +77,13 @@ class ReplyLike(models.Model):
 	user_reply = models.OneToOneField(UserReply, on_delete=models.SET_NULL, null=True, blank=True)
 	quantity = models.IntegerField()
 	is_gamified = models.BooleanField(default=False)
+	# reply_owner = models.OneToOneField(User, on_delete=models.CASCADE, default=user_reply.creator)
 
 	def __str__(self):
-		return '{0} likes for reply {1}'.format(self.quantity, self.user_reply.subject)
+		if self.user_reply is None:
+			return '{0} likes for reply NULL'.format(self.quantity)
+		else:
+			return '{0} likes for reply {1}'.format(self.quantity, self.user_reply.subject)
 
 class GivenReplyLike(models.Model):
 	liker = models.ForeignKey(User, on_delete=models.CASCADE) # liker gak mungkin dihapus
