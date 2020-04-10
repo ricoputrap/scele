@@ -4,6 +4,15 @@ import uuid
 
 # Create your models here.
 
+class UserActivity(models.Model):
+	user = models.OneToOneField(User, on_delete=models.CASCADE)
+	post_count = models.IntegerField(default=0)
+	reply_count = models.IntegerField(default=0)
+	likes_given_count = models.IntegerField(default=0)
+	likes_earned_count = models.IntegerField(default=0)
+	grades = models.IntegerField(default=0)
+	bonuses = models.IntegerField(default=0)
+
 
 class UserParticipation(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)

@@ -60,7 +60,6 @@ def initiate_user_participation_obj(user):
     participation = UserParticipation()
     participation.user = user
     participation.save()
-    print('participation: ', participation)
 
 # sourcecode: https://simpleisbetterthancomplex.com/tutorial/2017/02/18/how-to-create-user-sign-up-view.html
 def register(request):
@@ -296,13 +295,10 @@ def get_deepest_replies(deepest_replies, rep):
 def view_post(request, id):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
-    print('gamified: ', is_gamified)
     post_id = int(id)
     post = UserPost.objects.get(id=post_id)
     try:
         total_likes = PostLike.objects.get(user_post=post, is_gamified=is_gamified).quantity
-        print('postlike: ', PostLike.objects.get(user_post=post, is_gamified=is_gamified))
-        print('likes: ', total_likes)
         user_has_liked = has_liked_post(user, post)
     except ObjectDoesNotExist:
         total_likes = 0
@@ -535,7 +531,6 @@ def has_liked_post(user, post):
     postlike = PostLike.objects.get(user_post=post)
     try:
         user_has_liked = GivenPostLike.objects.get(post_like=postlike, liker=user)
-        print('has liked gamified: ', user_has_liked.is_gamified)
         return True
     except ObjectDoesNotExist:
         return False
@@ -576,7 +571,6 @@ def record_replyliker(liker, replylike):
 def add_like(request):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
-    print('add like gamified: ', is_gamified)
     data = request.POST
     like_type = data['like_type']
     obj_id = int(data['obj_id'])
@@ -587,14 +581,11 @@ def add_like(request):
         if postlikes:
             try:
                 postlike = postlikes.get(user_post=userpost)
-                print('ada postlike gamified: ', postlike.is_gamified)
                 postlike.quantity += 1
             except ObjectDoesNotExist:
                 postlike = create_new_postlike(user, userpost, is_gamified)
-                print('gak ada postlike gam: ', postlike.is_gamified)
         else:
             postlike = create_new_postlike(user, userpost, is_gamified)
-            print('postlike baru gam: ', postlike.is_gamified)
         postlike.save()
 
         user_participation = UserParticipation.objects.get(user=user)
