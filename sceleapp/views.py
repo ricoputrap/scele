@@ -607,7 +607,9 @@ def add_like(request):
         else:
             replylike = create_new_replylike(user, userreply, is_gamified)
         replylike.save()
-        update_user_participation(user, 'lr', userreply)
+        user_participation = UserParticipation.objects.get(user=user)
+        if not user_participation.has_liked:
+            update_user_participation(user, 'lr', userreply)
         record_liker = record_replyliker(user, replylike)
         dict_replylike = model_to_dict(replylike)
         return JsonResponse({'likes': dict_replylike})
