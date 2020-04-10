@@ -103,16 +103,20 @@ def view_profile(request):
 def count_postlikes_earned(user):
     postlikes_earned_count = 0
     postlikes = PostLike.objects.filter(post_owner=user)
-    for postlike in postlikes:
-        postlikes_earned_count += postlike.quantity
-    return postlikes_earned_count
+    if postlikes.count() > 0:
+        for postlike in postlikes:
+            postlikes_earned_count += postlike.quantity
+        return postlikes_earned_count
+    return 0
 
 def count_replylikes_earned(user):
     replylikes_earned_count = 0
     replylikes = ReplyLike.objects.filter(reply_owner=user)
-    for replylike in replylikes:
-        replylikes_earned_count += replylike.quantity
-    return replylikes_earned_count
+    if replylikes.count() > 0:
+        for replylike in replylikes:
+            replylikes_earned_count += replylike.quantity
+        return replylikes_earned_count
+    return 0
 
 def populate_activity_results(user, context, is_gamified):
     posts = UserPost.objects.filter(creator=user, is_gamified=is_gamified)
@@ -138,6 +142,9 @@ def populate_activity_results(user, context, is_gamified):
     context['grades'] = grades
 
     return context
+
+# def has_first_3_likes(user):
+    
 
 @login_required
 def view_course(request):
@@ -327,6 +334,43 @@ def get_replies(all_replies, parent, lv):
             get_replies(all_replies, rep, lv+1)
     return all_replies
 
+# ('p', 'Create a post'),
+# ('r', 'Create a reply'),
+# ('l', 'Give a like'),
+# ('n', 'Receive 3 likes'),
+
+def assign_user_badge(code, user):
+    user_badge = UserBadge()
+    badge = Badge.objects.get(code=code)
+    user_badge.owner = user
+    user_badge.badge = badge
+    return user_badge
+
+def update_user_participation(user, activity_type, obj):
+    user_participation = UserParticipation.objects.get(user=user)
+    if activity_type == 'p':
+        user_participation.has_posted = True
+        user_badge = assign_user_badge('p1', user)
+        user_badge.user_post = obj
+    elif activity_type == 'r':
+        user_participation.has_replied = True
+        user_badge = assign_user_badge('p2', user)
+        user_badge.user_reply = obj
+    elif activity_type == 'lp':
+        user_participation.has_liked = True
+        user_badge = assign_user_badge('p3', user)
+        user_badge.user_post = obj
+    elif activity_type == 'lr':
+        user_participation.has_liked = True
+        user_badge = assign_user_badge('p3', user)
+        user_badge.user_reply = obj
+    else:
+        user_participation.has_been_liked_3_times = True
+        user_badge = assign_user_badge('p4', user)
+        # TODO: kasih link ke <= 3 post/reply doi yg dpt pertama kali like dari orang lain
+    user_participation.save()
+    user_badge.save()
+
 @login_required
 def add_post(request):
     user = request.user
@@ -344,6 +388,9 @@ def add_post(request):
             newPost.is_gamified = is_gamified
             newPost.creator = user
             newPost.save()
+            user_participation = UserParticipation.objects.get(user=user)
+            if not user_participation.has_posted:
+                update_user_participation(user, 'p', newPost)
         return redirect('forum')
     else:
         form = UserPostForm()
@@ -358,37 +405,6 @@ def get_post(reply):
         return reply.user_post
     else:
         return get_post(reply.host_reply)
-
-@login_required
-def edit_reply(request, id):
-    user = request.user
-    is_gamified = Gamification.objects.first().is_gamified
-    reply = UserReply.objects.get(id=id)
-    post = get_post(reply)
-    if reply.user_post:
-        parent = reply.user_post
-    else:
-        parent = reply.host_reply
-    
-    if request.method == 'POST':
-        form = UserReplyForm(request.POST)
-        if form.is_valid():
-            subject = form.cleaned_data.get('subject')
-            msg = form.cleaned_data.get('msg')
-            reply.subject = subject
-            reply.msg = msg
-            reply.save()
-        return redirect('post', id=post.id)
-    else:
-        form = UserReplyForm(instance=reply)
-        return render(request, 'edit-reply.html',
-            {'logged_in': True, 'user': user,
-            'user_fullname': user.get_full_name(),
-            'is_gamified': is_gamified,
-            'parent': parent,
-            'post': post,
-            'form': form})
-
 
 @login_required
 def add_reply(request, post_id, parent_type, parent_id):
@@ -417,6 +433,9 @@ def add_reply(request, post_id, parent_type, parent_id):
             else:
                 newRep.host_reply = UserReply.objects.get(id=parent_id)
             newRep.save()
+            user_participation = UserParticipation.objects.get(user=user)
+            if not user_participation.has_replied:
+                update_user_participation(user, 'r', newRep)
         return redirect('post', id=post.id)
     else:
         form = UserReplyForm()
@@ -451,7 +470,35 @@ def edit_post(request, id):
             'is_gamified': is_gamified,
             'form': form})
 
-
+@login_required
+def edit_reply(request, id):
+    user = request.user
+    is_gamified = Gamification.objects.first().is_gamified
+    reply = UserReply.objects.get(id=id)
+    post = get_post(reply)
+    if reply.user_post:
+        parent = reply.user_post
+    else:
+        parent = reply.host_reply
+    
+    if request.method == 'POST':
+        form = UserReplyForm(request.POST)
+        if form.is_valid():
+            subject = form.cleaned_data.get('subject')
+            msg = form.cleaned_data.get('msg')
+            reply.subject = subject
+            reply.msg = msg
+            reply.save()
+        return redirect('post', id=post.id)
+    else:
+        form = UserReplyForm(instance=reply)
+        return render(request, 'edit-reply.html',
+            {'logged_in': True, 'user': user,
+            'user_fullname': user.get_full_name(),
+            'is_gamified': is_gamified,
+            'parent': parent,
+            'post': post,
+            'form': form})
 
 def delete_post(obj_id):
     UserPost.objects.get(id=obj_id).delete()
@@ -530,6 +577,11 @@ def add_like(request):
         else:
             postlike = create_new_postlike(user, userpost, is_gamified)
         postlike.save()
+
+        user_participation = UserParticipation.objects.get(user=user)
+        if not user_participation.has_liked:
+            update_user_participation(user, 'lp', userpost)
+        
         record_liker = record_postliker(user, postlike)
         dict_postlike = model_to_dict(postlike)
         return JsonResponse({'likes': dict_postlike})
@@ -545,6 +597,7 @@ def add_like(request):
         else:
             replylike = create_new_replylike(user, userreply, is_gamified)
         replylike.save()
+        update_user_participation(user, 'lr', userreply)
         record_liker = record_replyliker(user, replylike)
         dict_replylike = model_to_dict(replylike)
         return JsonResponse({'likes': dict_replylike})
