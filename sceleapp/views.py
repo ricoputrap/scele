@@ -143,8 +143,10 @@ def populate_activity_results(user, context, is_gamified):
 
     return context
 
-# def has_first_3_likes(user):
-    
+def has_first_3_likes(user):
+    return count_postlikes_earned(user) + count_replylikes_earned(user) >= 3
+
+
 
 @login_required
 def view_course(request):
@@ -345,6 +347,13 @@ def assign_user_badge(code, user):
     user_badge.owner = user
     user_badge.badge = badge
     return user_badge
+
+def update_user_participation_has_been_liked(user):
+    user_participation = UserParticipation.objects.get(user=user)
+    if not user_participation.has_been_liked_3_times:
+        if has_first_3_likes(user):
+            user_participation.has_been_liked_3_times = True
+            assign_user_badge('p4', user)
 
 def update_user_participation(user, activity_type, obj):
     user_participation = UserParticipation.objects.get(user=user)
