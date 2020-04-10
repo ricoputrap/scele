@@ -296,10 +296,13 @@ def get_deepest_replies(deepest_replies, rep):
 def view_post(request, id):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
+    print('gamified: ', is_gamified)
     post_id = int(id)
     post = UserPost.objects.get(id=post_id)
     try:
-        total_likes = PostLike.objects.get(user_post=post).quantity
+        total_likes = PostLike.objects.get(user_post=post, is_gamified=is_gamified).quantity
+        print('postlike: ', PostLike.objects.get(user_post=post, is_gamified=is_gamified))
+        print('likes: ', total_likes)
         user_has_liked = has_liked_post(user, post)
     except ObjectDoesNotExist:
         total_likes = 0
@@ -532,6 +535,7 @@ def has_liked_post(user, post):
     postlike = PostLike.objects.get(user_post=post)
     try:
         user_has_liked = GivenPostLike.objects.get(post_like=postlike, liker=user)
+        print('has liked gamified: ', user_has_liked.is_gamified)
         return True
     except ObjectDoesNotExist:
         return False
@@ -541,13 +545,14 @@ def create_new_postlike(user, userpost, isgamified):
     postlike.user_post = userpost
     postlike.quantity = 1
     postlike.is_gamified = isgamified
-    postlike.post_owner = user
+    # postlike.post_owner = user
     return postlike
 
 def record_postliker(liker, postlike):
     postliker_rec = GivenPostLike()
     postliker_rec.liker = liker
     postliker_rec.post_like = postlike
+    postliker_rec.is_gamified = postlike.is_gamified
     postliker_rec.save()
     return postliker_rec
 
@@ -556,13 +561,14 @@ def create_new_replylike(user, userreply, isgamified):
     replylike.user_reply = userreply
     replylike.quantity = 1
     replylike.is_gamified = isgamified
-    replylike.reply_owner = user
+    # replylike.reply_owner = user
     return replylike
 
 def record_replyliker(liker, replylike):
     repliker_rec = GivenReplyLike()
     repliker_rec.liker = liker
     repliker_rec.reply_like = replylike
+    repliker_rec.is_gamified = replylike.is_gamified
     repliker_rec.save()
     return repliker_rec
 
@@ -570,6 +576,7 @@ def record_replyliker(liker, replylike):
 def add_like(request):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
+    print('add like gamified: ', is_gamified)
     data = request.POST
     like_type = data['like_type']
     obj_id = int(data['obj_id'])
@@ -580,11 +587,14 @@ def add_like(request):
         if postlikes:
             try:
                 postlike = postlikes.get(user_post=userpost)
+                print('ada postlike gamified: ', postlike.is_gamified)
                 postlike.quantity += 1
             except ObjectDoesNotExist:
                 postlike = create_new_postlike(user, userpost, is_gamified)
+                print('gak ada postlike gam: ', postlike.is_gamified)
         else:
             postlike = create_new_postlike(user, userpost, is_gamified)
+            print('postlike baru gam: ', postlike.is_gamified)
         postlike.save()
 
         user_participation = UserParticipation.objects.get(user=user)
