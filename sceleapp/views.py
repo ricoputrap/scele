@@ -606,13 +606,10 @@ def add_like(request):
     if like_type == 'p':
         userpost = UserPost.objects.get(id=obj_id)
         postlikes = PostLike.objects.all()
-        if postlikes:
-            try:
-                postlike = postlikes.get(user_post=userpost)
-                postlike.quantity += 1
-            except ObjectDoesNotExist:
-                postlike = create_new_postlike(user, userpost, is_gamified)
-        else:
+        try:
+            postlike = PostLike.objects.all().get(user_post=userpost)
+            postlike.quantity += 1
+        except ObjectDoesNotExist:
             postlike = create_new_postlike(user, userpost, is_gamified)
         postlike.save()
         update_user_activity_record(user, 'lga')
@@ -627,14 +624,12 @@ def add_like(request):
     else:
         userreply = UserReply.objects.get(id=obj_id)
         replylikes = ReplyLike.objects.all()
-        if replylikes:
-            try:
-                replylike = replylikes.get(user_reply=userreply)
-                replylike.quantity += 1
-            except ObjectDoesNotExist:
-                replylike = create_new_replylike(user, userreply, is_gamified)
-        else:
+        try:
+            replylike = replylikes.get(user_reply=userreply)
+            replylike.quantity += 1
+        except ObjectDoesNotExist:
             replylike = create_new_replylike(user, userreply, is_gamified)
+        
         replylike.save()
         update_user_activity_record(user, 'lga')
         user_participation = UserParticipation.objects.get(user=user)
