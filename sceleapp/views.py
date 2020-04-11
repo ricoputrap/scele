@@ -147,7 +147,8 @@ def populate_activity_results(user, context, is_gamified):
     return context
 
 def has_first_3_likes(user):
-    return count_postlikes_earned(user) + count_replylikes_earned(user) >= 3
+    user_activity = UserActivity.objects.get(user=user)
+    return user_activity.likes_earned_count >= 3
 
 
 
@@ -372,7 +373,7 @@ def update_user_participation_has_been_liked(user):
             user_participation.has_been_liked_3_times = True
             assign_user_badge('p4', user)
 
-def update_user_participation(user, activity_type, obj):
+def update_user_participation(user, activity_type, obj=None):
     user_participation = UserParticipation.objects.get(user=user)
     if activity_type == 'p':
         user_participation.has_posted = True
@@ -647,6 +648,11 @@ def add_like(request):
         user_participation = UserParticipation.objects.get(user=user)
         if not user_participation.has_liked:
             update_user_participation(user, 'lp', userpost)
+
+        # update whether user has been liked 3 times
+        if not user_participation.has_been_liked_3_times:
+            if has_first_3_likes(user):
+                update_user_participation(user, 'liked')
         
         record_liker = record_postliker(user, postlike)
         dict_postlike = model_to_dict(postlike)
