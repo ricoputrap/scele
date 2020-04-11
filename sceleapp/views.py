@@ -385,15 +385,21 @@ def update_user_participation(user, activity_type, obj):
 
 def update_user_activity_record(user, activity_type):
     activity = UserActivity.objects.get(user=user)
-    if activity_type == 'p':
+    if activity_type == 'ap':       # add post
         activity.post_count += 1
-    elif activity_type == 'r':
+    elif activity_type == 'dp':     # delete post
+        activity.reply_count -= 1
+    elif activity_type == 'ar':     # add reply
         activity.reply_count += 1
-    elif activity_type == 'lga':
+    elif activity_type == 'dr':     # delete reply
+        activity.reply_count -= 1
+    elif activity_type == 'lga':    # like give add
         activity.likes_given_count += 1
-    elif activity_type == 'lgs':
+    elif activity_type == 'lgs':    # like give sub (unlike)
         activity.likes_given_count -= 1
-    elif activity_type == 'le':
+    elif activity_type == 'lea':    # like earned add (has been liked)
+        activity.likes_earned_count += 1
+    elif activity_type == 'les':    # like earned sub (has been unliked)
         activity.likes_earned_count += 1
     activity.save()
 
