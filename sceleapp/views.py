@@ -389,8 +389,10 @@ def update_user_activity_record(user, activity_type):
         activity.post_count += 1
     elif activity_type == 'r':
         activity.reply_count += 1
-    elif activity_type == 'lg':
+    elif activity_type == 'lga':
         activity.likes_given_count += 1
+    elif activity_type == 'lgs':
+        activity.likes_given_count -= 1
     elif activity_type == 'le':
         activity.likes_earned_count += 1
     activity.save()
@@ -458,6 +460,7 @@ def add_reply(request, post_id, parent_type, parent_id):
             else:
                 newRep.host_reply = UserReply.objects.get(id=parent_id)
             newRep.save()
+            update_user_activity_record(user, 'r')
             user_participation = UserParticipation.objects.get(user=user)
             if not user_participation.has_replied:
                 update_user_participation(user, 'r', newRep)
@@ -604,6 +607,7 @@ def add_like(request):
         else:
             postlike = create_new_postlike(user, userpost, is_gamified)
         postlike.save()
+        update_user_activity_record(user, 'lga')
 
         user_participation = UserParticipation.objects.get(user=user)
         if not user_participation.has_liked:
@@ -624,6 +628,7 @@ def add_like(request):
         else:
             replylike = create_new_replylike(user, userreply, is_gamified)
         replylike.save()
+        update_user_activity_record(user, 'lga')
         user_participation = UserParticipation.objects.get(user=user)
         if not user_participation.has_liked:
             update_user_participation(user, 'lr', userreply)
@@ -660,6 +665,7 @@ def unlike(request):
             GivenReplyLike.objects.get(liker=user, reply_like=replylike).delete()
         else:
             replylike.delete()
+    update_user_activity_record(user, 'lgs')
     
     return JsonResponse({'new_quantity': new_quantity})
 
