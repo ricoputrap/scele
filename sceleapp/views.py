@@ -157,14 +157,16 @@ def view_course(request):
     is_gamified = Gamification.objects.first().is_gamified
     notifs = get_notif(user, is_gamified)
     new_notif_count = notifs.filter(is_new=True).count()
+    user_activity = UserActivity.objects.get(user=user)
 
     context = {'logged_in': True, 'user': user, 
             'user_fullname': user.get_full_name(), 
             'is_gamified': is_gamified,
             'notifs': notifs,
-            'new_notif_count': new_notif_count}
+            'new_notif_count': new_notif_count,
+            'user_activity': user_activity}
 
-    context = populate_activity_results(user, context, is_gamified)
+    # context = populate_activity_results(user, context, is_gamified)
 
     if is_gamified:
         badges = UserBadge.objects.filter(owner=user)
@@ -172,10 +174,10 @@ def view_course(request):
         context['badges'] = badges
         context['latest_badge'] = latest_badge
 
-        postlikes_earned_count = count_postlikes_earned(user)
-        replylikes_earned_count = count_replylikes_earned(user)
-        likes_earned_count = postlikes_earned_count + replylikes_earned_count
-        context['likes_earned_count'] = likes_earned_count
+        # postlikes_earned_count = count_postlikes_earned(user)
+        # replylikes_earned_count = count_replylikes_earned(user)
+        # likes_earned_count = postlikes_earned_count + replylikes_earned_count
+        # context['likes_earned_count'] = likes_earned_count
         
     return render(request, 'course.html', context)
 
@@ -325,6 +327,18 @@ class Reply:
         self.lv = lv
         self.parent = parent
         self.comp_id = str(obj.id)
+
+def get_all_replies(all_replies, parent):
+    if type(parent) is UserPost:
+        replies = UserReply.objects.filter(user_post=parent)
+    else:
+        replies = UserReply.objects.filter(host_reply=parent)
+    
+    for reply in replies:
+        all_replies.append(reply)
+        if has_replies(reply):
+            get_all_replies(all_replies, reply)
+    return all_replies
 
 def get_replies(all_replies, parent, lv):
     if type(parent) is UserPost:
@@ -534,8 +548,15 @@ def edit_reply(request, id):
             'post': post,
             'form': form})
 
-def delete_post(obj_id):
-    UserPost.objects.get(id=obj_id).delete()
+def delete_post(user, obj_id):
+    post = UserPost.objects.get(id=obj_id)
+    if has_replies(post):
+        all_replies = get_all_replies([], post)
+        reversed_replies = [rep for rep in reversed(all_replies)]
+        for rep in reversed_replies:
+            rep.delete()
+            update_user_activity_record(user, 'dr')
+    post.delete()
     return JsonResponse({'response':'sukses'})
 
 def delete_reply(obj_id):
@@ -551,7 +572,7 @@ def delete_item(request):
     item_type = data['item_type']
     if item_type == 'p':
         update_user_activity_record(user, 'dp')
-        return delete_post(obj_id)
+        return delete_post(user, obj_id)
     update_user_activity_record(user, 'dr')
     return delete_reply(obj_id)
 
