@@ -606,17 +606,23 @@ def add_like(request):
     if like_type == 'p':
         userpost = UserPost.objects.get(id=obj_id)
         postlikes = PostLike.objects.all()
+
+        # create/update postlike quantity
         try:
             postlike = PostLike.objects.all().get(user_post=userpost)
             postlike.quantity += 1
         except ObjectDoesNotExist:
             postlike = create_new_postlike(user, userpost, is_gamified)
         postlike.save()
+
+        # add user likes given
         update_user_activity_record(user, 'lga')
 
+        # add post_owner likes earned 
         post_owner = userpost.creator
         update_user_activity_record(post_owner, 'lea')
 
+        # update whether user has posted or not yet
         user_participation = UserParticipation.objects.get(user=user)
         if not user_participation.has_liked:
             update_user_participation(user, 'lp', userpost)
@@ -632,12 +638,19 @@ def add_like(request):
             replylike.quantity += 1
         except ObjectDoesNotExist:
             replylike = create_new_replylike(user, userreply, is_gamified)
-        
         replylike.save()
+        
         update_user_activity_record(user, 'lga')
+
+        # add reply_owner likes earned
+        reply_owner = userreply.creator
+        update_user_activity_record(reply_owner, 'lea')
+
+        # update whether user has replied or not yet
         user_participation = UserParticipation.objects.get(user=user)
         if not user_participation.has_liked:
             update_user_participation(user, 'lr', userreply)
+
         record_liker = record_replyliker(user, replylike)
         dict_replylike = model_to_dict(replylike)
         return JsonResponse({'likes': dict_replylike})
@@ -650,10 +663,12 @@ def unlike(request):
     like_type = data['like_type']
     obj_id = int(data['obj_id'])
     new_quantity = 0
+    owner = None
 
     if like_type == 'p':
         userpost = UserPost.objects.get(id=obj_id)
         postlike = PostLike.objects.get(user_post=userpost)
+        owner = userpost.creator
         if postlike.quantity > 1:
             postlike.quantity -= 1
             postlike.save()
@@ -664,6 +679,7 @@ def unlike(request):
     else:
         userreply = UserReply.objects.get(id=obj_id)
         replylike = ReplyLike.objects.get(user_reply=userreply)
+        owner = userreply.creator
         if replylike.quantity > 1:
             replylike.quantity -= 1
             replylike.save()
@@ -672,6 +688,7 @@ def unlike(request):
         else:
             replylike.delete()
     update_user_activity_record(user, 'lgs')
+    update_user_activity_record(owner, 'les')
     
     return JsonResponse({'new_quantity': new_quantity})
 
