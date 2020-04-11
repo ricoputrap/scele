@@ -15,7 +15,7 @@ from django.core import serializers
 
 from sceleapp.forms import RegisterForm, UserPostForm, UserReplyForm
 
-from sceleapp.models import Gamification, UserBadge, UserPost, UserReply, Badge, Notif, PostLike, GivenPostLike, ReplyLike, GivenReplyLike, UserParticipation
+from sceleapp.models import Gamification, UserBadge, UserPost, UserReply, Badge, Notif, PostLike, GivenPostLike, ReplyLike, GivenReplyLike, UserParticipation, UserActivity
 
 # Create your views here.
 
@@ -61,6 +61,11 @@ def initiate_user_participation_obj(user):
     participation.user = user
     participation.save()
 
+def initiate_user_activity_record(user):
+    activity = UserActivity()
+    activity.user = user
+    activity.save()
+
 # sourcecode: https://simpleisbetterthancomplex.com/tutorial/2017/02/18/how-to-create-user-sign-up-view.html
 def register(request):
     if request.user.is_authenticated:
@@ -71,6 +76,7 @@ def register(request):
             if form.is_valid():
                 user = form.save()
                 initiate_user_participation_obj(user)
+                initiate_user_activity_record(user)
                 # uname = form.cleaned_data.get('username')
                 # raw_password = form.cleaned_data.get('password1')
                 return redirect('login')
