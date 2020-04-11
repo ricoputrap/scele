@@ -106,12 +106,14 @@
                         <tr>
                             <td>Posts</td>
                             <td>:</td>
-                            <td>{{posts_count}}</td>
+                            <td>{{user_activity.post_count}}</td>
+                            <!-- <td>{{posts_count}}</td> -->
                         </tr>
                         <tr>
                             <td>Replies</td>
                             <td>:</td>
-                            <td>{{replies_count}}</td>
+                            <td>{{user_activity.reply_count}}</td>
+                            <!-- <td>{{replies_count}}</td> -->
                         </tr>
                         <tr>
                             <td class="white">A</td>
@@ -122,12 +124,14 @@
                         <tr>
                             <td>Likes given</td>
                             <td>:</td>
-                            <td>{{likes_given_count}}</td>
+                            <td>{{user_activity.likes_given_count}}</td>
+                            <!-- <td>{{likes_given_count}}</td> -->
                         </tr>
                         <tr>
                             <td>Likes earned</td>
                             <td>:</td>
-                            <td>{{likes_earned_count}}</td>
+                            <td>{{user_activity.likes_earned_count}}</td>
+                            <!-- <td>{{likes_earned_count}}</td> -->
                         </tr>
                         <tr>
                             <td class="white">A</td>
@@ -138,12 +142,14 @@
                         <tr>
                             <td>Grades</td>
                             <td>:</td>
-                            <td>{{grades}}</td>
+                            <td>{{user_activity.grades}}</td>
+                            <!-- <td>{{grades}}</td> -->
                         </tr>
                         <tr>
                             <td>Bonuses</td>
                             <td>:</td>
-                            <td>0</td>
+                            <td>{{user_activity.bonuses}}</td>
+                            <!-- <td>0</td> -->
                         </tr>
                     </table>
                     {% else %}
