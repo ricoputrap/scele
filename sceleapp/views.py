@@ -77,8 +77,6 @@ def register(request):
                 user = form.save()
                 initiate_user_participation_obj(user)
                 initiate_user_activity_record(user)
-                # uname = form.cleaned_data.get('username')
-                # raw_password = form.cleaned_data.get('password1')
                 return redirect('login')
         else:
             form = RegisterForm()
@@ -385,6 +383,18 @@ def update_user_participation(user, activity_type, obj):
     user_participation.save()
     user_badge.save()
 
+def update_user_activity_record(user, activity_type):
+    activity = UserActivity.objects.get(user=user)
+    if activity_type == 'p':
+        activity.post_count += 1
+    elif activity_type == 'r':
+        activity.reply_count += 1
+    elif activity_type == 'lg':
+        activity.likes_given_count += 1
+    elif activity_type == 'le':
+        activity.likes_earned_count += 1
+    activity.save()
+
 @login_required
 def add_post(request):
     user = request.user
@@ -402,6 +412,7 @@ def add_post(request):
             newPost.is_gamified = is_gamified
             newPost.creator = user
             newPost.save()
+            update_user_activity_record(user, 'p')
             user_participation = UserParticipation.objects.get(user=user)
             if not user_participation.has_posted:
                 update_user_participation(user, 'p', newPost)
