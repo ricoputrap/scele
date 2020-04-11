@@ -400,7 +400,7 @@ def update_user_activity_record(user, activity_type):
     elif activity_type == 'lea':    # like earned add (has been liked)
         activity.likes_earned_count += 1
     elif activity_type == 'les':    # like earned sub (has been unliked)
-        activity.likes_earned_count += 1
+        activity.likes_earned_count -= 1
     activity.save()
 
 @login_required
@@ -613,6 +613,9 @@ def add_like(request):
             postlike = create_new_postlike(user, userpost, is_gamified)
         postlike.save()
         update_user_activity_record(user, 'lga')
+
+        post_owner = userpost.creator
+        update_user_activity_record(post_owner, 'lea')
 
         user_participation = UserParticipation.objects.get(user=user)
         if not user_participation.has_liked:
