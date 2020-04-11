@@ -388,7 +388,7 @@ def update_user_activity_record(user, activity_type):
     if activity_type == 'ap':       # add post
         activity.post_count += 1
     elif activity_type == 'dp':     # delete post
-        activity.reply_count -= 1
+        activity.post_count -= 1
     elif activity_type == 'ar':     # add reply
         activity.reply_count += 1
     elif activity_type == 'dr':     # delete reply
@@ -420,7 +420,7 @@ def add_post(request):
             newPost.is_gamified = is_gamified
             newPost.creator = user
             newPost.save()
-            update_user_activity_record(user, 'p')
+            update_user_activity_record(user, 'ap')
             user_participation = UserParticipation.objects.get(user=user)
             if not user_participation.has_posted:
                 update_user_participation(user, 'p', newPost)
@@ -466,7 +466,7 @@ def add_reply(request, post_id, parent_type, parent_id):
             else:
                 newRep.host_reply = UserReply.objects.get(id=parent_id)
             newRep.save()
-            update_user_activity_record(user, 'r')
+            update_user_activity_record(user, 'ar')
             user_participation = UserParticipation.objects.get(user=user)
             if not user_participation.has_replied:
                 update_user_participation(user, 'r', newRep)
@@ -550,7 +550,9 @@ def delete_item(request):
     obj_id = int(data['obj_id'])
     item_type = data['item_type']
     if item_type == 'p':
+        update_user_activity_record(user, 'dp')
         return delete_post(obj_id)
+    update_user_activity_record(user, 'dr')
     return delete_reply(obj_id)
 
 def has_liked_post(user, post):
