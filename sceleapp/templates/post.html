@@ -65,23 +65,33 @@
                 </div>
                 <div class="box-item__content__footer">
                     
-                    {% if total_likes > 1 %}
-                    <a href="" class="likes-count" id="postliker" data-obj_id="{{post.id}}" data-toggle="modal" data-target="#likersModal">{{total_likes}} likes</a>
-                    {% elif total_likes == 1 %}
-                    <a href="" class="likes-count" id="postliker" data-obj_id="{{post.id}}" data-toggle="modal" data-target="#likersModal">1 like</a>
-                    {% else %}
-                    <a href="" class="likes-count hidden" id="postliker" data-obj_id="{{post.id}}" data-toggle="modal" data-target="#likersModal">0 like</a>
+                    {% if is_gamified %}
+                        {% if total_likes > 1 %}
+                        <a href="" class="likes-count" id="postliker" data-obj_id="{{post.id}}" data-toggle="modal" data-target="#likersModal">{{total_likes}} likes</a>
+                        {% elif total_likes == 1 %}
+                        <a href="" class="likes-count" id="postliker" data-obj_id="{{post.id}}" data-toggle="modal" data-target="#likersModal">1 like</a>
+                        {% else %}
+                        <a href="" class="likes-count hidden" id="postliker" data-obj_id="{{post.id}}" data-toggle="modal" data-target="#likersModal">0 like</a>
+                        {% endif %}
                     {% endif %}
                         
                     
-                    <div class="right">
                         
-                        {% if user_has_liked %}
-                            <a href="" class="btn-like liked" id="postlike" data-obj_id="{{post.id}}">Unlike</a>
-                        {% else %}
-                            <a href="" class="btn-like" id="postlike" data-obj_id="{{post.id}}">Like</a>
+                    
+                    {% if is_gamified %}
+                    <div class="right">
+                    {% else %}
+                    <div class="right push-up">
+                    {% endif %}
+                        {% if is_gamified %}
+                            {% if user_has_liked %}
+                                <a href="" class="btn-like liked" id="postlike" data-obj_id="{{post.id}}">Unlike</a>
+                            {% else %}
+                                <a href="" class="btn-like" id="postlike" data-obj_id="{{post.id}}">Like</a>
+                            {% endif %}
+                            |
                         {% endif %}
-                        |
+                        
                         {% if post|is_updateable %}
                         <a href="{% url 'edit-post' id=post.id %}" class="btn-edit" id="postedit" data-obj_id="{{post.id}}">Edit</a>
                         |
@@ -89,6 +99,8 @@
                         |
                         {% endif %}
                         <a href="{% url 'addreply' post_id=post.id parent_type='0' parent_id=post.id %}">Reply</a>
+                        
+                        
                     </div>
                 </div>
             </div>

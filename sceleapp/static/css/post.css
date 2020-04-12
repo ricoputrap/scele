@@ -65,8 +65,12 @@
     margin-bottom: 2rem;
 }
 
-.box-item__content__footer p {
+.box-item__content__footer a {
     display: inline;
+}
+
+.push-up {
+    margin-top: -1.5rem;
 }
 
 /* MODAL */
