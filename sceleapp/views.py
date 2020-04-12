@@ -26,6 +26,7 @@ def get_notif(user, is_gamified):
 @login_required
 def dashboard(request):
     user = request.user
+    update_user_participation_has_been_liked(user)
     is_gamified = Gamification.objects.first().is_gamified
     return render(request, 'dashboard.html', {'logged_in': True, 'user_fullname': user.get_full_name(), 'is_gamified': is_gamified})
 
@@ -377,6 +378,7 @@ def assign_user_badge(code, user):
 def update_user_participation_has_been_liked(user):
     user_participation = UserParticipation.objects.get(user=user)
     print(user_participation)
+    print('------------------------------')
     if not user_participation.has_been_liked_3_times:
         if has_first_3_likes(user):
             update_user_participation(user, 'liked')
@@ -570,10 +572,12 @@ def delete_post(user, obj_id):
             rep.delete()
             update_user_activity_record(user, 'dr')
     post.delete()
+    update_user_participation_has_been_liked(user)
     return JsonResponse({'response':'sukses'})
 
-def delete_reply(obj_id):
+def delete_reply(user, obj_id):
     UserReply.objects.get(id=obj_id).delete()
+    update_user_participation_has_been_liked(user)
     return JsonResponse({'response':'sukses'})
 
 @login_required
@@ -587,7 +591,7 @@ def delete_item(request):
         update_user_activity_record(user, 'dp')
         return delete_post(user, obj_id)
     update_user_activity_record(user, 'dr')
-    return delete_reply(obj_id)
+    return delete_reply(user, obj_id)
 
 def has_liked_post(user, post):
     postlike = PostLike.objects.get(user_post=post)
@@ -702,6 +706,8 @@ def add_like(request):
 @login_required
 def unlike(request):
     user = request.user
+    update_user_participation_has_been_liked(user)
+
     is_gamified = Gamification.objects.first().is_gamified
     data = request.POST
     like_type = data['like_type']
@@ -739,6 +745,8 @@ def unlike(request):
 @login_required
 def view_likers(request):
     user = request.user
+    update_user_participation_has_been_liked(user)
+
     is_gamified = Gamification.objects.first().is_gamified
     data = request.POST
     like_type = data['like_type']
@@ -760,5 +768,5 @@ def view_likers(request):
         for obj in recorded_likes:
             liker = obj.liker.get_full_name()
             likers[obj.id] = liker
-
+    
     return JsonResponse({'response': likers})
