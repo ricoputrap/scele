@@ -217,7 +217,7 @@ def view_forum(request):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
     update_user_participation_has_been_liked(user)
-    posts = list(UserPost.objects.all())
+    posts = list(UserPost.objects.filter(is_gamified=is_gamified))
     len_posts = len(posts)
     if len_posts > 0:
         sort_post(posts, 0, len_posts-1)
@@ -247,14 +247,14 @@ def swap(posts, i, j):
 def partition(posts, low, high):
     i = low - 1                     # index of smaller element
     pivot_post = posts[high]
-    if has_replies(pivot_post):
+    if has_replies(pivot_post, pivot_post.is_gamified):
         pivot = get_last_reply(pivot_post).created_at
     else:
         pivot = pivot_post.created_at
 
     for j in range(low, high):
         # If current element is smaller than or equal to pivot
-        if has_replies(posts[j]):
+        if has_replies(posts[j], posts[j].is_gamified):
             last_reply_created = get_last_reply(posts[j]).created_at
             if last_reply_created < pivot:
                 i += 1
@@ -280,11 +280,11 @@ def sort_post(posts, low, high):
         sort_post(posts, low, pi-1)
         sort_post(posts, pi+1, high)
     
-def has_replies(parent):
+def has_replies(parent, is_gamified):
     if type(parent) is UserPost:
-        replies = UserReply.objects.filter(user_post=parent)
+        replies = UserReply.objects.filter(user_post=parent, is_gamified=is_gamified)
     else:
-        replies = UserReply.objects.filter(host_reply=parent)
+        replies = UserReply.objects.filter(host_reply=parent, is_gamified=is_gamified)
     if replies.count() > 0:
         return True
     return False
@@ -315,6 +315,7 @@ def view_post(request, id):
     is_gamified = Gamification.objects.first().is_gamified
     update_user_participation_has_been_liked(user)
     post_id = int(id)
+    # try catch kalo post query dengan is_gamified tidak ditemukan -> error page
     post = UserPost.objects.get(id=post_id)
     try:
         total_likes = PostLike.objects.get(user_post=post, is_gamified=is_gamified).quantity
@@ -328,9 +329,9 @@ def view_post(request, id):
             'post': post,
             'total_likes': total_likes,
             'user_has_liked': user_has_liked}
-    if has_replies(post):
+    if has_replies(post, is_gamified):
         # reps = UserReply.objects.filter(user_post=post)
-        replies = get_replies([], post, 1)
+        replies = get_replies([], post, 1, is_gamified)
         context['replies'] = replies
     return render(request, 'post.html', context)
 
@@ -341,29 +342,29 @@ class Reply:
         self.parent = parent
         self.comp_id = str(obj.id)
 
-def get_all_replies(all_replies, parent):
+def get_all_replies(all_replies, parent, is_gamified):
     if type(parent) is UserPost:
-        replies = UserReply.objects.filter(user_post=parent)
+        replies = UserReply.objects.filter(user_post=parent, is_gamified=is_gamified)
     else:
-        replies = UserReply.objects.filter(host_reply=parent)
+        replies = UserReply.objects.filter(host_reply=parent, is_gamified=is_gamified)
     
     for reply in replies:
         all_replies.append(reply)
-        if has_replies(reply):
-            get_all_replies(all_replies, reply)
+        if has_replies(reply, reply.is_gamified):
+            get_all_replies(all_replies, reply, reply.is_gamified)
     return all_replies
 
-def get_replies(all_replies, parent, lv):
+def get_replies(all_replies, parent, lv, is_gamified):
     if type(parent) is UserPost:
-        replies = UserReply.objects.filter(user_post=parent)
+        replies = UserReply.objects.filter(user_post=parent, is_gamified=is_gamified)
     else:
-        replies = UserReply.objects.filter(host_reply=parent)
+        replies = UserReply.objects.filter(host_reply=parent, is_gamified=is_gamified)
     
     for rep in replies:
         reply = Reply(rep, lv, parent)
         all_replies.append(reply)
-        if has_replies(rep):
-            get_replies(all_replies, rep, lv+1)
+        if has_replies(rep, rep.is_gamified):
+            get_replies(all_replies, rep, lv+1, is_gamified)
     return all_replies
 
 # ('p', 'Create a post'),
@@ -568,8 +569,8 @@ def edit_reply(request, id):
 
 def delete_post(user, obj_id):
     post = UserPost.objects.get(id=obj_id)
-    if has_replies(post):
-        all_replies = get_all_replies([], post)
+    if has_replies(post, post.is_gamified):
+        all_replies = get_all_replies([], post, post.is_gamified)
         reversed_replies = [rep for rep in reversed(all_replies)]
         for rep in reversed_replies:
             rep.delete()
