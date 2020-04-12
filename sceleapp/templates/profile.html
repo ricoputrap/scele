@@ -104,12 +104,12 @@
                         <tr>
                             <td>Posts</td>
                             <td>:</td>
-                            <td>0</td>
+                            <td>{{user_activity.post_count}}</td>
                         </tr>
                         <tr>
                             <td>Replies</td>
                             <td>:</td>
-                            <td>0</td>
+                            <td>{{user_activity.reply_count}}</td>
                         </tr>
                         <tr>
                             <td class="white">A</td>
@@ -120,12 +120,12 @@
                         <tr>
                             <td>Likes given</td>
                             <td>:</td>
-                            <td>0</td>
+                            <td>{{user_activity.likes_given_count}}</td>
                         </tr>
                         <tr>
                             <td>Likes earned</td>
                             <td>:</td>
-                            <td>0</td>
+                            <td>{{user_activity.likes_earned_count}}</td>
                         </tr>
                         <tr>
                             <td class="white">A</td>
@@ -136,12 +136,12 @@
                         <tr>
                             <td>Grades</td>
                             <td>:</td>
-                            <td>0</td>
+                            <td>{{user_activity.grades}}</td>
                         </tr>
                         <tr>
                             <td>Bonuses</td>
                             <td>:</td>
-                            <td>0</td>
+                            <td>{{user_activity.bonuses}}</td>
                         </tr>
                     </table>
                     {% else %}
@@ -152,9 +152,9 @@
                             <p>Grades</p>
                         </div>
                         <div class="col-8">
-                            <p>: 0</p>
-                            <p>: 0</p>
-                            <p>: 0</p>
+                            <p>: {{user_activity.post_count}}</p>
+                            <p>: {{user_activity.reply_count}}</p>
+                            <p>: {{user_activity.likes_given_count}}/p>
                         </div>
                     </div>
                     {% endif %}

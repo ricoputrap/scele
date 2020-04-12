@@ -28,7 +28,11 @@ def dashboard(request):
     user = request.user
     update_user_participation_has_been_liked(user)
     is_gamified = Gamification.objects.first().is_gamified
-    return render(request, 'dashboard.html', {'logged_in': True, 'user_fullname': user.get_full_name(), 'is_gamified': is_gamified})
+    user_activity = UserActivity.objects.get(user=user)
+    context = { 'logged_in': True, 
+                'user_fullname': user.get_full_name(), 
+                'is_gamified': is_gamified}
+    return render(request, 'dashboard.html', context)
 
 def login(request):
     if request.user.is_authenticated:
@@ -88,22 +92,21 @@ def view_profile(request):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
     update_user_participation_has_been_liked(user)
+    user_activity = UserActivity.objects.get(user=user)
+    context = { 'logged_in': True, 'user': user, 
+                'user_fullname': user.get_full_name(), 
+                'is_gamified': is_gamified,
+                'user_activity': user_activity}
     if is_gamified:
         badges = UserBadge.objects.filter(owner=user)
         latest_badge = badges.last()
         reversed_badges = list(badges)
         reversed_badges.reverse()
-        return render(request, 'profile.html', 
-            {'logged_in': True, 'user': user, 
-            'user_fullname': user.get_full_name(), 
-            'is_gamified': is_gamified,
-            'badges': reversed_badges,
-            'latest_badge': latest_badge})
+        context['badges'] = reversed_badges
+        context['latest_badge'] = latest_badge
+        return render(request, 'profile.html', context)
     else:
-        return render(request, 'profile.html', 
-            {'logged_in': True, 'user': user, 
-            'user_fullname': user.get_full_name(), 
-            'is_gamified': is_gamified})
+        return render(request, 'profile.html', context)
 
 def count_postlikes_earned(user):
     postlikes_earned_count = 0
