@@ -69,8 +69,8 @@
     display: inline;
 }
 
-.push-up {
-    margin-top: -1.5rem;
+.extra-padding-bottom {
+    padding-bottom: 1.5rem;
 }
 
 /* MODAL */

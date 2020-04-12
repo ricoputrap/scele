@@ -37,7 +37,7 @@
             <tbody>
                 {% for post in posts %}
                     
-                    {% if post.is_gamified %}
+                    
                     <tr>
                         <td class="first-col">
                             <a href="{% url 'post' id=post.id %}">
@@ -74,8 +74,8 @@
                             </a>
                         </td>
                     </tr>
-                    {% endif %}
-                {% endfor %}   
+                    
+                {% endfor %}
             </tbody>
         </table>
         {% else %}

@@ -218,10 +218,12 @@ def view_forum(request):
     is_gamified = Gamification.objects.first().is_gamified
     update_user_participation_has_been_liked(user)
     posts = list(UserPost.objects.filter(is_gamified=is_gamified))
+    print('posts:', posts)
     len_posts = len(posts)
     if len_posts > 0:
         sort_post(posts, 0, len_posts-1)
         posts.reverse()
+        print('posts:', posts)
         return render(request, 'forum.html', 
             {'logged_in': True, 'user': user,
             'user_fullname': user.get_full_name(),

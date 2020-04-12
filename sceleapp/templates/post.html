@@ -63,7 +63,15 @@
                         <div class="box-item__content__msg">{{post.msg|safe}}</div>
                     </div>
                 </div>
-                <div class="box-item__content__footer">
+
+                
+                {% if is_gamified %}
+                    <div class="box-item__content__footer">
+                {% else %}
+                    <div class="box-item__content__footer extra-padding-bottom">
+                {% endif %}
+                    
+                
                     
                     {% if is_gamified %}
                         {% if total_likes > 1 %}
@@ -74,15 +82,8 @@
                         <a href="" class="likes-count hidden" id="postliker" data-obj_id="{{post.id}}" data-toggle="modal" data-target="#likersModal">0 like</a>
                         {% endif %}
                     {% endif %}
-                        
                     
-                        
-                    
-                    {% if is_gamified %}
                     <div class="right">
-                    {% else %}
-                    <div class="right push-up">
-                    {% endif %}
                         {% if is_gamified %}
                             {% if user_has_liked %}
                                 <a href="" class="btn-like liked" id="postlike" data-obj_id="{{post.id}}">Unlike</a>
