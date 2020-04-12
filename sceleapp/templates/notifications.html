@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    <title>Pemberitahuan</title>
+{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/notifications.css' %}">
+{% endblock %}
+
+
+{% block content %}
+<section id="notifs">
+    <div class="breadcrumb-menu font-open-sans">
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+        <p>></p>
+        <p>Pemberitahuan</p>
+    </div>
+    <div class="content">
+        <h2 class="font-bold">Forum</h2>
+        <hr>
+    </div>
+</section>
+{% endblock %}
+    

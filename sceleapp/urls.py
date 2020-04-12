@@ -20,4 +20,5 @@ urlpatterns = [
     path('forum/post/addlike/', views.add_like, name="addlike"),
     path('forum/post/unlike/', views.unlike, name="unlike"),
     path('forum/post/viewlikers/', views.view_likers, name="viewlikers"),
+    path('notifpage/', views.view_notification_page, name="notif-page"),
 ]
