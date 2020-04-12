@@ -137,7 +137,10 @@ def get_reply_box(reply, active_user):
             '<div class="box-item__content__msg">' + str(reply.obj.msg) + '</div></div></div>'
 
     # footer
-    tags += '<div class="box-item__content__footer">'
+    if is_gamified:
+        tags += '<div class="box-item__content__footer">'
+    else:
+        tags += '<div class="box-item__content__footer extra-padding-bottom">'
 
     if is_gamified:
         if total_likes > 1:
@@ -148,12 +151,7 @@ def get_reply_box(reply, active_user):
             likes_counter = '<a href="" class="likes-count hidden" data-obj_id="' + str(reply.obj.id) + '" data-toggle="modal" data-target="#likersModal">0 like</a>'
         tags += likes_counter
     
-    if is_gamified:
-        tags += '<div class="right">'
-    else:
-        tags += '<div class="right push-up">'
-
-    tags += '<a href="#'
+    tags += '<div class="right"><a href="#'
 
     if type(parent) is UserPost:
         tags += 'post-item'
