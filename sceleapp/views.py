@@ -86,6 +86,7 @@ def register(request):
 def view_profile(request):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
+    update_user_participation_has_been_liked(user)
     if is_gamified:
         badges = UserBadge.objects.filter(owner=user)
         latest_badge = badges.last()
@@ -156,6 +157,9 @@ def has_first_3_likes(user):
 def view_course(request):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
+
+    update_user_participation_has_been_liked(user)
+
     notifs = get_notif(user, is_gamified)
     new_notif_count = notifs.filter(is_new=True).count()
     user_activity = UserActivity.objects.get(user=user)
@@ -186,6 +190,7 @@ def view_course(request):
 def view_course_badges(request):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
+    update_user_participation_has_been_liked(user)
     badges = Badge.objects.all()
     return render(request, 'course-badges.html',
         {'logged_in': True, 'user': user,
@@ -197,6 +202,7 @@ def view_course_badges(request):
 def view_badge_detail(request, code):
     user = request.user
     badge = UserBadge.objects.get(owner=user, badge__code=code)
+    update_user_participation_has_been_liked(user)
     return render(request, 'badge-detail.html', 
         {'logged_in': True, 'user': user,
         'user_fullname': user.get_full_name(),
@@ -206,6 +212,7 @@ def view_badge_detail(request, code):
 def view_forum(request):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
+    update_user_participation_has_been_liked(user)
     posts = list(UserPost.objects.all())
     len_posts = len(posts)
     if len_posts > 0:
@@ -302,6 +309,7 @@ def get_deepest_replies(deepest_replies, rep):
 def view_post(request, id):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
+    update_user_participation_has_been_liked(user)
     post_id = int(id)
     post = UserPost.objects.get(id=post_id)
     try:
@@ -368,10 +376,10 @@ def assign_user_badge(code, user):
 
 def update_user_participation_has_been_liked(user):
     user_participation = UserParticipation.objects.get(user=user)
+    print(user_participation)
     if not user_participation.has_been_liked_3_times:
         if has_first_3_likes(user):
-            user_participation.has_been_liked_3_times = True
-            assign_user_badge('p4', user)
+            update_user_participation(user, 'liked')
 
 def update_user_participation(user, activity_type, obj=None):
     user_participation = UserParticipation.objects.get(user=user)
@@ -422,6 +430,7 @@ def update_user_activity_record(user, activity_type):
 def add_post(request):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
+    update_user_participation_has_been_liked(user)
     if request.method == 'POST':
         form = UserPostForm(request.POST)
         if form.is_valid():
@@ -458,6 +467,7 @@ def get_post(reply):
 def add_reply(request, post_id, parent_type, parent_id):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
+    update_user_participation_has_been_liked(user)
     post = UserPost.objects.get(id=post_id)
     if parent_type == '0':
         parent = UserPost.objects.get(id=parent_id)
@@ -501,6 +511,7 @@ def add_reply(request, post_id, parent_type, parent_id):
 def edit_post(request, id):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
+    update_user_participation_has_been_liked(user)
     post = UserPost.objects.get(id=id)
     if request.method == 'POST':
         form = UserPostForm(request.POST)
@@ -523,6 +534,7 @@ def edit_post(request, id):
 def edit_reply(request, id):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
+    update_user_participation_has_been_liked(user)
     reply = UserReply.objects.get(id=id)
     post = get_post(reply)
     if reply.user_post:
@@ -677,6 +689,11 @@ def add_like(request):
         user_participation = UserParticipation.objects.get(user=user)
         if not user_participation.has_liked:
             update_user_participation(user, 'lr', userreply)
+
+        # update whether user has been liked 3 times
+        if not user_participation.has_been_liked_3_times:
+            if has_first_3_likes(user):
+                update_user_participation(user, 'liked')
 
         record_liker = record_replyliker(user, replylike)
         dict_replylike = model_to_dict(replylike)
