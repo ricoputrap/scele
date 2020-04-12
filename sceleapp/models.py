@@ -5,7 +5,7 @@ import uuid
 # Create your models here.
 
 class UserActivity(models.Model):
-	user = models.OneToOneField(User, on_delete=models.CASCADE)
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	post_count = models.IntegerField(default=0)
 	reply_count = models.IntegerField(default=0)
 	likes_given_count = models.IntegerField(default=0)
