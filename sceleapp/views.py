@@ -416,6 +416,8 @@ def update_user_participation(user, activity_type, obj=None):
         user_participation.has_been_liked_3_times = True
         user_badge = assign_user_badge('p4', user)
         # TODO: kasih link ke <= 3 post/reply doi yg dpt pertama kali like dari orang lain
+        # kasih atribut created_at di tiap given_post_like & given_reply_like
+        # ambil masing2 3 item pertama, terus dari <= 6 itu ambil 3 pertama -> return 3 pertama tsb
     user_participation.save()
     user_badge.save()
 
