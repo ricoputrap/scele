@@ -1,0 +1,45 @@
+#notifs {
+    padding: 1rem 2rem;
+    color: #555;
+}
+
+.breadcrumb-menu a, .breadcrumb-menu p {
+    display: inline;
+    color: #7B5A60;
+}
+
+.content {
+    padding: 2rem 2rem 1rem;
+}
+
+.notif-item {
+    display: grid;
+    grid-template-columns: min-content auto;
+    padding: 0.4rem;
+    background-color: #EDF2FA;
+    border-bottom: solid 1px #DDDDDD;
+}
+
+.notif-item__img {
+    grid-row: 1 / span 2;
+    grid-column: 1;
+}
+
+.notif-item__img img {
+    max-width: 4rem;
+}
+
+.notif-item__details {
+    grid-column: 2;
+    padding: 0.2rem 1rem;
+}
+
+.notif-item__details p:first-of-type {
+    grid-row: 1;
+    margin-bottom: 0.4rem;
+}
+
+.notif-item__details p:last-of-type {
+    grid-row: 2;
+    margin-bottom: 0;
+}
