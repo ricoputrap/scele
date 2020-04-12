@@ -383,8 +383,6 @@ def assign_user_badge(code, user):
 
 def update_user_participation_has_been_liked(user):
     user_participation = UserParticipation.objects.get(user=user)
-    print(user_participation)
-    print('------------------------------')
     if not user_participation.has_been_liked_3_times:
         if has_first_3_likes(user):
             update_user_participation(user, 'liked')
@@ -414,8 +412,8 @@ def update_user_participation(user, activity_type, obj=None):
     user_participation.save()
     user_badge.save()
 
-def update_user_activity_record(user, activity_type):
-    activity = UserActivity.objects.get(user=user)
+def update_user_activity_record(user, activity_type, is_gamified):
+    activity = UserActivity.objects.get(user=user, is_gamified=is_gamified)
     if activity_type == 'ap':       # add post
         activity.post_count += 1
     elif activity_type == 'dp':     # delete post
@@ -452,7 +450,7 @@ def add_post(request):
             newPost.is_gamified = is_gamified
             newPost.creator = user
             newPost.save()
-            update_user_activity_record(user, 'ap')
+            update_user_activity_record(user, 'ap', is_gamified)
             user_participation = UserParticipation.objects.get(user=user)
             if not user_participation.has_posted:
                 update_user_participation(user, 'p', newPost)
@@ -499,7 +497,7 @@ def add_reply(request, post_id, parent_type, parent_id):
             else:
                 newRep.host_reply = UserReply.objects.get(id=parent_id)
             newRep.save()
-            update_user_activity_record(user, 'ar')
+            update_user_activity_record(user, 'ar', is_gamified)
             user_participation = UserParticipation.objects.get(user=user)
             if not user_participation.has_replied:
                 update_user_participation(user, 'r', newRep)
@@ -576,7 +574,7 @@ def delete_post(user, obj_id):
         reversed_replies = [rep for rep in reversed(all_replies)]
         for rep in reversed_replies:
             rep.delete()
-            update_user_activity_record(user, 'dr')
+            update_user_activity_record(user, 'dr', rep.is_gamified)
     post.delete()
     update_user_participation_has_been_liked(user)
     return JsonResponse({'response':'sukses'})
@@ -594,9 +592,9 @@ def delete_item(request):
     obj_id = int(data['obj_id'])
     item_type = data['item_type']
     if item_type == 'p':
-        update_user_activity_record(user, 'dp')
+        update_user_activity_record(user, 'dp', is_gamified)
         return delete_post(user, obj_id)
-    update_user_activity_record(user, 'dr')
+    update_user_activity_record(user, 'dr', is_gamified)
     return delete_reply(user, obj_id)
 
 def has_liked_post(user, post):
@@ -660,11 +658,11 @@ def add_like(request):
         postlike.save()
 
         # add user likes given
-        update_user_activity_record(user, 'lga')
+        update_user_activity_record(user, 'lga', is_gamified)
 
         # add post_owner likes earned 
         post_owner = userpost.creator
-        update_user_activity_record(post_owner, 'lea')
+        update_user_activity_record(post_owner, 'lea', is_gamified)
 
         # update whether user has posted or not yet
         user_participation = UserParticipation.objects.get(user=user)
@@ -689,11 +687,11 @@ def add_like(request):
             replylike = create_new_replylike(user, userreply, is_gamified)
         replylike.save()
         
-        update_user_activity_record(user, 'lga')
+        update_user_activity_record(user, 'lga', is_gamified)
 
         # add reply_owner likes earned
         reply_owner = userreply.creator
-        update_user_activity_record(reply_owner, 'lea')
+        update_user_activity_record(reply_owner, 'lea', is_gamified)
 
         # update whether user has replied or not yet
         user_participation = UserParticipation.objects.get(user=user)
@@ -743,8 +741,8 @@ def unlike(request):
             GivenReplyLike.objects.get(liker=user, reply_like=replylike).delete()
         else:
             replylike.delete()
-    update_user_activity_record(user, 'lgs')
-    update_user_activity_record(owner, 'les')
+    update_user_activity_record(user, 'lgs', is_gamified)
+    update_user_activity_record(owner, 'les', is_gamified)
     
     return JsonResponse({'new_quantity': new_quantity})
 
