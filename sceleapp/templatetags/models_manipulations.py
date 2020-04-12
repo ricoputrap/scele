@@ -101,6 +101,7 @@ def get_reply_box(reply, active_user):
     creator = reply.obj.creator
     creator_fulname = creator.get_full_name()
     user_fullname = active_user.get_full_name()
+    is_gamified = reply.obj.is_gamified
     parent = reply.parent
     post = get_post(reply.obj)
     reply_url = reverse('addreply', kwargs={'post_id': post.id, 'parent_type': '1', 'parent_id': reply.obj.id})
@@ -138,14 +139,21 @@ def get_reply_box(reply, active_user):
     # footer
     tags += '<div class="box-item__content__footer">'
 
-    if total_likes > 1:
-        likes_counter = '<a href="" class="likes-count" data-obj_id="' + str(reply.obj.id) + '" data-toggle="modal" data-target="#likersModal">' + str(total_likes) + ' likes</a>'
-    elif total_likes == 1:
-        likes_counter = '<a href="" class="likes-count" data-obj_id="' + str(reply.obj.id) + '" data-toggle="modal" data-target="#likersModal">1 like</a>'
-    else:
-        likes_counter = '<a href="" class="likes-count hidden" data-obj_id="' + str(reply.obj.id) + '" data-toggle="modal" data-target="#likersModal">0 like</a>'
+    if is_gamified:
+        if total_likes > 1:
+            likes_counter = '<a href="" class="likes-count" data-obj_id="' + str(reply.obj.id) + '" data-toggle="modal" data-target="#likersModal">' + str(total_likes) + ' likes</a>'
+        elif total_likes == 1:
+            likes_counter = '<a href="" class="likes-count" data-obj_id="' + str(reply.obj.id) + '" data-toggle="modal" data-target="#likersModal">1 like</a>'
+        else:
+            likes_counter = '<a href="" class="likes-count hidden" data-obj_id="' + str(reply.obj.id) + '" data-toggle="modal" data-target="#likersModal">0 like</a>'
+        tags += likes_counter
     
-    tags += likes_counter + '<div class="right"><a href="#'
+    if is_gamified:
+        tags += '<div class="right">'
+    else:
+        tags += '<div class="right push-up">'
+
+    tags += '<a href="#'
 
     if type(parent) is UserPost:
         tags += 'post-item'
@@ -155,10 +163,11 @@ def get_reply_box(reply, active_user):
     
     tags += '">Show Parent</a> | '
 
-    if user_has_liked:
-        tags += '<a href="" class="btn-like liked" data-obj_id="' + str(reply.obj.id) + '">Unlike</a> | '
-    else:
-        tags += '<a href="" class="btn-like" data-obj_id="' + str(reply.obj.id) + '">Like</a> | '
+    if is_gamified:
+        if user_has_liked:
+            tags += '<a href="" class="btn-like liked" data-obj_id="' + str(reply.obj.id) + '">Unlike</a> | '
+        else:
+            tags += '<a href="" class="btn-like" data-obj_id="' + str(reply.obj.id) + '">Like</a> | '
     
     if is_updateable(reply.obj):
         tags += '<a href="' + str(edit_reply_url) + '" class="btn-edit" data-obj_id="' + str(reply.obj.id) + '">Edit</a> | ' + \
