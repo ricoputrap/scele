@@ -26,9 +26,10 @@ def get_notif(user, is_gamified):
 @login_required
 def dashboard(request):
     user = request.user
-    update_user_participation_has_been_liked(user)
     is_gamified = Gamification.objects.first().is_gamified
-    user_activity = UserActivity.objects.get(user=user)
+    if is_gamified:
+        update_user_participation_has_been_liked(user)
+    user_activity = UserActivity.objects.get(user=user, is_gamified=is_gamified)
     context = { 'logged_in': True, 
                 'user_fullname': user.get_full_name(), 
                 'is_gamified': is_gamified}
@@ -70,6 +71,10 @@ def initiate_user_activity_record(user):
     activity = UserActivity()
     activity.user = user
     activity.save()
+    activity2 = UserActivity()
+    activity2.user = user
+    activity2.is_gamified = True
+    activity2.save()
 
 # sourcecode: https://simpleisbetterthancomplex.com/tutorial/2017/02/18/how-to-create-user-sign-up-view.html
 def register(request):
@@ -91,13 +96,13 @@ def register(request):
 def view_profile(request):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
-    update_user_participation_has_been_liked(user)
-    user_activity = UserActivity.objects.get(user=user)
+    user_activity = UserActivity.objects.get(user=user, is_gamified=is_gamified)
     context = { 'logged_in': True, 'user': user, 
                 'user_fullname': user.get_full_name(), 
                 'is_gamified': is_gamified,
                 'user_activity': user_activity}
     if is_gamified:
+        update_user_participation_has_been_liked(user)
         badges = UserBadge.objects.filter(owner=user)
         latest_badge = badges.last()
         reversed_badges = list(badges)
@@ -126,33 +131,33 @@ def count_replylikes_earned(user):
         return replylikes_earned_count
     return 0
 
-def populate_activity_results(user, context, is_gamified):
-    posts = UserPost.objects.filter(creator=user, is_gamified=is_gamified)
-    posts_count = posts.count()
-    context['posts_count'] = posts_count
+# def populate_activity_results(user, context, is_gamified):
+#     posts = UserPost.objects.filter(creator=user, is_gamified=is_gamified)
+#     posts_count = posts.count()
+#     context['posts_count'] = posts_count
 
-    replies = UserReply.objects.filter(creator=user, is_gamified=is_gamified)
-    replies_count = replies.count()
-    context['replies_count'] = replies_count
+#     replies = UserReply.objects.filter(creator=user, is_gamified=is_gamified)
+#     replies_count = replies.count()
+#     context['replies_count'] = replies_count
 
-    postlikes_given_count = GivenPostLike.objects.filter(liker=user, is_gamified=is_gamified).count()
-    replylikes_given_count = GivenReplyLike.objects.filter(liker=user, is_gamified=is_gamified).count()
-    likes_given_count = postlikes_given_count + replylikes_given_count
-    context['likes_given_count'] = likes_given_count
+#     postlikes_given_count = GivenPostLike.objects.filter(liker=user, is_gamified=is_gamified).count()
+#     replylikes_given_count = GivenReplyLike.objects.filter(liker=user, is_gamified=is_gamified).count()
+#     likes_given_count = postlikes_given_count + replylikes_given_count
+#     context['likes_given_count'] = likes_given_count
 
-    grades = 0
-    if posts_count > 0:
-        for post in posts:
-            grades += post.grade
-    if replies_count > 0:
-        for reply in replies:
-            grades += reply.grade
-    context['grades'] = grades
+#     grades = 0
+#     if posts_count > 0:
+#         for post in posts:
+#             grades += post.grade
+#     if replies_count > 0:
+#         for reply in replies:
+#             grades += reply.grade
+#     context['grades'] = grades
 
-    return context
+#     return context
 
 def has_first_3_likes(user):
-    user_activity = UserActivity.objects.get(user=user)
+    user_activity = UserActivity.objects.get(user=user, is_gamified=True)
     return user_activity.likes_earned_count >= 3
 
 
@@ -161,12 +166,9 @@ def has_first_3_likes(user):
 def view_course(request):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
-
-    update_user_participation_has_been_liked(user)
-
     notifs = get_notif(user, is_gamified)
     new_notif_count = notifs.filter(is_new=True).count()
-    user_activity = UserActivity.objects.get(user=user)
+    user_activity = UserActivity.objects.get(user=user, is_gamified=is_gamified)
 
     context = {'logged_in': True, 'user': user, 
             'user_fullname': user.get_full_name(), 
@@ -178,6 +180,7 @@ def view_course(request):
     # context = populate_activity_results(user, context, is_gamified)
 
     if is_gamified:
+        update_user_participation_has_been_liked(user)
         badges = UserBadge.objects.filter(owner=user)
         latest_badge = badges.last()
         context['badges'] = badges
@@ -190,6 +193,7 @@ def view_course(request):
         
     return render(request, 'course.html', context)
 
+# TODO if not gamified: redirect error page
 @login_required
 def view_course_badges(request):
     user = request.user
@@ -202,6 +206,7 @@ def view_course_badges(request):
         'is_gamified': is_gamified,
         'badges': badges})
 
+# TODO if not gamified: redirect error page
 @login_required
 def view_badge_detail(request, code):
     user = request.user
@@ -216,7 +221,8 @@ def view_badge_detail(request, code):
 def view_forum(request):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
-    update_user_participation_has_been_liked(user)
+    if is_gamified:
+        update_user_participation_has_been_liked(user)
     posts = list(UserPost.objects.filter(is_gamified=is_gamified))
     print('posts:', posts)
     len_posts = len(posts)
@@ -315,7 +321,8 @@ def get_deepest_replies(deepest_replies, rep):
 def view_post(request, id):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
-    update_user_participation_has_been_liked(user)
+    if is_gamified:
+        update_user_participation_has_been_liked(user)
     post_id = int(id)
     # try catch kalo post query dengan is_gamified tidak ditemukan -> error page
     post = UserPost.objects.get(id=post_id)
@@ -436,7 +443,8 @@ def update_user_activity_record(user, activity_type, is_gamified):
 def add_post(request):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
-    update_user_participation_has_been_liked(user)
+    if is_gamified:
+        update_user_participation_has_been_liked(user)
     if request.method == 'POST':
         form = UserPostForm(request.POST)
         if form.is_valid():
@@ -451,9 +459,12 @@ def add_post(request):
             newPost.creator = user
             newPost.save()
             update_user_activity_record(user, 'ap', is_gamified)
-            user_participation = UserParticipation.objects.get(user=user)
-            if not user_participation.has_posted:
-                update_user_participation(user, 'p', newPost)
+
+            if is_gamified:
+                user_participation = UserParticipation.objects.get(user=user)
+                if not user_participation.has_posted:
+                    update_user_participation(user, 'p', newPost)
+
         return redirect('forum')
     else:
         form = UserPostForm()
@@ -473,7 +484,8 @@ def get_post(reply):
 def add_reply(request, post_id, parent_type, parent_id):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
-    update_user_participation_has_been_liked(user)
+    if is_gamified:
+        update_user_participation_has_been_liked(user)
     post = UserPost.objects.get(id=post_id)
     if parent_type == '0':
         parent = UserPost.objects.get(id=parent_id)
@@ -517,7 +529,8 @@ def add_reply(request, post_id, parent_type, parent_id):
 def edit_post(request, id):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
-    update_user_participation_has_been_liked(user)
+    if is_gamified:
+        update_user_participation_has_been_liked(user)
     post = UserPost.objects.get(id=id)
     if request.method == 'POST':
         form = UserPostForm(request.POST)
@@ -540,7 +553,8 @@ def edit_post(request, id):
 def edit_reply(request, id):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
-    update_user_participation_has_been_liked(user)
+    if is_gamified:
+        update_user_participation_has_been_liked(user)
     reply = UserReply.objects.get(id=id)
     post = get_post(reply)
     if reply.user_post:
@@ -569,19 +583,25 @@ def edit_reply(request, id):
 
 def delete_post(user, obj_id):
     post = UserPost.objects.get(id=obj_id)
+    is_gamified = post.is_gamified
     if has_replies(post, post.is_gamified):
-        all_replies = get_all_replies([], post, post.is_gamified)
+        all_replies = get_all_replies([], post, is_gamified)
         reversed_replies = [rep for rep in reversed(all_replies)]
         for rep in reversed_replies:
-            rep.delete()
             update_user_activity_record(user, 'dr', rep.is_gamified)
+            rep.delete()
     post.delete()
-    update_user_participation_has_been_liked(user)
+
+    if is_gamified:
+        update_user_participation_has_been_liked(user)
     return JsonResponse({'response':'sukses'})
 
 def delete_reply(user, obj_id):
-    UserReply.objects.get(id=obj_id).delete()
-    update_user_participation_has_been_liked(user)
+    reply = UserReply.objects.get(id=obj_id)
+    is_gamified = reply.is_gamified
+    reply.delete()
+    if is_gamified:
+        update_user_participation_has_been_liked(user)
     return JsonResponse({'response':'sukses'})
 
 @login_required
@@ -637,6 +657,7 @@ def record_replyliker(liker, replylike):
     repliker_rec.save()
     return repliker_rec
 
+# TODO if not gamified: redirect to error page
 @login_required
 def add_like(request):
     user = request.user
@@ -707,12 +728,12 @@ def add_like(request):
         dict_replylike = model_to_dict(replylike)
         return JsonResponse({'likes': dict_replylike})
 
+# TODO if not gamified: redirect error page
 @login_required
 def unlike(request):
     user = request.user
-    update_user_participation_has_been_liked(user)
-
     is_gamified = Gamification.objects.first().is_gamified
+    update_user_participation_has_been_liked(user)
     data = request.POST
     like_type = data['like_type']
     obj_id = int(data['obj_id'])
@@ -746,12 +767,12 @@ def unlike(request):
     
     return JsonResponse({'new_quantity': new_quantity})
 
+# TODO if not gamified: redirect error page
 @login_required
 def view_likers(request):
     user = request.user
-    update_user_participation_has_been_liked(user)
-
     is_gamified = Gamification.objects.first().is_gamified
+    update_user_participation_has_been_liked(user)
     data = request.POST
     like_type = data['like_type']
     obj_id = int(data['obj_id'])

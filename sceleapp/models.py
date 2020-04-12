@@ -15,7 +15,7 @@ class UserActivity(models.Model):
 	is_gamified = models.BooleanField(default=False)
 
 	def __str__(self):
-	 return "Activity of {0}: [post: {1}, reply: {2}, likes_given: {3}, likes_earned: {4}, grades: {5}, bonuses: {6}]".format(self.user, self.post_count, self.reply_count, self.likes_given_count, self.likes_earned_count, self.grades, self.bonuses)
+	 return "Activity of {0}: [post: {1}, reply: {2}, likes_given: {3}, likes_earned: {4}, grades: {5}, bonuses: {6}, is_gamified: {7}]".format(self.user, self.post_count, self.reply_count, self.likes_given_count, self.likes_earned_count, self.grades, self.bonuses, self.is_gamified)
 
 
 class UserParticipation(models.Model):
