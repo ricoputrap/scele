@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-    <title>Pemberitahuan</title>
+    <title>Notifikasi</title>
 {% endblock %}
 {% block head %}
     <link rel="stylesheet" href="{% static 'css/notifications.css' %}">
@@ -14,10 +14,10 @@
     <div class="breadcrumb-menu font-open-sans">
         <a href="{% url 'dashboard' %}">Dashboard</a>
         <p>></p>
-        <p>Pemberitahuan</p>
+        <p>Notifikasi</p>
     </div>
     <div class="content">
-        <h2 class="font-bold">Pemberitahuan</h2>
+        <h2 class="font-bold">Notifikasi</h2>
         <hr>
         <div id="notif-area">
             {% if has_notif %}
@@ -33,7 +33,7 @@
                     </div>
                 {% endfor %}
             {% else %}
-                <p class="text-center">Anda tidak memiliki pemberitahuan</p>
+                <p class="text-center">Anda tidak memiliki notifikasi</p>
             {% endif %}
         </div>
     </div>
