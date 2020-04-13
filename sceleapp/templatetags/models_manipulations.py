@@ -188,3 +188,36 @@ def is_updateable(value):
     selisih = now - value.created_at
     max_delta = timedelta(minutes=30)
     return selisih <= max_delta
+
+
+################ NOTIF AREA ################
+
+@register.filter(name="get_formatted_time")
+def get_formatted_time(value):
+    now = timezone.now()
+    minute = timedelta(seconds=60)
+    hour = timedelta(minutes=60)
+    hours10 = timedelta(hours=10)
+    day = timedelta(hours=24)
+    days10 = timedelta(days=10)
+    selisih = now - value
+    selisih_int = 0
+
+    if selisih < minute:
+        selisih_int = int(str(selisih)[5:7])
+        return '{0} detik yang lalu'.format(selisih_int)
+    elif selisih < hour:
+        selisih_int = int(str(selisih)[2:4])
+        return '{0} menit yang lalu'.format(selisih_int)
+    elif selisih < hours10:
+        selisih_int = int(str(selisih)[:1])
+        return '{0} jam yang lalu'.format(selisih_int)
+    elif selisih < day:
+        selisih_int = int(str(selisih)[:2])
+        return '{0} jam yang lalu'.format(selisih_int)
+    elif selisih < days10:
+        selisih_int = int(str(selisih)[:1])
+        return '{0} hari yang lalu'.format(selisih_int)
+    else:
+        selisih_int = int(str(selisih)[:2])
+        return '{0} hari yang lalu'.format(selisih_int)

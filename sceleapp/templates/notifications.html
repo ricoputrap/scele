@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load models_manipulations %}
 
 {% block title %}
     <title>Notifikasi</title>
@@ -28,7 +29,7 @@
                         </div>
                         <div class="notif-item__details">
                             <p>{{notif.title|safe}}</p>
-                            <sub>{{created_at}}</sub>
+                            <sub>{{notif.created_at|get_formatted_time}}</sub>
                         </div>
                     </div>
                 {% endfor %}
