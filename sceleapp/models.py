@@ -133,6 +133,13 @@ class Notif(models.Model):
 	def __str__(self):
 		return '{0} got notif "{1}"'.format(self.receiver, self.title)
 
+class PostNotif(models.Model):
+	notif = models.OneToOneField(Notif, on_delete=models.CASCADE)
+	post_quantity = models.IntegerField()
+
+	def __str__(self):
+		return '{0} posts'.format(self.post_quantity)
+
 class ReplyNotif(models.Model):
 	notif = models.OneToOneField(Notif, on_delete=models.CASCADE)
 	rep_quantity = models.IntegerField()
