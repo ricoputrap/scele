@@ -20,24 +20,21 @@
         <h2 class="font-bold">Pemberitahuan</h2>
         <hr>
         <div id="notif-area">
-            <div class="notif-item">
-                <div class="notif-item__img">
-                    <img src="{% static 'img/badges/participation/initiator-badge.png' %}" alt="">
-                </div>
-                <div class="notif-item__details">
-                    <p>Nama</p>
-                    <sub>Waktu</sub>
-                </div>
-            </div>
-            <div class="notif-item">
-                <div class="notif-item__img">
-                    <img src="{% static 'img/badges/participation/initiator-badge.png' %}" alt="">
-                </div>
-                <div class="notif-item__details">
-                    <p>Nama</p>
-                    <sub>Waktu</sub>
-                </div>
-            </div>
+            {% if has_notif %}
+                {% for notif in all_notif %}
+                    <div class="notif-item">
+                        <div class="notif-item__img">
+                            <img src="{% static notif.img_loc %}" alt="">
+                        </div>
+                        <div class="notif-item__details">
+                            <p>{{notif.title|safe}}</p>
+                            <sub>{{created_at}}</sub>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-center">Anda tidak memiliki pemberitahuan</p>
+            {% endif %}
         </div>
     </div>
 </section>

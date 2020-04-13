@@ -798,14 +798,19 @@ def view_likers(request):
     
     return JsonResponse({'response': likers})
 
+################ NOTIF AREA ################
+
 @login_required
 def view_notification_page(request):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
     all_notif = Notif.objects.filter(receiver=user, is_gamified=is_gamified)
+    has_notif = True if all_notif.count() > 0 else False
     print('all_notif:', all_notif)
+    print('has_notif:', has_notif)
     context = {'logged_in': True, 'user': user,
             'user_fullname': user.get_full_name(),
             'is_gamified': is_gamified,
-            'all_notif': all_notif}
+            'all_notif': all_notif,
+            'has_notif': has_notif}
     return render(request, 'notifications.html', context)
