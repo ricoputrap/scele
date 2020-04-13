@@ -115,6 +115,7 @@ class Notif(models.Model):
 		('g', 'Grade'),
 		('l', 'Like'),
 		('r', 'Reply'),
+		('p', 'Post'),
 		(None, '-------')
 	)
 	notif_type = models.CharField(max_length=1, choices=NOTIF_TYPES, default=None)
