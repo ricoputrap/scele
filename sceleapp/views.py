@@ -15,7 +15,7 @@ from django.core import serializers
 
 from sceleapp.forms import RegisterForm, UserPostForm, UserReplyForm
 
-from sceleapp.models import Gamification, UserBadge, UserPost, UserReply, Badge, Notif, PostLike, GivenPostLike, ReplyLike, GivenReplyLike, UserParticipation, UserActivity, PostNotif
+from sceleapp.models import Gamification, UserBadge, UserPost, UserReply, Badge, Notif, PostLike, GivenPostLike, ReplyLike, GivenReplyLike, UserParticipation, UserActivity, PostNotif, ReplyNotif
 
 # Create your views here.
 
@@ -442,6 +442,53 @@ def update_user_activity_record(user, activity_type, is_gamified):
         activity.likes_earned_count -= 1
     activity.save()
 
+def add_reply_notif(parent, reply, is_gamified, creator):
+    creator_fullname = creator.get_full_name()
+    all_users = User.objects.exclude(id=creator.id)
+    parent_type = ''
+
+    for user in all_users:
+        try:
+            if type(parent) is UserPost:
+                notif = Notif.objects.get(notif_type='r', is_new=True, user_post=parent, receiver=user)
+                parent_type = 'post'
+            else:
+                notif = Notif.objects.get(notif_type='r', is_new=True, user_reply=parent, receiver=user)
+                parent_type = 'reply'
+            
+            reply_notif = ReplyNotif.objects.get(notif=notif)
+            reply_notif.rep_quantity += 1
+            reply_notif.reply = None
+            reply_notif.save()
+
+            notif.title = 'Terdapat <b>{0} komentar</b> pada {1} Anda'.format(reply_notif.rep_quantity, parent_type)
+            notif.desc = 'Terdapat {0} komentar baru yang belum Anda buka pada {1} Anda yang berjudul {2}'.format(reply_notif.rep_quantity, parent_type, parent.subject)
+            notif.save()
+        
+        except ObjectDoesNotExist:
+            notif = Notif()
+            if type(parent) is UserPost:
+                notif.user_post = parent
+                parent_type = 'post'
+            else:
+                notif.user_reply = parent
+                parent_type = 'reply'
+
+            notif.title = '<b>{0} mengomentari</b> {1} Anda'.format(creator_fullname, parent_type)
+            notif.desc = '{0} telah mengomentari sebuah {1} Anda yang berjudul "{2}"'.format(creator_fullname, parent_type, parent.subject)
+            notif.notif_type = 'r'
+            notif.is_gamified = is_gamified
+            notif.img_loc = 'r'
+            notif.receiver = user
+            notif.save()
+
+            reply_notif = ReplyNotif()
+            reply_notif.notif = notif
+            reply_notif.rep_quantity = 1
+            reply_notif.reply = reply
+            reply_notif.save()
+
+
 def add_post_notif(post, is_gamified, creator):
     creator_fullname = creator.get_full_name()
     all_users = User.objects.exclude(id=creator.id)
@@ -453,14 +500,14 @@ def add_post_notif(post, is_gamified, creator):
             post_notif.post_quantity += 1
             post_notif.save()
 
-            notif.title = 'Terdapat {0} post baru'.format(post_notif.post_quantity)
+            notif.title = 'Terdapat <b>{0} post baru</b>'.format(post_notif.post_quantity)
             notif.desc = 'Terdapat {0} post baru yang belum Anda buka'.format(post_notif.post_quantity)
             notif.user_post = None
             notif.save()
 
         except ObjectDoesNotExist:
             notif = Notif()
-            notif.title = 'Terdapat sebuah post baru oleh {0}'.format(creator_fullname)
+            notif.title = 'Terdapat sebuah <b>post baru</b> oleh {0}'.format(creator_fullname)
             notif.desc = '{0} telah membuat sebuah post yang berjudul "{1}"'.format(creator_fullname, post.subject)
             notif.notif_type = 'p'
             notif.is_gamified = is_gamified
@@ -517,6 +564,9 @@ def get_post(reply):
     else:
         return get_post(reply.host_reply)
 
+
+
+
 @login_required
 def add_reply(request, post_id, parent_type, parent_id):
     user = request.user
@@ -543,9 +593,13 @@ def add_reply(request, post_id, parent_type, parent_id):
             newRep.creator = user
             if parent_type == '0':
                 newRep.user_post = post
+                newRep.save()
+                add_reply_notif(post, newRep, is_gamified, user)
             else:
                 newRep.host_reply = UserReply.objects.get(id=parent_id)
-            newRep.save()
+                newRep.save()
+                add_reply_notif(parent, newRep, is_gamified, user)
+            
             update_user_activity_record(user, 'ar', is_gamified)
             user_participation = UserParticipation.objects.get(user=user)
             if not user_participation.has_replied:
@@ -841,8 +895,6 @@ def view_notification_page(request):
     is_gamified = Gamification.objects.first().is_gamified
     all_notif = Notif.objects.filter(receiver=user, is_gamified=is_gamified)
     has_notif = True if all_notif.count() > 0 else False
-    print('all_notif:', all_notif)
-    print('has_notif:', has_notif)
     context = {'logged_in': True, 'user': user,
             'user_fullname': user.get_full_name(),
             'is_gamified': is_gamified,

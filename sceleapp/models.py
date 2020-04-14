@@ -143,6 +143,7 @@ class PostNotif(models.Model):
 class ReplyNotif(models.Model):
 	notif = models.OneToOneField(Notif, on_delete=models.CASCADE)
 	rep_quantity = models.IntegerField()
+	reply = models.ForeignKey(UserReply, on_delete=models.SET_NULL, null=True, blank=True)
 
 	def __str__(self):
 		return '{0} replies'.format(self.rep_quantity)
