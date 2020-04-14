@@ -442,18 +442,18 @@ def update_user_activity_record(user, activity_type, is_gamified):
         activity.likes_earned_count -= 1
     activity.save()
 
-def add_reply_notif(parent, reply, is_gamified, creator):
-    creator_fullname = creator.get_full_name()
-    all_users = User.objects.exclude(id=creator.id)
+def add_reply_notif(parent, reply, is_gamified, reply_creator):
+    reply_creator_fullname = reply_creator.get_full_name()
+    parent_creator = parent.creator
     parent_type = ''
-
-    for user in all_users:
+    
+    if reply_creator != parent_creator:
         try:
             if type(parent) is UserPost:
-                notif = Notif.objects.get(notif_type='r', is_new=True, user_post=parent, receiver=user)
+                notif = Notif.objects.get(notif_type='r', is_new=True, user_post=parent, receiver=parent_creator)
                 parent_type = 'post'
             else:
-                notif = Notif.objects.get(notif_type='r', is_new=True, user_reply=parent, receiver=user)
+                notif = Notif.objects.get(notif_type='r', is_new=True, user_reply=parent, receiver=parent_creator)
                 parent_type = 'reply'
             
             reply_notif = ReplyNotif.objects.get(notif=notif)
@@ -474,12 +474,12 @@ def add_reply_notif(parent, reply, is_gamified, creator):
                 notif.user_reply = parent
                 parent_type = 'reply'
 
-            notif.title = '<b>{0} mengomentari</b> {1} Anda'.format(creator_fullname, parent_type)
-            notif.desc = '{0} telah mengomentari sebuah {1} Anda yang berjudul "{2}"'.format(creator_fullname, parent_type, parent.subject)
+            notif.title = '{0} <b>mengomentari</b> {1} Anda'.format(reply_creator_fullname, parent_type)
+            notif.desc = '{0} telah mengomentari sebuah {1} Anda yang berjudul "{2}"'.format(reply_creator_fullname, parent_type, parent.subject)
             notif.notif_type = 'r'
             notif.is_gamified = is_gamified
             notif.img_loc = 'r'
-            notif.receiver = user
+            notif.receiver = parent_creator
             notif.save()
 
             reply_notif = ReplyNotif()
