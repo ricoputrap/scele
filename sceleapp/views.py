@@ -15,7 +15,7 @@ from django.core import serializers
 
 from sceleapp.forms import RegisterForm, UserPostForm, UserReplyForm
 
-from sceleapp.models import Gamification, UserBadge, UserPost, UserReply, Badge, Notif, PostLike, GivenPostLike, ReplyLike, GivenReplyLike, UserParticipation, UserActivity
+from sceleapp.models import Gamification, UserBadge, UserPost, UserReply, Badge, Notif, PostLike, GivenPostLike, ReplyLike, GivenReplyLike, UserParticipation, UserActivity, PostNotif
 
 # Create your views here.
 
@@ -326,6 +326,7 @@ def view_post(request, id):
     post_id = int(id)
     # try catch kalo post query dengan is_gamified tidak ditemukan -> error page
     post = UserPost.objects.get(id=post_id)
+    # add_post_notif(post, is_gamified, user)
     try:
         total_likes = PostLike.objects.get(user_post=post, is_gamified=is_gamified).quantity
         user_has_liked = has_liked_post(user, post)
@@ -441,6 +442,40 @@ def update_user_activity_record(user, activity_type, is_gamified):
         activity.likes_earned_count -= 1
     activity.save()
 
+def add_post_notif(post, is_gamified, creator):
+    # all_users = User.objects.exclude(id=creator.id)
+    creator_fullname = creator.get_full_name()
+    all_users = User.objects.all()
+    all_notifs = None
+    for user in all_users:
+        all_notifs = Notif.objects.filter(notif_type='p', is_new=True, user_post=post, receiver=user)
+        if all_notifs.count() == 0:
+            notif = Notif()
+            notif.title = 'Terdapat sebuah post baru oleh {0}'.format(creator_fullname)
+            notif.desc = '{0} telah membuat sebuah post yang berjudul "{1}"'.format(creator_fullname, post.subject)
+            notif.notif_type = 'p'
+            notif.is_gamified = is_gamified
+            notif.img_loc = 'p'
+            notif.user_post = post
+            notif.receiver = user
+            notif.save()
+            print('new notif:', notif)
+
+            post_notif = PostNotif()
+            post_notif.notif = notif
+            post_notif.post_quantity = 1
+            post_notif.save()
+            print('new postnotif:', post_notif)
+        else:
+            notif = all_notifs.first()
+            print('old notif:', notif)
+            post_notif = PostNotif.objects.get(notif=notif)
+            post_notif.post_quantity += 1
+            post_notif.save()
+            print('old postnotif:', post_notif)
+
+
+
 @login_required
 def add_post(request):
     user = request.user
@@ -461,6 +496,8 @@ def add_post(request):
             newPost.creator = user
             newPost.save()
             update_user_activity_record(user, 'ap', is_gamified)
+
+            add_post_notif(newPost, is_gamified, user)
 
             if is_gamified:
                 user_participation = UserParticipation.objects.get(user=user)
