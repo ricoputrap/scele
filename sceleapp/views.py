@@ -461,7 +461,7 @@ def add_reply_notif(parent, reply, is_gamified, creator):
             reply_notif.reply = None
             reply_notif.save()
 
-            notif.title = 'Terdapat <b>{0} komentar</b> pada {1} Anda'.format(reply_notif.rep_quantity, parent_type)
+            notif.title = 'Terdapat <b>{0} komentar</b> baru pada {1} Anda'.format(reply_notif.rep_quantity, parent_type)
             notif.desc = 'Terdapat {0} komentar baru yang belum Anda buka pada {1} Anda yang berjudul {2}'.format(reply_notif.rep_quantity, parent_type, parent.subject)
             notif.save()
         
