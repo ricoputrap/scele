@@ -461,8 +461,8 @@ def add_reply_notif(parent, reply, is_gamified, reply_creator):
             reply_notif.reply = None
             reply_notif.save()
 
-            notif.title = 'Terdapat <b>{0} komentar</b> baru pada {1} Anda'.format(reply_notif.rep_quantity, parent_type)
-            notif.desc = 'Terdapat {0} komentar baru yang belum Anda buka pada {1} Anda yang berjudul {2}'.format(reply_notif.rep_quantity, parent_type, parent.subject)
+            notif.title = 'Terdapat <b>{0} komentar baru</b> pada {1} Anda yang berjudul "{2}"'.format(reply_notif.rep_quantity, parent_type, parent.subject)
+            notif.desc = 'Terdapat {0} komentar baru yang belum Anda buka pada {1} Anda yang berjudul "{2}"'.format(reply_notif.rep_quantity, parent_type, parent.subject)
             notif.save()
         
         except ObjectDoesNotExist:
@@ -474,7 +474,7 @@ def add_reply_notif(parent, reply, is_gamified, reply_creator):
                 notif.user_reply = parent
                 parent_type = 'reply'
 
-            notif.title = '{0} <b>mengomentari</b> {1} Anda'.format(reply_creator_fullname, parent_type)
+            notif.title = '{0} <b>mengomentari</b> {1} Anda yang berjudul "{2}"'.format(reply_creator_fullname, parent_type, parent.subject)
             notif.desc = '{0} telah mengomentari sebuah {1} Anda yang berjudul "{2}"'.format(reply_creator_fullname, parent_type, parent.subject)
             notif.notif_type = 'r'
             notif.is_gamified = is_gamified
