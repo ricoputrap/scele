@@ -448,7 +448,9 @@ def add_post_notif(post, is_gamified, creator):
     all_users = User.objects.all()
     all_notifs = None
     for user in all_users:
-        all_notifs = Notif.objects.filter(notif_type='p', is_new=True, user_post=post, receiver=user)
+        # notif baru dengan tipe post yang dimiliki user
+        all_notifs = Notif.objects.filter(notif_type='p', is_new=True, receiver=user)
+        
         if all_notifs.count() == 0:
             notif = Notif()
             notif.title = 'Terdapat sebuah post baru oleh {0}'.format(creator_fullname)
@@ -468,11 +470,15 @@ def add_post_notif(post, is_gamified, creator):
             print('new postnotif:', post_notif)
         else:
             notif = all_notifs.first()
-            print('old notif:', notif)
             post_notif = PostNotif.objects.get(notif=notif)
             post_notif.post_quantity += 1
             post_notif.save()
-            print('old postnotif:', post_notif)
+            print('updated postnotif:', post_notif)
+            notif.title = 'Terdapat {0} post baru'.format(post_notif.post_quantity)
+            notif.desc = 'Terdapat {0} post baru yang belum Anda buka'.format(post_notif.post_quantity)
+            notif.user_post = None
+            notif.save()
+            print('updated notif:', notif)
 
 
 
