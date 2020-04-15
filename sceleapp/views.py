@@ -511,30 +511,44 @@ def add_post_notif(post, is_gamified, creator):
         try:
             # notif baru dengan tipe post yang dimiliki user
             notif = Notif.objects.get(notif_type='p', is_new=True, receiver=user)
-            post_notif = PostNotif.objects.get(notif=notif)
-            post_notif.post_quantity += 1
-            post_notif.save()
-
-            notif.title = 'Terdapat <b>{0} post baru</b>'.format(post_notif.post_quantity)
-            notif.desc = 'Terdapat {0} post baru yang belum Anda buka'.format(post_notif.post_quantity)
-            notif.user_post = None
-            notif.save()
+            post_notif = update_post_notif(notif)
+            notif = update_notif_for_post(notif, post_notif)
 
         except ObjectDoesNotExist:
-            notif = Notif()
-            notif.title = 'Terdapat sebuah <b>post baru</b> oleh {0}'.format(creator_fullname)
-            notif.desc = '{0} telah membuat sebuah post yang berjudul "{1}"'.format(creator_fullname, post.subject)
-            notif.notif_type = 'p'
-            notif.is_gamified = is_gamified
-            notif.img_loc = 'p'
-            notif.user_post = post
-            notif.receiver = user
-            notif.save()
+            notif = create_new_notif_for_post(creator_fullname, post, is_gamified, user)
+            post_notif = create_new_post_notif(notif)
 
-            post_notif = PostNotif()
-            post_notif.notif = notif
-            post_notif.post_quantity = 1
-            post_notif.save()
+def update_post_notif(notif):
+    post_notif = PostNotif.objects.get(notif=notif)
+    post_notif.post_quantity += 1
+    post_notif.save()
+    return post_notif
+
+def update_notif_for_post(notif, post_notif):
+    notif.title = 'Terdapat <b>{0} post baru</b>'.format(post_notif.post_quantity)
+    notif.desc = 'Terdapat {0} post baru yang belum Anda buka'.format(post_notif.post_quantity)
+    notif.user_post = None
+    notif.save()
+    return notif
+
+def create_new_notif_for_post(creator_fullname, post, is_gamified, user):
+    notif = Notif()
+    notif.title = 'Terdapat sebuah <b>post baru</b> oleh {0}'.format(creator_fullname)
+    notif.desc = '{0} telah membuat sebuah post yang berjudul "{1}"'.format(creator_fullname, post.subject)
+    notif.notif_type = 'p'
+    notif.is_gamified = is_gamified
+    notif.img_loc = 'p'
+    notif.user_post = post
+    notif.receiver = user
+    notif.save()
+    return notif
+
+def create_new_post_notif(notif):
+    post_notif = PostNotif()
+    post_notif.notif = notif
+    post_notif.post_quantity = 1
+    post_notif.save()
+    return post_notif
 
 @login_required
 def add_post(request):
