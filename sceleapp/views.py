@@ -464,33 +464,35 @@ def add_like_notif(liked_obj, is_gamified, liker):
             notif.save()
 
         except ObjectDoesNotExist:
-            notif = Notif()
-            if type(liked_obj) is UserPost:
-                notif.user_post = liked_obj
-                obj_type = 'post'
-            else:
-                notif.user_reply = liked_obj
-                obj_type = 'reply'
+            notif = create_new_notif_for_liked_obj(liked_obj, liker_name, is_gamified, liked_obj_owner)
+            like_notif = create_new_like_notif(notif)
 
-            notif.title = '{0} <b>menyukai</b> {1} Anda yang berjudul "{2}"'.format(liker_name, obj_type, liked_obj.subject)
-            notif.desc = '{0} telah menyukai sebuah {1} Anda yang berjudul "{2}"'.format(liker_name, obj_type, liked_obj.subject)
-            notif.notif_type = 'l'
-            notif.is_gamified = is_gamified
-            notif.img_loc = 'l'
-            notif.receiver = liked_obj_owner
-            notif.save()
+def create_new_notif_for_liked_obj(liked_obj, liker_name, is_gamified, liked_obj_owner):
+    notif = Notif()
+    if type(liked_obj) is UserPost:
+        notif.user_post = liked_obj
+        obj_type = 'post'
+    else:
+        notif.user_reply = liked_obj
+        obj_type = 'reply'
 
-            like_notif = LikeNotif()
-            like_notif.notif = notif
-            like_notif.like_quantity = 1
-            like_notif.save()
+    notif.title = '{0} <b>menyukai</b> {1} Anda yang berjudul "{2}"'.format(liker_name, obj_type, liked_obj.subject)
+    notif.desc = '{0} telah menyukai sebuah {1} Anda yang berjudul "{2}"'.format(liker_name, obj_type, liked_obj.subject)
+    notif.notif_type = 'l'
+    notif.is_gamified = is_gamified
+    notif.img_loc = 'l'
+    notif.receiver = liked_obj_owner
+    notif.save()
+    return notif
 
-    # notif = Notif()
-    # if type(liked_obj) is UserPost:
-    #     notif.user_post = liked_obj
-    # else:
-    #     notif.user_reply = liked_obj
-    
+def create_new_like_notif(notif):
+    like_notif = LikeNotif()
+    like_notif.notif = notif
+    like_notif.like_quantity = 1
+    like_notif.save()
+    return like_notif
+
+
 
 def add_reply_notif(parent, reply, is_gamified, reply_creator):
     reply_creator_fullname = reply_creator.get_full_name()
