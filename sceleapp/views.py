@@ -15,7 +15,7 @@ from django.core import serializers
 
 from sceleapp.forms import RegisterForm, UserPostForm, UserReplyForm
 
-from sceleapp.models import Gamification, UserBadge, UserPost, UserReply, Badge, Notif, PostLike, GivenPostLike, ReplyLike, GivenReplyLike, UserParticipation, UserActivity, PostNotif, ReplyNotif
+from sceleapp.models import Gamification, UserBadge, UserPost, UserReply, Badge, Notif, PostLike, GivenPostLike, ReplyLike, GivenReplyLike, UserParticipation, UserActivity, PostNotif, ReplyNotif, LikeNotif
 
 # Create your views here.
 
@@ -442,6 +442,55 @@ def update_user_activity_record(user, activity_type, is_gamified):
         activity.likes_earned_count -= 1
     activity.save()
 
+def add_like_notif(liked_obj, is_gamified, liker):
+    liker_name = liker.get_full_name()
+    liked_obj_owner = liked_obj.creator
+
+    if liker != liked_obj_owner:
+        try:
+            if type(liked_obj) is UserPost:
+                notif = Notif.objects.get(notif_type='l', is_gamified=is_gamified, is_new=True, user_post=liked_obj, receiver=liked_obj_owner)
+                obj_type = 'post'
+            else:
+                notif = Notif.objects.get(notif_type='l', is_gamified=is_gamified, is_new=True, user_reply=liked_obj, receiver=liked_obj_owner)
+                obj_type = 'reply'
+
+            like_notif = LikeNotif.objects.get(notif=notif)
+            like_notif.like_quantity += 1
+            like_notif.save()
+
+            notif.title = 'Terdapat <b>{0} likes</b> pada {1} Anda yang berjudul "{2}"'.format(like_notif.like_quantity, obj_type, liked_obj.subject)
+            notif.desc = 'Terdapat {0} likes baru pada {1} Anda yang berjudul "{2}"'.format(like_notif.like_quantity, obj_type, liked_obj.subject)
+            notif.save()
+
+        except ObjectDoesNotExist:
+            notif = Notif()
+            if type(liked_obj) is UserPost:
+                notif.user_post = liked_obj
+                obj_type = 'post'
+            else:
+                notif.user_reply = liked_obj
+                obj_type = 'reply'
+
+            notif.title = '{0} <b>menyukai</b> {1} Anda yang berjudul "{2}"'.format(liker_name, obj_type, liked_obj.subject)
+            notif.desc = '{0} telah menyukai sebuah {1} Anda yang berjudul "{2}"'.format(liker_name, obj_type, liked_obj.subject)
+            notif.notif_type = 'l'
+            notif.is_gamified = is_gamified
+            notif.img_loc = 'l'
+            notif.receiver = liked_obj_owner
+            notif.save()
+
+            like_notif = LikeNotif()
+            like_notif.notif = notif
+            like_notif.like_quantity = 1
+            like_notif.save()
+
+    # notif = Notif()
+    # if type(liked_obj) is UserPost:
+    #     notif.user_post = liked_obj
+    # else:
+    #     notif.user_reply = liked_obj
+    
 
 def add_reply_notif(parent, reply, is_gamified, reply_creator):
     reply_creator_fullname = reply_creator.get_full_name()
@@ -798,6 +847,9 @@ def add_like(request):
             postlike = create_new_postlike(user, userpost, is_gamified)
         postlike.save()
 
+        # update notif
+        add_like_notif(userpost, is_gamified, user)
+
         # add user likes given
         update_user_activity_record(user, 'lga', is_gamified)
 
@@ -827,6 +879,9 @@ def add_like(request):
         except ObjectDoesNotExist:
             replylike = create_new_replylike(user, userreply, is_gamified)
         replylike.save()
+
+        # update notif
+        add_like_notif(userreply, is_gamified, user)
         
         update_user_activity_record(user, 'lga', is_gamified)
 
