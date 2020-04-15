@@ -123,8 +123,12 @@ class Notif(models.Model):
 	created_at = models.DateTimeField(auto_now_add=True)
 	is_new = models.BooleanField(default=True)
 	img_loc = models.CharField(max_length=200)
+	
+	# the post that has been replied
 	user_post = models.ForeignKey(UserPost, on_delete=models.SET_NULL, null=True, blank=True)
+	# the reply that has been replied
 	user_reply = models.ForeignKey(UserReply, on_delete=models.SET_NULL, null=True, blank=True)
+	
 	receiver = models.ForeignKey(User, on_delete=models.CASCADE)  # receiver gak mungkin dihapus
 
 	class Meta:

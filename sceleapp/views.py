@@ -442,6 +442,7 @@ def update_user_activity_record(user, activity_type, is_gamified):
         activity.likes_earned_count -= 1
     activity.save()
 
+
 def add_reply_notif(parent, reply, is_gamified, reply_creator):
     reply_creator_fullname = reply_creator.get_full_name()
     parent_creator = parent.creator
@@ -456,37 +457,51 @@ def add_reply_notif(parent, reply, is_gamified, reply_creator):
                 notif = Notif.objects.get(notif_type='r', is_new=True, user_reply=parent, receiver=parent_creator)
                 parent_type = 'reply'
             
-            reply_notif = ReplyNotif.objects.get(notif=notif)
-            reply_notif.rep_quantity += 1
-            reply_notif.reply = None
-            reply_notif.save()
-
-            notif.title = 'Terdapat <b>{0} komentar baru</b> pada {1} Anda yang berjudul "{2}"'.format(reply_notif.rep_quantity, parent_type, parent.subject)
-            notif.desc = 'Terdapat {0} komentar baru yang belum Anda buka pada {1} Anda yang berjudul "{2}"'.format(reply_notif.rep_quantity, parent_type, parent.subject)
-            notif.save()
+            reply_notif = update_reply_notif(notif)
+            notif = update_notif_for_reply(notif, reply_notif, parent_type, parent)
         
         except ObjectDoesNotExist:
-            notif = Notif()
-            if type(parent) is UserPost:
-                notif.user_post = parent
-                parent_type = 'post'
-            else:
-                notif.user_reply = parent
-                parent_type = 'reply'
+            notif = create_new_notif_for_reply(parent, parent_creator, reply_creator_fullname, is_gamified)
+            reply_notif = create_new_reply_notif(notif, reply)
 
-            notif.title = '{0} <b>mengomentari</b> {1} Anda yang berjudul "{2}"'.format(reply_creator_fullname, parent_type, parent.subject)
-            notif.desc = '{0} telah mengomentari sebuah {1} Anda yang berjudul "{2}"'.format(reply_creator_fullname, parent_type, parent.subject)
-            notif.notif_type = 'r'
-            notif.is_gamified = is_gamified
-            notif.img_loc = 'r'
-            notif.receiver = parent_creator
-            notif.save()
+def update_reply_notif(notif):
+    reply_notif = ReplyNotif.objects.get(notif=notif)
+    reply_notif.rep_quantity += 1
+    reply_notif.reply = None
+    reply_notif.save()
+    return reply_notif
 
-            reply_notif = ReplyNotif()
-            reply_notif.notif = notif
-            reply_notif.rep_quantity = 1
-            reply_notif.reply = reply
-            reply_notif.save()
+def update_notif_for_reply(notif, reply_notif, parent_type, parent):
+    notif.title = 'Terdapat <b>{0} komentar baru</b> pada {1} Anda yang berjudul "{2}"'.format(reply_notif.rep_quantity, parent_type, parent.subject)
+    notif.desc = 'Terdapat {0} komentar baru yang belum Anda buka pada {1} Anda yang berjudul "{2}"'.format(reply_notif.rep_quantity, parent_type, parent.subject)
+    notif.save()
+    return notif
+
+def create_new_notif_for_reply(parent, parent_creator, reply_creator_fullname, is_gamified):
+    notif = Notif()
+    if type(parent) is UserPost:
+        notif.user_post = parent
+        parent_type = 'post'
+    else:
+        notif.user_reply = parent
+        parent_type = 'reply'
+
+    notif.title = '{0} <b>mengomentari</b> {1} Anda yang berjudul "{2}"'.format(reply_creator_fullname, parent_type, parent.subject)
+    notif.desc = '{0} telah mengomentari sebuah {1} Anda yang berjudul "{2}"'.format(reply_creator_fullname, parent_type, parent.subject)
+    notif.notif_type = 'r'
+    notif.is_gamified = is_gamified
+    notif.img_loc = 'r'
+    notif.receiver = parent_creator
+    notif.save()
+    return notif
+
+def create_new_reply_notif(notif, reply):
+    reply_notif = ReplyNotif()
+    reply_notif.notif = notif
+    reply_notif.rep_quantity = 1
+    reply_notif.reply = reply
+    reply_notif.save()
+    return reply_notif
 
 
 def add_post_notif(post, is_gamified, creator):
