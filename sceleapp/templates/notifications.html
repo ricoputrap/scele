@@ -44,7 +44,7 @@
 {% block script %}
 <script>
     var forum_url = "{% url 'forum' %}";
-    var getNotifUrl = "{% url 'get-notif' %}";
+    var notif_url = "{% url 'opennotif' %}";
     var post_url = "{% url 'post' id=0 %}";
 </script>
 <script src="{% static 'js/notifications.js' %}"></script>

@@ -25,15 +25,21 @@ $(document).ready(function(){
         console.log('SDSD')
         var obj_id = $(this).data('obj_id');
         console.log(obj_id)
-        redirectNotif(obj_id)
+        openAndUpdateNotifItem(obj_id)
     });
 
-    function redirectNotif(obj_id){
+    function openAndUpdateNotifItem(obj_id){
         var postUrl = post_url.substr(0,12)
         $.ajax({
-            url: getNotifUrl,
+            url: notif_url,
             data: {'obj_id': obj_id},
-            type: 'get',
+            type: 'post',
+            dataType: 'json',
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
             success: (data) => {
                 console.log(data)
                 var page = data['res'].page
