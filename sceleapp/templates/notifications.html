@@ -28,7 +28,14 @@
                             <img src="{% static notif.img_loc %}" alt="">
                         </div>
                         <div class="notif-item__details">
-                            <p>{{notif.title|safe}}</p>
+                            
+                            {% if notif.is_new %}
+                            <p><span class="badge badge-pill badge-primary">new</span> {{notif.title|safe}}</p>
+                            {% else %}
+                                <p>{{notif.title|safe}}</p>
+                            {% endif %}
+                                
+                            
                             <sub>{{notif.created_at|get_formatted_time}}</sub>
                         </div>
                     </div>
