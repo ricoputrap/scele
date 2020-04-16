@@ -22,7 +22,6 @@ $(document).ready(function(){
     }
 
     $('.notif-item').click(function(e){
-        console.log('SDSD')
         var obj_id = $(this).data('obj_id');
         console.log(obj_id)
         openAndUpdateNotifItem(obj_id)

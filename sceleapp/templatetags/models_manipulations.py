@@ -12,7 +12,6 @@ register = template.Library()
 @register.filter(name="get_creator")
 def get_creator_name(value):
     tags = '<p>' + str(value.creator.get_full_name()) + '</p>'
-    print(add_indent(tags))
     return value.creator.get_full_name()
 
 @register.filter(name="get_fullname")
@@ -112,8 +111,8 @@ def get_reply_box(reply, active_user):
     except ObjectDoesNotExist:
         total_likes = 0
         user_has_liked = False
-
-    tags = '<div class="box-item" id="' + str(reply.comp_id) + '">' + \
+    
+    tags = '<a id="' + str(reply.comp_id) + '"></a><div class="box-item" id="' + str(reply.comp_id) + '">' + \
                 '<div class="box-item__main-content">'
     
     if creator == active_user:
@@ -156,7 +155,8 @@ def get_reply_box(reply, active_user):
     if type(parent) is UserPost:
         tags += 'post-item'
     else:
-        parent_comp_id = 'rep-' + str(reply.lv - 1) + '-' + str(parent.id)
+        # parent_comp_id = 'rep-' + str(reply.lv - 1) + '-' + str(parent.id)
+        parent_comp_id = str(parent.id)
         tags += parent_comp_id
     
     tags += '">Show Parent</a> | '
