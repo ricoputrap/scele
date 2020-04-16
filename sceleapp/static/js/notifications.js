@@ -25,10 +25,10 @@ $(document).ready(function(){
         console.log('SDSD')
         var obj_id = $(this).data('obj_id');
         console.log(obj_id)
-        getNotif(obj_id)
+        redirectNotif(obj_id)
     });
 
-    function getNotif(obj_id){
+    function redirectNotif(obj_id){
         var postUrl = post_url.substr(0,12)
         $.ajax({
             url: getNotifUrl,
