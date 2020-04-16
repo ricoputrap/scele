@@ -944,6 +944,28 @@ def unlike(request):
     
     return JsonResponse({'new_quantity': new_quantity})
 
+@login_required
+def get_notif_obj(request):
+    user = request.user
+    is_gamified = Gamification.objects.first().is_gamified
+    data = request.GET
+    obj_id = int(data['obj_id'])
+    notif = Notif.objects.get(id=obj_id)
+    res = dict()
+
+    if notif.notif_type == 'p':
+        if notif.user_post:
+            post = notif.user_post
+            res['id'] = post.id
+            res['page'] = 'post'
+            return JsonResponse({'res': res})
+        else:
+            res['page'] = 'forum'
+            return JsonResponse({'res': res})
+
+    dict_notif = model_to_dict(notif)
+    return JsonResponse({'notif': dict_notif})
+
 # TODO if not gamified: redirect error page
 @login_required
 def view_likers(request):

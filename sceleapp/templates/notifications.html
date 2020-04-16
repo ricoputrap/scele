@@ -23,7 +23,7 @@
         <div id="notif-area">
             {% if has_notif %}
                 {% for notif in all_notif %}
-                    <div class="notif-item">
+                    <div class="notif-item" data-obj_id="{{notif.id}}">
                         <div class="notif-item__img">
                             <img src="{% static notif.img_loc %}" alt="">
                         </div>
@@ -39,5 +39,14 @@
         </div>
     </div>
 </section>
+{% endblock %}
+
+{% block script %}
+<script>
+    var forum_url = "{% url 'forum' %}";
+    var getNotifUrl = "{% url 'get-notif' %}";
+</script>
+<script src="{% static 'js/notifications.js' %}"></script>
+<script src="{% static 'js/bootstrap/jquery-3.4.1.min.js' %}"></script>
 {% endblock %}
     

@@ -134,8 +134,8 @@ class Notif(models.Model):
 	class Meta:
 		ordering = ['-created_at']
 
-	def __str__(self):
-		return '{0} got notif "{1}"'.format(self.receiver, self.title)
+	# def __str__(self):
+	# 	return '{0} got notif "{1}"'.format(self.receiver, self.title)
 
 class PostNotif(models.Model):
 	notif = models.OneToOneField(Notif, on_delete=models.CASCADE)
