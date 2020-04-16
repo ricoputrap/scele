@@ -29,6 +29,7 @@ $(document).ready(function(){
     });
 
     function getNotif(obj_id){
+        var postUrl = post_url.substr(0,12)
         $.ajax({
             url: getNotifUrl,
             data: {'obj_id': obj_id},
@@ -37,7 +38,8 @@ $(document).ready(function(){
                 console.log(data)
                 var page = data['res'].page
                 if (page === 'post'){
-                    console.log('post')
+                    postUrl = postUrl + data['res'].id
+                    window.location.replace(postUrl)
                 }
                 else if (page === 'forum'){
                     window.location.replace(forum_url)
