@@ -712,7 +712,7 @@ def add_reply(request, post_id, parent_type, parent_id):
             
             update_user_activity_record(user, 'ar', is_gamified)
             user_participation = UserParticipation.objects.get(user=user)
-            if not user_participation.has_replied:
+            if not user_participation.has_replied and user != parent.creator:
                 update_user_participation(user, 'r', newRep)
                 add_participation_badge_notif(user, 'p2', newRep)
         return redirect('post', id=post.id)
