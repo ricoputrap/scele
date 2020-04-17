@@ -1031,7 +1031,7 @@ def open_and_update_notif_item(request):
     if notif_type == 'p':
         if notif.user_post:
             post = notif.user_post
-            res = prepare_res(res, post.id, 'post')
+            res = setup_res(res, post, 'post')
         else:
             res['page'] = 'forum'
     elif notif_type == 'r':
@@ -1039,21 +1039,24 @@ def open_and_update_notif_item(request):
         # Mengomentari sebuah reply
         if reply_notif.reply:
             new_reply = reply_notif.reply
-            parent_post = get_post(new_reply)
-            res = prepare_res(res, new_reply.id, 'reply', parent_post.id)
+            res = setup_res(res, new_reply, 'reply')
         # Terdapat > 1 reply pada sebuah post
         elif notif.user_post:
             parent_post = notif.user_post
-            res = prepare_res(res, parent_post.id, 'post')
+            res = setup_res(res, parent_post, 'post')
         # Terdapat > 1 reply pada sebuah reply
         else:
             parent_reply = notif.user_reply
-            parent_post = get_post(parent_reply)
-            res = prepare_res(res, parent_reply.id, 'reply', parent_post.id)
+            res = setup_res(res, parent_reply, 'reply')
     return JsonResponse({'res': res})
 
-    # dict_notif = model_to_dict(notif)
-    # return JsonResponse({'notif': dict_notif})
+def setup_res(res, redirect_obj, page_type):
+    res['id'] = redirect_obj.id
+    res['page'] = page_type
+    if type(redirect_obj) is UserReply:
+        parent_post = get_post(redirect_obj)
+        res['post_id'] = parent_post.id
+    return res
 
 def prepare_res(res, obj_id, page_type, parent_post_id=None):
     if parent_post_id:
