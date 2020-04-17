@@ -706,7 +706,7 @@ def add_reply(request, post_id, parent_type, parent_id):
                 newRep.save()
                 add_reply_notif(post, newRep, is_gamified, user)
             else:
-                newRep.host_reply = UserReply.objects.get(id=parent_id)
+                newRep.host_reply = parent
                 newRep.save()
                 add_reply_notif(parent, newRep, is_gamified, user)
             
@@ -714,6 +714,7 @@ def add_reply(request, post_id, parent_type, parent_id):
             user_participation = UserParticipation.objects.get(user=user)
             if not user_participation.has_replied:
                 update_user_participation(user, 'r', newRep)
+                add_participation_badge_notif(user, 'p2', newRep)
         return redirect('post', id=post.id)
     else:
         form = UserReplyForm()
