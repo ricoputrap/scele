@@ -1031,31 +1031,33 @@ def open_and_update_notif_item(request):
     if notif_type == 'p':
         if notif.user_post:
             post = notif.user_post
-            res['id'] = post.id
-            res['page'] = 'post'
-            return JsonResponse({'res': res})
+            res = prepare_res(res, post.id, 'post')
         else:
             res['page'] = 'forum'
-            return JsonResponse({'res': res})
     elif notif_type == 'r':
         reply_notif = ReplyNotif.objects.get(notif=notif)
+        # Mengomentari sebuah reply
         if reply_notif.reply:
             new_reply = reply_notif.reply
             parent_post = get_post(new_reply)
-            res['post_id'] = parent_post.id
-            res['id'] = new_reply.id
-            res['page'] = 'reply'
+            res = prepare_res(res, new_reply.id, 'reply', parent_post.id)
+        # Terdapat > 1 reply pada sebuah post
         elif notif.user_post:
             parent_post = notif.user_post
-            res['id'] = parent_post.id
-            res['page'] = 'post'
+            res = prepare_res(res, parent_post.id, 'post')
+        # Terdapat > 1 reply pada sebuah reply
         else:
             parent_reply = notif.user_reply
             parent_post = get_post(parent_reply)
-            res['post_id'] = parent_post.id
-            res['id'] = parent_reply.id
-            res['page'] = 'reply'
-        return JsonResponse({'res': res})
+            res = prepare_res(res, parent_reply.id, 'reply', parent_post.id)
+    return JsonResponse({'res': res})
 
-    dict_notif = model_to_dict(notif)
-    return JsonResponse({'notif': dict_notif})
+    # dict_notif = model_to_dict(notif)
+    # return JsonResponse({'notif': dict_notif})
+
+def prepare_res(res, obj_id, page_type, parent_post_id=None):
+    if parent_post_id:
+        res['post_id'] = parent_post_id
+    res['id'] = obj_id
+    res['page'] = page_type
+    return res
