@@ -890,10 +890,11 @@ def add_like(request):
         post_owner = userpost.creator
         update_user_activity_record(post_owner, 'lea', is_gamified)
 
-        # update whether user has posted or not yet
+        # update whether user has liked or not yet
         user_participation = UserParticipation.objects.get(user=user)
-        if not user_participation.has_liked:
+        if not user_participation.has_liked and user != userpost.creator:
             update_user_participation(user, 'lp', userpost)
+            add_participation_badge_notif(user, 'p3', userpost)
 
         # update whether user has been liked 3 times
         if not user_participation.has_been_liked_3_times:
@@ -924,8 +925,9 @@ def add_like(request):
 
         # update whether user has replied or not yet
         user_participation = UserParticipation.objects.get(user=user)
-        if not user_participation.has_liked:
+        if not user_participation.has_liked and user != userreply.creator:
             update_user_participation(user, 'lr', userreply)
+            add_participation_badge_notif(user, 'p3', userreply)
 
         # update whether user has been liked 3 times
         if not user_participation.has_been_liked_3_times:
