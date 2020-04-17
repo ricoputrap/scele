@@ -1048,6 +1048,14 @@ def open_and_update_notif_item(request):
         else:
             parent_reply = notif.user_reply
             res = setup_res(res, parent_reply, 'reply')
+    elif notif_type == 'l':
+        if notif.user_post:
+            liked_post = notif.user_post
+            res = setup_res(res, liked_post, 'post')
+        else:
+            liked_reply = notif.user_reply
+            res = setup_res(res, liked_reply, 'reply')
+
     return JsonResponse({'res': res})
 
 def setup_res(res, redirect_obj, page_type):
