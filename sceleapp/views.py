@@ -4,6 +4,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import JsonResponse
+from django.urls import reverse
 from django.forms.models import model_to_dict
 import json
 
@@ -377,17 +378,45 @@ def get_replies(all_replies, parent, lv, is_gamified):
             get_replies(all_replies, rep, lv+1, is_gamified)
     return all_replies
 
-# ('p', 'Create a post'),
-# ('r', 'Create a reply'),
-# ('l', 'Give a like'),
-# ('n', 'Receive 3 likes'),
-
 def assign_user_badge(code, user):
     user_badge = UserBadge()
     badge = Badge.objects.get(code=code)
     user_badge.owner = user
     user_badge.badge = badge
     return user_badge
+
+def add_participation_badge_notif(user, code, obj):
+    notif = Notif()
+    notif.notif_type = 'b'
+    notif.is_gamified = True
+    notif.receiver = user
+
+    if code == 'p1':
+        # post_url = reverse('post', kwargs={'id': obj.id})
+        notif.title = 'Anda berhasil mendapatkan "<b>Initiator</b>" badge!'
+        notif.desc = 'Anda berhasil mendapatkan "<b>Initiator</b>" badge karena telah mencoba memulai sebuah diskusi!'
+        notif.img_loc = 'img/badges/participation/initiator-badge.png'
+        notif.user_post = obj
+    elif code == 'p2':
+        notif.title = 'Anda berhasil mendapatkan "<b>Commentator</b>" badge!'
+        notif.desc = 'Anda berhasil mendapatkan "<b>Commentator</b>" badge karena telah mencoba menghidupkan diskusi!'
+        notif.img_loc = 'img/badges/participation/commentator-badge.png'
+        notif.user_reply = obj
+    elif code == 'p3':
+        notif.title = 'Anda berhasil mendapatkan "<b>Appreciator</b>" badge!'
+        notif.img_loc = 'img/badges/participation/appreciator-badge.png'
+        if type(obj) is UserPost:
+            notif.desc = 'Anda berhasil mendapatkan "<b>Appreciator</b>" badge karena telah mencoba mengapresiasi post dari pengguna lain!'
+            notif.user_post = obj
+        else:
+            notif.desc = 'Anda berhasil mendapatkan "<b>Appreciator</b>" badge karena telah mencoba mengapresiasi reply dari pengguna lain!'
+            notif.user_post = obj
+    else:
+        notif.title = 'Anda berhasil mendapatkan "<b>Noticeable</b>" badge!'
+        notif.desc = 'Anda berhasil mendapatkan "<b>Noticeable</b>" badge karena telah mendapatkan apresiasi berupa 3 buah likes dari pengguna lain!'
+        notif.img_loc = 'img/badges/participation/noticeable-badge.png'
+    notif.save()
+
 
 def update_user_participation_has_been_liked(user):
     user_participation = UserParticipation.objects.get(user=user)
@@ -628,6 +657,7 @@ def add_post(request):
                 user_participation = UserParticipation.objects.get(user=user)
                 if not user_participation.has_posted:
                     update_user_participation(user, 'p', newPost)
+                    add_participation_badge_notif(user, 'p1', newPost)
 
         return redirect('forum')
     else:
