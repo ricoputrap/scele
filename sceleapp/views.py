@@ -1023,11 +1023,12 @@ def open_and_update_notif_item(request):
     obj_id = int(data['obj_id'])
     notif = Notif.objects.get(id=obj_id)
     res = dict()
+    notif_type = notif.notif_type
 
     if notif.is_new:
         make_notif_is_not_new(notif)
 
-    if notif.notif_type == 'p':
+    if notif_type == 'p':
         if notif.user_post:
             post = notif.user_post
             res['id'] = post.id
@@ -1036,6 +1037,25 @@ def open_and_update_notif_item(request):
         else:
             res['page'] = 'forum'
             return JsonResponse({'res': res})
+    elif notif_type == 'r':
+        reply_notif = ReplyNotif.objects.get(notif=notif)
+        if reply_notif.reply:
+            new_reply = reply_notif.reply
+            parent_post = get_post(new_reply)
+            res['post_id'] = parent_post.id
+            res['id'] = new_reply.id
+            res['page'] = 'reply'
+        elif notif.user_post:
+            parent_post = notif.user_post
+            res['id'] = parent_post.id
+            res['page'] = 'post'
+        else:
+            parent_reply = notif.user_reply
+            parent_post = get_post(parent_reply)
+            res['post_id'] = parent_post.id
+            res['id'] = parent_reply.id
+            res['page'] = 'reply'
+        return JsonResponse({'res': res})
 
     dict_notif = model_to_dict(notif)
     return JsonResponse({'notif': dict_notif})

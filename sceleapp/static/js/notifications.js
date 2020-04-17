@@ -49,6 +49,10 @@ $(document).ready(function(){
                 else if (page === 'forum'){
                     window.location.replace(forum_url)
                 }
+                else if (page === 'reply'){
+                    var replyUrl = postUrl + data['res'].post_id + '#' + data['res'].id
+                    window.location.replace(replyUrl)
+                }
             }
         });
     }
