@@ -883,16 +883,15 @@ def add_like(request):
         # update notif
         add_like_notif(userpost, is_gamified, user)
 
-        # add user likes given
-        update_user_activity_record(user, 'lga', is_gamified)
-
-        # add post_owner likes earned 
+        # add post_owner likes earned and user likes given
         post_owner = userpost.creator
-        update_user_activity_record(post_owner, 'lea', is_gamified)
+        if user != post_owner:
+            update_user_activity_record(user, 'lga', is_gamified)
+            update_user_activity_record(post_owner, 'lea', is_gamified)
 
         # update whether user has liked or not yet
         user_participation = UserParticipation.objects.get(user=user)
-        if not user_participation.has_liked and user != userpost.creator:
+        if not user_participation.has_liked and user != post_owner:
             update_user_participation(user, 'lp', userpost)
             add_participation_badge_notif(user, 'p3', userpost)
 
@@ -917,15 +916,15 @@ def add_like(request):
         # update notif
         add_like_notif(userreply, is_gamified, user)
         
-        update_user_activity_record(user, 'lga', is_gamified)
-
-        # add reply_owner likes earned
+        # add reply_owner likes earned & user likes given
         reply_owner = userreply.creator
-        update_user_activity_record(reply_owner, 'lea', is_gamified)
+        if user != reply_owner:
+            update_user_activity_record(user, 'lga', is_gamified)
+            update_user_activity_record(reply_owner, 'lea', is_gamified)
 
         # update whether user has replied or not yet
         user_participation = UserParticipation.objects.get(user=user)
-        if not user_participation.has_liked and user != userreply.creator:
+        if not user_participation.has_liked and user != reply_owner:
             update_user_participation(user, 'lr', userreply)
             add_participation_badge_notif(user, 'p3', userreply)
 
@@ -972,8 +971,10 @@ def unlike(request):
             GivenReplyLike.objects.get(liker=user, reply_like=replylike).delete()
         else:
             replylike.delete()
-    update_user_activity_record(user, 'lgs', is_gamified)
-    update_user_activity_record(owner, 'les', is_gamified)
+    
+    if user != owner:
+        update_user_activity_record(user, 'lgs', is_gamified)
+        update_user_activity_record(owner, 'les', is_gamified)
     
     return JsonResponse({'new_quantity': new_quantity})
 

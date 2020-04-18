@@ -112,7 +112,7 @@ def get_reply_box(reply, active_user):
         total_likes = 0
         user_has_liked = False
     
-    tags = '<a id="' + str(reply.comp_id) + '"></a><div class="box-item" id="' + str(reply.comp_id) + '">' + \
+    tags = '<div class="box-item" id="' + str(reply.comp_id) + '">' + \
                 '<div class="box-item__main-content">'
     
     if creator == active_user:

@@ -140,7 +140,6 @@ $(document).ready(function() {
           }
         },
         success: (data) => {
-          console.log(data['response'])
           var likers = data['response']
           var content = "";
           $.each(likers, function(key, val) {
@@ -190,7 +189,6 @@ $(document).ready(function() {
           }
         },
         success: (data) => {
-          console.log(data)
           if (item_type === 'p') {
             window.location.replace(forum_url);
           }
