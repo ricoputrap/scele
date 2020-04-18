@@ -385,7 +385,7 @@ def assign_user_badge(code, user):
     user_badge.badge = badge
     return user_badge
 
-def add_participation_badge_notif(user, code, obj):
+def add_participation_badge_notif(user, code, obj=None):
     notif = Notif()
     notif.notif_type = 'b'
     notif.is_gamified = True
@@ -423,6 +423,7 @@ def update_user_participation_has_been_liked(user):
     if not user_participation.has_been_liked_3_times:
         if has_first_3_likes(user):
             update_user_participation(user, 'liked')
+            add_participation_badge_notif(user, 'p4')
 
 def update_user_participation(user, activity_type, obj=None):
     user_participation = UserParticipation.objects.get(user=user)
