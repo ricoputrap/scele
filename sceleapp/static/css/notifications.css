@@ -49,3 +49,50 @@
     margin-bottom: 0;
     color: #999999;
 }
+
+/* MODAL AREA */
+.modal-body {
+    padding: 1rem 0;
+}
+
+.modal-content__content-area {
+    padding: 0 2rem;
+}
+
+.modal-content h3 {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.modal-content p {
+    color: #999999;
+}
+
+.modal-content hr {
+    margin-top: 0;
+}
+
+
+.btn {
+    border-radius: 0;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    cursor: pointer;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2), 0 2px 20px rgba(0, 0, 0, 0.19);
+}
+
+.btn--block {
+    display: block;
+    width: 100%;
+}
+
+.btn--green {
+    background-color: #8EC63F;
+    color: #fff;
+}
+
+.btn--green:hover {
+    background-color: #77AE29;
+    color: #fff;
+}

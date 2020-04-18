@@ -40,19 +40,46 @@ $(document).ready(function(){
                 }
             },
             success: (data) => {
-                console.log(data)
-                var page = data['res'].page
-                if (page === 'post'){
-                    postUrl = postUrl + data['res'].id
-                    window.location.replace(postUrl)
+                var res = data['res']
+                console.log(res)
+                if ('page' in res) {
+                    var page = res.page;
                 }
-                else if (page === 'forum'){
-                    window.location.replace(forum_url)
+                
+                if ('is_badge' in res){
+                    content =   '<div class="modal-content__content-area">' +
+                                    '<img src="' + res.img_loc + '" alt="badge-img">' +
+                                    '<h3>Selamat!</h3>' +
+                                    '<p>' + res.desc + '</p>' +
+                                    '<button type="close" class="btn btn--block btn--green" data-dismiss="modal">OK</button>' +
+                                '</div>'
+                    if (page === 'post') {
+                        postUrl = postUrl + data['res'].id
+                        content += '<hr><a href="' + postUrl + '" class="font-bold">Lihat ' + page + '</a>'
+                    }
+                    else if (page === 'reply') {
+                        var replyUrl = postUrl + data['res'].post_id + '#' + data['res'].id
+                        content += '<hr><a href="' + replyUrl + '" class="font-bold">Lihat ' + page + '</a>'
+                    }
+                    $('.modal-body').html(content);
+                    $('#modal').modal('show');
                 }
-                else if (page === 'reply'){
-                    var replyUrl = postUrl + data['res'].post_id + '#' + data['res'].id
-                    window.location.replace(replyUrl)
+                else {
+                    if (page === 'post'){
+                        postUrl = postUrl + data['res'].id
+                        window.location.replace(postUrl)
+                    }
+                    else if (page === 'forum'){
+                        window.location.replace(forum_url)
+                    }
+                    else if (page === 'reply'){
+                        var replyUrl = postUrl + data['res'].post_id + '#' + data['res'].id
+                        window.location.replace(replyUrl)
+                    }
                 }
+
+                
+                
             }
         });
     }

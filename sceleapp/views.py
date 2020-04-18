@@ -8,7 +8,7 @@ from django.urls import reverse
 from django.forms.models import model_to_dict
 import json
 
-
+from django.templatetags.static import static
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
@@ -1060,13 +1060,12 @@ def open_and_update_notif_item(request):
     res = dict()
     notif_type = notif.notif_type
 
-    if notif.is_new:
-        make_notif_is_not_new(notif)
+    
 
     if notif_type == 'p':
         if notif.user_post:
             post = notif.user_post
-            res = setup_res(res, post, 'post')
+            res = setup_res(res, 'post', post)
         else:
             res['page'] = 'forum'
     elif notif_type == 'r':
@@ -1074,26 +1073,45 @@ def open_and_update_notif_item(request):
         # Mengomentari sebuah reply
         if reply_notif.reply:
             new_reply = reply_notif.reply
-            res = setup_res(res, new_reply, 'reply')
+            res = setup_res(res, 'reply', new_reply)
         # Terdapat > 1 reply pada sebuah post
         elif notif.user_post:
             parent_post = notif.user_post
-            res = setup_res(res, parent_post, 'post')
+            res = setup_res(res, 'post', parent_post)
         # Terdapat > 1 reply pada sebuah reply
         else:
             parent_reply = notif.user_reply
-            res = setup_res(res, parent_reply, 'reply')
+            res = setup_res(res, 'reply', parent_reply)
     elif notif_type == 'l':
         if notif.user_post:
             liked_post = notif.user_post
-            res = setup_res(res, liked_post, 'post')
+            res = setup_res(res, 'post', liked_post)
         else:
             liked_reply = notif.user_reply
-            res = setup_res(res, liked_reply, 'reply')
+            res = setup_res(res, 'reply', liked_reply)
+    elif notif_type == 'b':
+        if notif.is_new:
+            res = setup_modal_res(res, notif)
+        if notif.user_post:
+            badged_post = notif.user_post
+            res = setup_res(res, 'post', badged_post)
+        elif notif.user_reply:
+            badged_post = notif.user_reply
+            res = setup_res(res, 'reply', badged_post)
+
+    if notif.is_new:
+        make_notif_is_not_new(notif)
 
     return JsonResponse({'res': res})
 
-def setup_res(res, redirect_obj, page_type):
+def setup_modal_res(res, notif):
+    res['title'] = notif.title
+    res['desc'] = notif.desc
+    res['img_loc'] = static(notif.img_loc)
+    res['is_badge'] = True
+    return res
+
+def setup_res(res, page_type, redirect_obj):
     res['id'] = redirect_obj.id
     res['page'] = page_type
     if type(redirect_obj) is UserReply:
