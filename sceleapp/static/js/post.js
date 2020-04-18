@@ -25,6 +25,7 @@ $(document).ready(function() {
 
   $('.btn-like').click(function(e) {
     e.preventDefault();
+    // $('#likersModal').modal('show');
     var like_type = 'r';
     if ($(this).is('#postlike')) {
       like_type = 'p';
