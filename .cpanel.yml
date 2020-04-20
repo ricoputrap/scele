@@ -1,5 +1,5 @@
 ---
 deployment:
  tasks:
- - export DEPLOYPATH=/home/dummysce/dummyscele.xyz
+ - export DEPLOYPATH=/home/dummysce/game.dummyscele.xyz
  - /usr/bin/rsync -Paz * $DEPLOYPATH --delete
