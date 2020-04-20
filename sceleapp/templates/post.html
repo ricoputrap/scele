@@ -99,14 +99,14 @@
                         {% endif %}
                         
                         {% if post|is_updateable %}
-                        <a href="{% url 'edit-post' id=post.id %}" class="btn-edit" id="postedit" data-obj_id="{{post.id}}">Edit</a>
-                        |
-                        <a href="" class="btn-delete" id="postdelete" data-obj_id="{{post.id}}">Delete</a>
-                        |
+                            {% if post.creator == user %}
+                            <a href="{% url 'edit-post' id=post.id %}" class="btn-edit" id="postedit" data-obj_id="{{post.id}}">Edit</a>
+                            |
+                            <a href="" class="btn-delete" id="postdelete" data-obj_id="{{post.id}}">Delete</a>
+                            |
+                            {% endif %}
                         {% endif %}
                         <a href="{% url 'addreply' post_id=post.id parent_type='0' parent_id=post.id %}">Reply</a>
-                        
-                        
                     </div>
                 </div>
             </div>
