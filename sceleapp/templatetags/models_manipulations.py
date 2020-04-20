@@ -167,7 +167,7 @@ def get_reply_box(reply, active_user):
         else:
             tags += '<a href="" class="btn-like" data-obj_id="' + str(reply.obj.id) + '">Like</a> | '
     
-    if is_updateable(reply.obj):
+    if is_updateable(reply.obj) and creator == active_user:
         tags += '<a href="' + str(edit_reply_url) + '" class="btn-edit" data-obj_id="' + str(reply.obj.id) + '">Edit</a> | ' + \
                         '<a href="" class="btn-delete" data-obj_id="' + str(reply.obj.id) + '">Delete</a> | '
 
