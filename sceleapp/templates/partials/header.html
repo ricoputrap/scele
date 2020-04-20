@@ -4,7 +4,7 @@
 <div class="header-container row">
     <div class="logo-div text-center item-align-mid">
         <a href="{% url 'dashboard' %}">
-            <img src="{% static "img/univ-logo.png" %}" alt="univ-logo"/>
+            <img src="{% static 'img/univ-logo.png' %}" alt="univ-logo"/>
         </a>
     </div>
     
@@ -15,13 +15,15 @@
     {% if logged_in %}
     <div class="user-div item-align-mid">
         <div class="user-area">
-            <div id="div-notif">
-                <!-- https://fontawesome.com/icons/bell?style=solid -->
-                <img class="align-top" src="{% static "img/notif-icon.png" %}" alt="notif-icon"/>
-                {% if new_notif_count > 0 %}
-                    <span class="notif-num">{{new_notif_count}}</span>
-                {% endif %}
-            </div>
+            <a href="{% url 'notif-page' %}">
+                <div id="div-notif">
+                    <!-- https://fontawesome.com/icons/bell?style=solid -->
+                    <img class="align-top" src="{% static "img/notif-icon.png" %}" alt="notif-icon"/>
+                    {% if new_notif_count > 0 %}
+                        <span class="notif-num">{{new_notif_count}}</span>
+                    {% endif %}
+                </div>
+            </a>
             <div class="div-name">
                 <h5 class="font-open-sans font-semi-bold">{{user_fullname}}</h5>
                 <h6 class="font-open-sans font-regular right"><a href="{% url 'logout' %}">Log out</a></h6>
