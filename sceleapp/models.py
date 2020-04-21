@@ -47,7 +47,7 @@ class UserPost(models.Model):
 		ordering = ['-created_at']
 
 	def __str__(self):
-		return self.subject
+		return '{0} - subject: "{1}" - msg: "{2}"'.format(self.creator, self.subject, self.msg)
 
 class PostLike(models.Model):
 	user_post = models.OneToOneField(UserPost, on_delete=models.SET_NULL, null=True, blank=True)

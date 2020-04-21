@@ -25,6 +25,10 @@ $(document).ready(function(){
         var obj_id = $(this).data('obj_id');
         console.log(obj_id)
         openAndUpdateNotifItem(obj_id)
+
+        // remove "baru" label/badge
+        var selector = '#' + obj_id + ' .badge'
+        $(selector).remove()
     });
 
     function openAndUpdateNotifItem(obj_id){
@@ -77,9 +81,6 @@ $(document).ready(function(){
                         window.location.replace(replyUrl)
                     }
                 }
-
-                
-                
             }
         });
     }
