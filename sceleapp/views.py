@@ -510,6 +510,7 @@ def add_like_notif(liked_obj, is_gamified, liker):
 
             notif.title = 'Terdapat <b>{0} likes</b> pada {1} Anda yang berjudul "{2}"'.format(like_notif.like_quantity, obj_type, liked_obj.subject)
             notif.desc = 'Terdapat {0} likes baru pada {1} Anda yang berjudul "{2}"'.format(like_notif.like_quantity, obj_type, liked_obj.subject)
+            notif.created_at = timezone.now()
             notif.save()
 
         except ObjectDoesNotExist:
@@ -574,6 +575,7 @@ def update_reply_notif(notif):
 def update_notif_for_reply(notif, reply_notif, parent_type, parent):
     notif.title = 'Terdapat <b>{0} komentar baru</b> pada {1} Anda yang berjudul "{2}"'.format(reply_notif.rep_quantity, parent_type, parent.subject)
     notif.desc = 'Terdapat {0} komentar baru yang belum Anda buka pada {1} Anda yang berjudul "{2}"'.format(reply_notif.rep_quantity, parent_type, parent.subject)
+    notif.created_at = timezone.now()
     notif.save()
     return notif
 
