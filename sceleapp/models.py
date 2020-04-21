@@ -120,7 +120,7 @@ class Notif(models.Model):
 	)
 	notif_type = models.CharField(max_length=1, choices=NOTIF_TYPES, default=None)
 	is_gamified = models.BooleanField(default=False)
-	created_at = models.DateTimeField(auto_now=True)
+	created_at = models.DateTimeField(auto_now_add=True)
 	is_new = models.BooleanField(default=True)
 	img_loc = models.CharField(max_length=200)
 	

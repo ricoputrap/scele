@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.forms.models import model_to_dict
 import json
 
+from django.utils import timezone
 from django.templatetags.static import static
 from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
@@ -332,6 +333,8 @@ def get_deepest_replies(deepest_replies, rep):
 
 @login_required
 def view_post(request, id):
+    now = timezone.now()
+    print('now:', now)
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
     if is_gamified:
@@ -339,6 +342,7 @@ def view_post(request, id):
     post_id = int(id)
     # try catch kalo post query dengan is_gamified tidak ditemukan -> error page
     post = UserPost.objects.get(id=post_id)
+    print('post date:', post.created_at)
     # add_post_notif(post, is_gamified, user)
     try:
         total_likes = PostLike.objects.get(user_post=post, is_gamified=is_gamified).quantity
@@ -624,6 +628,7 @@ def update_notif_for_post(notif, post_notif):
     notif.title = 'Terdapat <b>{0} post baru</b>'.format(post_notif.post_quantity)
     notif.desc = 'Terdapat {0} post baru yang belum Anda buka'.format(post_notif.post_quantity)
     notif.user_post = None
+    notif.created_at = timezone.now()
     notif.save()
     return notif
 
