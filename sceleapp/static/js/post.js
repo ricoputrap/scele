@@ -148,10 +148,7 @@ $(document).ready(function() {
         var content = "";
         $.each(likers, function(key, val) {
           content += '<div class="liker-item">' + 
-                        '<a href="#">' +
-                        // '<a href="' + profile_url + '">' +
-                          '<img src="' + pic + '" alt="user-icon">' +
-                        '</a>' +
+                        '<img src="' + pic + '" alt="user-icon">' +
                         '<p>' + val + '</p>' +
                       '</div>';
         });
@@ -177,7 +174,7 @@ $(document).ready(function() {
       delete_item(obj_id, item_type)
     });
   }
-  
+
   function delete_item(obj_id, item_type){
     $.ajax({
       url: del_post_url,
