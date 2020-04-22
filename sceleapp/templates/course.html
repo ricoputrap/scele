@@ -48,12 +48,6 @@
             <div class="section-line">
                 <p class="font-open-sans font-bold">Activity</p>
             </div>
-            <div class="menu-item">
-                <a href="{% url 'forum' %}">
-                    <img src="{% static 'img/forum-icon.png' %}" alt="forum-icon">
-                    <p>Forum</p>
-                </a>
-            </div>
             
             {% if is_gamified %}
             <div class="menu-item">
@@ -63,6 +57,13 @@
                 </a>
             </div>
             {% endif %}
+
+            <div class="menu-item">
+                <a href="{% url 'forum' %}">
+                    <img src="{% static 'img/forum-icon.png' %}" alt="forum-icon">
+                    <p>Forum</p>
+                </a>
+            </div>
         </div>
 
         <div class="col-4">
