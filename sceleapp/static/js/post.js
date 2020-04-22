@@ -178,14 +178,19 @@ $(document).ready(function() {
     if ($(this).is('#postdelete')) {
       item_type = 'p';
     }
-    openDeleteModal()
+    openDeleteModal(obj_id, item_type)
     // delete_item(obj_id, item_type)
   })
 
-  function openDeleteModal() {
+  function openDeleteModal(obj_id, item_type) {
     $('#delete-conf').modal('show')
+
+    $('#delete').click(function(){
+      delete_item(obj_id, item_type)
+    });
   }
 
+  
 
   function delete_item(obj_id, item_type){
     $.ajax({
