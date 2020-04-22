@@ -763,7 +763,9 @@ def add_reply(request, post_id, parent_type, parent_id):
     else:
         notifs = get_notif(user, is_gamified)
         new_notif_count = notifs.filter(is_new=True).count()
-        form = UserReplyForm()
+        subject = 'Re: ' + parent.subject
+        data = {'subject': subject}
+        form = UserReplyForm(initial=data)
         return render(request, 'add-reply.html',
             {'logged_in': True, 'user': user,
             'user_fullname': user.get_full_name(),
