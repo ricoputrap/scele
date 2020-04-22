@@ -7,6 +7,7 @@ from django.http import JsonResponse
 from django.urls import reverse
 from django.forms.models import model_to_dict
 import json
+import pytz
 
 from django.utils import timezone
 from django.templatetags.static import static
@@ -355,8 +356,6 @@ def get_deepest_replies(deepest_replies, rep):
 
 @login_required
 def view_post(request, id):
-    now = timezone.now()
-    print('now:', now)
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
     if is_gamified:
@@ -364,7 +363,8 @@ def view_post(request, id):
     post_id = int(id)
     # try catch kalo post query dengan is_gamified tidak ditemukan -> error page
     post = UserPost.objects.get(id=post_id)
-    print('post date:', post.created_at)
+    created_at = timezone.localtime(post.created_at, timezone.get_fixed_timezone(420))
+    formatedDate = created_at.strftime("%B %d, %Y, %H:%M")
     # add_post_notif(post, is_gamified, user)
     try:
         total_likes = PostLike.objects.get(user_post=post, is_gamified=is_gamified).quantity
@@ -378,6 +378,7 @@ def view_post(request, id):
             'user_fullname': user.get_full_name(),
             'is_gamified': is_gamified,
             'post': post,
+            'formatedDate': formatedDate,
             'total_likes': total_likes,
             'user_has_liked': user_has_liked,
             'new_notif_count': new_notif_count}
