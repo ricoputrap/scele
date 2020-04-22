@@ -214,8 +214,6 @@ def view_course(request):
             'user_activity': user_activity,
             'new_notif_count': new_notif_count}
 
-    # context = populate_activity_results(user, context, is_gamified)
-
     if is_gamified:
         update_user_participation_has_been_liked(user)
         badges = UserBadge.objects.filter(owner=user)
@@ -224,11 +222,6 @@ def view_course(request):
         context['badges'] = badges
         context['latest_badge'] = latest_badge
         context['user_activity'] = user_activity
-
-        # postlikes_earned_count = count_postlikes_earned(user)
-        # replylikes_earned_count = count_replylikes_earned(user)
-        # likes_earned_count = postlikes_earned_count + replylikes_earned_count
-        # context['likes_earned_count'] = likes_earned_count
         
     return render(request, 'course.html', context)
 
@@ -571,8 +564,6 @@ def create_new_like_notif(notif):
     like_notif.save()
     return like_notif
 
-
-
 def add_reply_notif(parent, reply, is_gamified, reply_creator):
     reply_creator_fullname = reply_creator.get_full_name()
     parent_creator = parent.creator
@@ -909,7 +900,6 @@ def create_new_replylike(user, userreply, isgamified):
     replylike.user_reply = userreply
     replylike.quantity = 1
     replylike.is_gamified = isgamified
-    # replylike.reply_owner = user
     return replylike
 
 def record_replyliker(liker, replylike):
@@ -1082,28 +1072,6 @@ def view_notification_page(request):
             'all_notif': all_notif,
             'has_notif': has_notif}
     return render(request, 'notifications.html', context)
-
-@login_required
-def get_notif_obj(request):
-    user = request.user
-    is_gamified = Gamification.objects.first().is_gamified
-    data = request.GET
-    obj_id = int(data['obj_id'])
-    notif = Notif.objects.get(id=obj_id)
-    res = dict()
-
-    if notif.notif_type == 'p':
-        if notif.user_post:
-            post = notif.user_post
-            res['id'] = post.id
-            res['page'] = 'post'
-            return JsonResponse({'res': res})
-        else:
-            res['page'] = 'forum'
-            return JsonResponse({'res': res})
-
-    dict_notif = model_to_dict(notif)
-    return JsonResponse({'notif': dict_notif})
 
 def make_notif_is_not_new(notif):
     notif.is_new = False
