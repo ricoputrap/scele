@@ -184,6 +184,18 @@ def update_grades(user, is_gamified):
     user_activity.grades = grades
     user_activity.save()
 
+# TODO
+def update_bonus(user):
+    user_activity = UserActivity.objects.get(user=user, is_gamified=True)
+    user_badges = UserBadge.objects.filter(owner=user)
+    bonuses = 0
+    if user_badges.count() > 0:
+        for badge in user_badges:
+            bonuses += 5
+    user_activity.bonuses = bonuses
+    user_activity.save()
+    return user_activity
+
 @login_required
 def view_course(request):
     user = request.user
@@ -208,8 +220,10 @@ def view_course(request):
         update_user_participation_has_been_liked(user)
         badges = UserBadge.objects.filter(owner=user)
         latest_badge = badges.last()
+        user_activity = update_bonus(user)
         context['badges'] = badges
         context['latest_badge'] = latest_badge
+        context['user_activity'] = user_activity
 
         # postlikes_earned_count = count_postlikes_earned(user)
         # replylikes_earned_count = count_replylikes_earned(user)
