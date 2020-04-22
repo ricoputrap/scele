@@ -262,9 +262,12 @@ def view_badge_detail(request, code):
     elif badge.user_reply:
         reply = badge.user_reply
         post = get_post(reply)
+        post_url = reverse('post', kwargs={'id': post.id})
+        reply_url = post_url + '#' + str(reply.id)
         badge_type = "Reply"
         context['badge_post'] = post
         context['badge_reply'] = reply
+        context['reply_url'] = reply_url
     context['badge_type'] = badge_type
 
     return render(request, 'badge-detail.html', context)

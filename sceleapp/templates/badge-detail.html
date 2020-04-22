@@ -108,7 +108,7 @@
                         <a class="btn btn-primary" href="{% url 'post' id=badge.user_post.id %}">Lihat Post</a>
                         {% elif badge_type == "Reply" %}
                         <!-- <a href="">{{badge.user_reply}} created at {{badge.user_reply.created_at}}</a> -->
-                        <a class="btn btn-primary" href="">Lihat Reply</a>
+                        <a class="btn btn-primary" href="{{reply_url}}">Lihat Reply</a>
                         {% endif %}                        
                     </div>
                 </div>
@@ -118,4 +118,3 @@
     </div>
 </section>
 {% endblock %}
-    
