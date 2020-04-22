@@ -141,7 +141,7 @@ def get_reply_box(reply, active_user):
     else:
         tags += creator_fulname
     
-    tags += '</span> - ' + str(formatedDate) + '</p></div>' + \
+    tags += '</span> - ' + str(formatedDate) + ' WIB</p></div>' + \
             '<div class="box-item__content__msg">' + str(reply_obj.msg) + '</div></div></div>'
 
     # footer
