@@ -94,7 +94,7 @@
 }
 
 /* DELETE MODAL */
-.modal-body {
+#delete-conf .modal-body {
     padding: 1rem 0;
 }
 
@@ -102,12 +102,12 @@
     padding: 0 2rem;
 }
 
-.modal-content h3 {
+#delete-conf h3 {
     margin-top: 1.5rem;
     margin-bottom: 1.5rem;
 }
 
-.modal-content p {
+#delete-conf p {
     color: #999999;
 }
 
@@ -143,21 +143,3 @@
     background-color: #B82D27;
     color: #fff;
 }
-
-
-
-/* .modal-confirm .icon-box {
-    width: 80px;
-    height: 80px;
-    margin: 0 auto;
-    border-radius: 50%;
-    z-index: 9;
-    text-align: center;
-    border: 3px solid #f15e5e;
-}
-.modal-confirm .icon-box i {
-    color: #f15e5e;
-    font-size: 46px;
-    display: inline-block;
-    margin-top: 13px;
-} */
