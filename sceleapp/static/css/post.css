@@ -40,6 +40,10 @@
     display: flex;
 }
 
+.user-icon-area {
+    height: fit-content;
+}
+
 .box-item a, .box-item a:hover {
     color: #966B00;
     text-decoration: none;

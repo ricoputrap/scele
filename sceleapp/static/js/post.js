@@ -156,17 +156,6 @@ $(document).ready(function() {
                       '</div>';
         });
         $('.modal-body').html(content);
-        // var new_quantity = data['likes'].quantity;
-        // if (like_type === 'p'){
-        //   var like_counter = $('#post-item .likes-count');
-        // }
-        // else {
-        //   obj_attr = '#' + obj_id + ' .likes-count';
-        //   var like_counter = $(obj_attr);
-        // }
-        // updateLikeCounter(like_counter, new_quantity);
-        // obj.text('Unlike');
-        // obj.addClass('liked')
       }
     });
   }
@@ -179,7 +168,6 @@ $(document).ready(function() {
       item_type = 'p';
     }
     openDeleteModal(obj_id, item_type)
-    // delete_item(obj_id, item_type)
   })
 
   function openDeleteModal(obj_id, item_type) {
@@ -189,9 +177,7 @@ $(document).ready(function() {
       delete_item(obj_id, item_type)
     });
   }
-
   
-
   function delete_item(obj_id, item_type){
     $.ajax({
       url: del_post_url,

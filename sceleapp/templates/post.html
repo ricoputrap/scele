@@ -39,7 +39,7 @@
                 <div class="box-item__main-content">
                     
                     {% if post.creator == user %}
-                    <a href="{% url 'profile' %}">
+                    <a class="user-icon-area" href="{% url 'profile' %}">
                         <img src="{% static 'img/user-icon.png' %}" alt="user-icon">
                     </a>
                     {% else %}

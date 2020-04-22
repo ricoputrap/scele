@@ -125,7 +125,7 @@ def get_reply_box(reply, active_user):
                 '<div class="box-item__main-content">'
     
     if creator == active_user:
-        tags += '<a href="' + str(profile_url) + '">' + \
+        tags += '<a class="user-icon-area" href="' + str(profile_url) + '">' + \
                     '<img src="' + str(profile_img) + '" alt="user-icon">' + \
                 '</a>'
     else:
