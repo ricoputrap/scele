@@ -96,32 +96,23 @@
                         <p>: MPKT A Kelas Y</p>
                     </div>
                 </div>
-                <div class="row details__item">
+                {% if badge_type %}
+                <div class="row details__item view-item">
                     <div class="col-2">
-                        {% if badge.badge.activity_type == "p" %}
-                        <p class="font-bold">Post</p>
-                        {% elif badge.badge.activity_type == "r" %}
-                        <p class="font-bold">Reply</p>
-                        {% else %}
-                        <p class="font-bold">Post/Reply</p>
-                        {% endif %}
+                        <p class="font-bold">{{badge_type}}</p>
                     </div>
                     <div class="col-10">
                         <p>:</p>
-                        {% if badge.badge.activity_type == "p" %}
-                        <a href="{% url 'post' id=badge.user_post.id %}">{{badge.user_post}} created at {{badge.user_post.created_at}}</a>
-                        {% elif badge.badge.activity_type == "r" %}
-                        <a href="">{{badge.user_reply}} created at {{badge.user_reply.created_at}}</a>
-                        {% else %}
-                            {% if badge.user_post %}
-                            <a href="">{{badge.user_post}} created at {{badge.user_post.created_at}}</a>
-                            {% elif badge.user_reply %}
-                            <a href="">{{badge.user_reply}} created at {{badge.user_reply.created_at}}</a>
-                            {% endif %}
-                        {% endif %}
-                        
+                        {% if badge_type == "Post" %}
+                        <!-- <a href="{% url 'post' id=badge.user_post.id %}">{{badge.user_post}} created at {{badge.user_post.created_at}}</a> -->
+                        <a class="btn btn-primary" href="{% url 'post' id=badge.user_post.id %}">Lihat Post</a>
+                        {% elif badge_type == "Reply" %}
+                        <!-- <a href="">{{badge.user_reply}} created at {{badge.user_reply.created_at}}</a> -->
+                        <a class="btn btn-primary" href="">Lihat Reply</a>
+                        {% endif %}                        
                     </div>
                 </div>
+                {% endif %}
             </div>
         </div>
     </div>

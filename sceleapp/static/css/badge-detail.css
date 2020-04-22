@@ -32,3 +32,7 @@
 .details__item:last-of-type p, .details__item a {
     display: inline;
 }
+
+.details__item.view-item a {
+    color: #fff;
+}

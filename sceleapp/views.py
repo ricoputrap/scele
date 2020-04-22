@@ -246,15 +246,28 @@ def view_course_badges(request):
 @login_required
 def view_badge_detail(request, code):
     user = request.user
-    badge = UserBadge.objects.get(owner=user, badge__code=code)
     update_user_participation_has_been_liked(user)
     notifs = get_notif(user, True)
     new_notif_count = notifs.filter(is_new=True).count()
-    return render(request, 'badge-detail.html', 
-        {'logged_in': True, 'user': user,
-        'user_fullname': user.get_full_name(),
-        'badge': badge,
-        'new_notif_count': new_notif_count})
+
+    badge = UserBadge.objects.get(owner=user, badge__code=code)
+    context = {'logged_in': True, 'user': user,
+            'user_fullname': user.get_full_name(),
+            'badge': badge,
+            'new_notif_count': new_notif_count}
+    badge_type = ""
+    if badge.user_post:
+        badge_type = "Post"
+        context['badge_post'] = badge.user_post
+    elif badge.user_reply:
+        reply = badge.user_reply
+        post = get_post(reply)
+        badge_type = "Reply"
+        context['badge_post'] = post
+        context['badge_reply'] = reply
+    context['badge_type'] = badge_type
+
+    return render(request, 'badge-detail.html', context)
 
 @login_required
 def view_forum(request):
