@@ -101,6 +101,7 @@ def register(request):
 def view_profile(request):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
+    update_grades(user, is_gamified)
     user_activity = UserActivity.objects.get(user=user, is_gamified=is_gamified)
     notifs = get_notif(user, is_gamified)
     new_notif_count = notifs.filter(is_new=True).count()
@@ -168,12 +169,26 @@ def has_first_3_likes(user):
     user_activity = UserActivity.objects.get(user=user, is_gamified=True)
     return user_activity.likes_earned_count >= 3
 
-
+def update_grades(user, is_gamified):
+    user_activity = UserActivity.objects.get(user=user, is_gamified=is_gamified)
+    posts = UserPost.objects.filter(creator=user, is_gamified=is_gamified)
+    replies = UserReply.objects.filter(creator=user, is_gamified=is_gamified)
+    grades = 0
+    
+    if posts.count() > 0:
+        for post in posts:
+            grades += post.grade
+    if replies.count() > 0:
+        for reply in replies:
+            grades += reply.grade
+    user_activity.grades = grades
+    user_activity.save()
 
 @login_required
 def view_course(request):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
+    update_grades(user, is_gamified)
     notifs = get_notif(user, is_gamified)
     new_notif_count = notifs.filter(is_new=True).count()
     user_activity = UserActivity.objects.get(user=user, is_gamified=is_gamified)
@@ -699,9 +714,6 @@ def get_post(reply):
         return reply.user_post
     else:
         return get_post(reply.host_reply)
-
-
-
 
 @login_required
 def add_reply(request, post_id, parent_type, parent_id):
