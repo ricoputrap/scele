@@ -1,5 +1,5 @@
 from django import template
-from sceleapp.models import UserPost, UserReply, ReplyLike, GivenReplyLike
+from sceleapp.models import UserPost, UserReply, ReplyLike, GivenReplyLike, Badge, UserBadge
 from django.templatetags.static import static
 from django.shortcuts import redirect
 from django.urls import reverse
@@ -231,3 +231,12 @@ def get_formatted_time(value):
     else:
         selisih_int = int(str(selisih)[:2])
         return '{0} hari yang lalu'.format(selisih_int)
+
+@register.filter(name="is_issued_to_me")
+def is_issued_to_me(value, active_user):
+    user_badges = UserBadge.objects.filter(badge=value)
+    if user_badges.count() > 0:
+        for user_badge in user_badges:
+            if user_badge.owner == active_user:
+                return True
+    return False

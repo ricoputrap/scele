@@ -57,12 +57,29 @@
                     <tr class="participatory-badge">
                     {% endif %}
                         <td class="text-center">
+                            {% if badge|is_issued_to_me:user %}
+                            <a href="{% url 'badge-detail' code=badge.code %}">
+                                <img src="{% static badge.img_loc %}" alt="badge.name">
+                            </a>
+                            {% else %}
                             <img src="{% static badge.img_loc %}" alt="badge.name">
+                            {% endif %}
                         </td>
                         <td class="text-center">{{badge.name}}</td>
                         <td>{{badge.desc}}</td>
                         <td>{{badge.criteria|safe}}</td>
-                        <td class="text-center"></td>
+                        
+                        {% if badge|is_issued_to_me:user %}
+                        <td class="text-center">
+                            <a href="{% url 'badge-detail' code=badge.code %}">
+                                <img src="{% static 'img/check-icon.png' %}" alt="check-icon" />
+                            </a>
+                        </td>
+                        {% else %}
+                        <td></td>
+                        {% endif %}
+                        
+                        
                     </tr>
                 {% endfor %}
             </tbody>
