@@ -10,6 +10,8 @@
     {% endif %}
 {% endblock %}
 {% block head %}
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="{% static 'css/post.css' %}">
 {% endblock %}
 
@@ -114,20 +116,58 @@
 
 <!-- Modal -->
 <div class="modal fade" id="likersModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-<div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-    <div class="modal-header">
-        <h5 class="modal-title w-100 text-center font-bold" id="exampleModalLongTitle">Likes</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        
-    </div>
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title w-100 text-center font-bold" id="exampleModalLongTitle">Likes</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            
+        </div>
+        </div>
     </div>
 </div>
+
+<!-- DELETE CONF MESSAGE MODAL -->
+<div class="modal fade" id="delete-conf" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <div class="modal-content__content-area">
+                    <img src="{% static 'img/warning-icon.png' %}" alt="warning-img">
+                    <h3>Are you sure?</h3>
+                    <p>Do you really want to delete this item? You cannot access this item anymore.</p>
+                    <div class="btn-area row">
+                        <div class="col-6">
+                            <span class="btn btn--block btn--red">Cancel</span>
+                        </div>
+                        <div class="col-6">
+                            <span class="btn btn--block btn--green">Delete</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+
+<!-- <div id="delete-conf" class="modal fade">
+	<div class="modal-dialog modal-confirm">
+		<div class="modal-content">
+			<div class="modal-body">
+				<div class="modal-content__content-area">
+                    <img src="" alt="warning-img">
+                    <h3>Apakah Anda yakin?</h3>
+                    <p>Apakah Anda benar-benar ingin menghapusnya? Tindakan ini tidak dapat dibatalkan.</p>
+                </div>
+			</div>
+		</div>
+	</div>
+</div> -->
 {% endblock %}
 {% block script %}
 <script>
