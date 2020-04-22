@@ -97,17 +97,20 @@ def has_liked(user, reply):
 def get_reply_box(reply, active_user):
     profile_url = reverse('profile')
     profile_img = static('img/user-icon.png')
-    creator = reply.obj.creator
+    reply_obj = reply.obj
+    created_at = timezone.localtime(reply_obj.created_at, timezone.get_fixed_timezone(420))
+    formatedDate = created_at.strftime("%B %d, %Y, %H:%M")
+    creator = reply_obj.creator
     creator_fulname = creator.get_full_name()
     user_fullname = active_user.get_full_name()
-    is_gamified = reply.obj.is_gamified
+    is_gamified = reply_obj.is_gamified
     parent = reply.parent
-    post = get_post(reply.obj)
-    reply_url = reverse('addreply', kwargs={'post_id': post.id, 'parent_type': '1', 'parent_id': reply.obj.id})
-    edit_reply_url = reverse('edit-reply', kwargs={'id': reply.obj.id})
+    post = get_post(reply_obj)
+    reply_url = reverse('addreply', kwargs={'post_id': post.id, 'parent_type': '1', 'parent_id': reply_obj.id})
+    edit_reply_url = reverse('edit-reply', kwargs={'id': reply_obj.id})
     try:
-        total_likes = ReplyLike.objects.get(user_reply=reply.obj).quantity
-        user_has_liked = has_liked(active_user, reply.obj)
+        total_likes = ReplyLike.objects.get(user_reply=reply_obj).quantity
+        user_has_liked = has_liked(active_user, reply_obj)
     except ObjectDoesNotExist:
         total_likes = 0
         user_has_liked = False
@@ -124,7 +127,7 @@ def get_reply_box(reply, active_user):
 
     tags += '<div class="box-item__content">' + \
                 '<div id="box-item__content__header">' + \
-                    '<p class="font-bold">' + str(reply.obj.subject) + '</p>' + \
+                    '<p class="font-bold">' + str(reply_obj.subject) + '</p>' + \
                         '<p>by <span>'
 
     if creator == active_user:
@@ -132,8 +135,8 @@ def get_reply_box(reply, active_user):
     else:
         tags += creator_fulname
     
-    tags += '</span> - ' + str(reply.obj.created_at) + '</p></div>' + \
-            '<div class="box-item__content__msg">' + str(reply.obj.msg) + '</div></div></div>'
+    tags += '</span> - ' + str(formatedDate) + '</p></div>' + \
+            '<div class="box-item__content__msg">' + str(reply_obj.msg) + '</div></div></div>'
 
     # footer
     if is_gamified:
@@ -143,11 +146,11 @@ def get_reply_box(reply, active_user):
 
     if is_gamified:
         if total_likes > 1:
-            likes_counter = '<a href="" class="likes-count" data-obj_id="' + str(reply.obj.id) + '" data-toggle="modal" data-target="#likersModal">' + str(total_likes) + ' likes</a>'
+            likes_counter = '<a href="" class="likes-count" data-obj_id="' + str(reply_obj.id) + '" data-toggle="modal" data-target="#likersModal">' + str(total_likes) + ' likes</a>'
         elif total_likes == 1:
-            likes_counter = '<a href="" class="likes-count" data-obj_id="' + str(reply.obj.id) + '" data-toggle="modal" data-target="#likersModal">1 like</a>'
+            likes_counter = '<a href="" class="likes-count" data-obj_id="' + str(reply_obj.id) + '" data-toggle="modal" data-target="#likersModal">1 like</a>'
         else:
-            likes_counter = '<a href="" class="likes-count hidden" data-obj_id="' + str(reply.obj.id) + '" data-toggle="modal" data-target="#likersModal">0 like</a>'
+            likes_counter = '<a href="" class="likes-count hidden" data-obj_id="' + str(reply_obj.id) + '" data-toggle="modal" data-target="#likersModal">0 like</a>'
         tags += likes_counter
     
     tags += '<div class="right"><a href="#'
@@ -163,13 +166,13 @@ def get_reply_box(reply, active_user):
 
     if is_gamified:
         if user_has_liked:
-            tags += '<a href="" class="btn-like liked" data-obj_id="' + str(reply.obj.id) + '">Unlike</a> | '
+            tags += '<a href="" class="btn-like liked" data-obj_id="' + str(reply_obj.id) + '">Unlike</a> | '
         else:
-            tags += '<a href="" class="btn-like" data-obj_id="' + str(reply.obj.id) + '">Like</a> | '
+            tags += '<a href="" class="btn-like" data-obj_id="' + str(reply_obj.id) + '">Like</a> | '
     
-    if is_updateable(reply.obj) and creator == active_user:
-        tags += '<a href="' + str(edit_reply_url) + '" class="btn-edit" data-obj_id="' + str(reply.obj.id) + '">Edit</a> | ' + \
-                        '<a href="" class="btn-delete" data-obj_id="' + str(reply.obj.id) + '">Delete</a> | '
+    if is_updateable(reply_obj) and creator == active_user:
+        tags += '<a href="' + str(edit_reply_url) + '" class="btn-edit" data-obj_id="' + str(reply_obj.id) + '">Edit</a> | ' + \
+                        '<a href="" class="btn-delete" data-obj_id="' + str(reply_obj.id) + '">Delete</a> | '
 
     tags += '<a href="' + str(reply_url) + '">Reply</a></div></div></div>'
     
