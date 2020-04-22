@@ -62,12 +62,18 @@ def get_last_activity_user_fullname(value):
     else:
         return get_last_reply(value).creator.get_full_name()
 
+def format_created_at(value):
+    created_at = timezone.localtime(value.created_at, timezone.get_fixed_timezone(420))
+    formatedDate = created_at.strftime("%B %d, %Y, %H:%M")
+    return formatedDate
+
 @register.filter(name="get_last_updated")
 def get_last_updated(value):
     if get_replies_size(value) == 0:
-        return value.created_at
+        return format_created_at(value) + " WIB"
     else:
-        return get_last_reply(value).created_at
+        last_reply_created_at = get_last_reply(value)
+        return format_created_at(last_reply_created_at) + " WIB"
 
 @register.filter(name="get_replies_tags")
 def get_replies_tags(value, active_user):
@@ -191,6 +197,7 @@ def is_updateable(value):
     selisih = now - value.created_at
     max_delta = timedelta(minutes=30)
     return selisih <= max_delta
+    
 
 
 ################ NOTIF AREA ################
