@@ -34,7 +34,7 @@ def dashboard(request):
         update_user_participation_has_been_liked(user)
     user_activity = UserActivity.objects.get(user=user, is_gamified=is_gamified)
     notifs = get_notif(user, is_gamified)
-    new_notif_count = notifs.filter(is_new=True).count()
+    new_notif_count = notifs.filter(is_new=True, is_notifpage_viewed=False).count()
     context = { 'logged_in': True, 
                 'user_fullname': user.get_full_name(), 
                 'is_gamified': is_gamified,
@@ -105,7 +105,7 @@ def view_profile(request):
     update_grades(user, is_gamified)
     user_activity = UserActivity.objects.get(user=user, is_gamified=is_gamified)
     notifs = get_notif(user, is_gamified)
-    new_notif_count = notifs.filter(is_new=True).count()
+    new_notif_count = notifs.filter(is_new=True, is_notifpage_viewed=False).count()
     context = { 'logged_in': True, 'user': user, 
                 'user_fullname': user.get_full_name(), 
                 'is_gamified': is_gamified,
@@ -202,18 +202,15 @@ def view_course(request):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
     update_grades(user, is_gamified)
-    notifs = get_notif(user, is_gamified)
-    new_notif_count = notifs.filter(is_new=True).count()
     user_activity = UserActivity.objects.get(user=user, is_gamified=is_gamified)
     notifs = get_notif(user, is_gamified)
-    new_notif_count = notifs.filter(is_new=True).count()
+    new_notif_count = notifs.filter(is_new=True, is_notifpage_viewed=False).count()
     context = {'logged_in': True, 'user': user, 
             'user_fullname': user.get_full_name(), 
             'is_gamified': is_gamified,
             'notifs': notifs,
             'new_notif_count': new_notif_count,
-            'user_activity': user_activity,
-            'new_notif_count': new_notif_count}
+            'user_activity': user_activity}
 
     if is_gamified:
         update_user_participation_has_been_liked(user)
@@ -230,15 +227,14 @@ def view_course(request):
 @login_required
 def view_course_badges(request):
     user = request.user
-    is_gamified = Gamification.objects.first().is_gamified
     update_user_participation_has_been_liked(user)
     badges = Badge.objects.all()
-    notifs = get_notif(user, is_gamified)
-    new_notif_count = notifs.filter(is_new=True).count()
+    notifs = get_notif(user, True)
+    new_notif_count = notifs.filter(is_new=True, is_notifpage_viewed=False).count()
     return render(request, 'course-badges.html',
         {'logged_in': True, 'user': user,
         'user_fullname': user.get_full_name(),
-        'is_gamified': is_gamified,
+        'is_gamified': True,
         'badges': badges,
         'new_notif_count': new_notif_count})
 
@@ -248,7 +244,7 @@ def view_badge_detail(request, code):
     user = request.user
     update_user_participation_has_been_liked(user)
     notifs = get_notif(user, True)
-    new_notif_count = notifs.filter(is_new=True).count()
+    new_notif_count = notifs.filter(is_new=True, is_notifpage_viewed=False).count()
 
     badge = UserBadge.objects.get(owner=user, badge__code=code)
     context = {'logged_in': True, 'user': user,
@@ -286,7 +282,7 @@ def view_forum(request):
     if is_gamified:
         update_user_participation_has_been_liked(user)
     notifs = get_notif(user, is_gamified)
-    new_notif_count = notifs.filter(is_new=True).count()
+    new_notif_count = notifs.filter(is_new=True, is_notifpage_viewed=False).count()
     posts = list(UserPost.objects.filter(is_gamified=is_gamified))
     context = {'logged_in': True, 'user': user,
         'user_fullname': user.get_full_name(),
@@ -396,7 +392,7 @@ def view_post(request, id):
         total_likes = 0
         user_has_liked = False
     notifs = get_notif(user, is_gamified)
-    new_notif_count = notifs.filter(is_new=True).count()
+    new_notif_count = notifs.filter(is_new=True, is_notifpage_viewed=False).count()
     context = {'logged_in': True, 'user': user,
             'user_fullname': user.get_full_name(),
             'is_gamified': is_gamified,
@@ -729,7 +725,7 @@ def add_post(request):
         return redirect('forum')
     else:
         notifs = get_notif(user, is_gamified)
-        new_notif_count = notifs.filter(is_new=True).count()
+        new_notif_count = notifs.filter(is_new=True, is_notifpage_viewed=False).count()
         form = UserPostForm()
         return render(request, 'add-post.html', 
             {'logged_in': True, 'user': user,
@@ -785,7 +781,7 @@ def add_reply(request, post_id, parent_type, parent_id):
         return redirect('post', id=post.id)
     else:
         notifs = get_notif(user, is_gamified)
-        new_notif_count = notifs.filter(is_new=True).count()
+        new_notif_count = notifs.filter(is_new=True, is_notifpage_viewed=False).count()
         subject = 'Re: ' + parent.subject
         data = {'subject': subject}
         form = UserReplyForm(initial=data)
@@ -818,7 +814,7 @@ def edit_post(request, id):
         return redirect('post', id=id)
     else:
         notifs = get_notif(user, is_gamified)
-        new_notif_count = notifs.filter(is_new=True).count()
+        new_notif_count = notifs.filter(is_new=True, is_notifpage_viewed=False).count()
         form = UserPostForm(instance=post)
         return render(request, 'edit-post.html', 
             {'logged_in': True, 'user': user,
@@ -852,7 +848,7 @@ def edit_reply(request, id):
         return redirect('post', id=post.id)
     else:
         notifs = get_notif(user, is_gamified)
-        new_notif_count = notifs.filter(is_new=True).count()
+        new_notif_count = notifs.filter(is_new=True, is_notifpage_viewed=False).count()
         form = UserReplyForm(instance=reply)
         return render(request, 'edit-reply.html',
             {'logged_in': True, 'user': user,
@@ -1093,7 +1089,12 @@ def view_notification_page(request):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
     all_notif = Notif.objects.filter(receiver=user, is_gamified=is_gamified)
-    has_notif = True if all_notif.count() > 0 else False
+    has_notif = False
+    if all_notif.count() > 0:
+        has_notif = True
+        for notif in all_notif:
+            make_notif_is_viewed_in_notifpage(notif)
+
     context = {'logged_in': True, 'user': user,
             'user_fullname': user.get_full_name(),
             'is_gamified': is_gamified,
@@ -1103,6 +1104,10 @@ def view_notification_page(request):
 
 def make_notif_is_not_new(notif):
     notif.is_new = False
+    notif.save()
+
+def make_notif_is_viewed_in_notifpage(notif):
+    notif.is_notifpage_viewed = True
     notif.save()
 
 @login_required

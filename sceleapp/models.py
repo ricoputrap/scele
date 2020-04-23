@@ -122,6 +122,7 @@ class Notif(models.Model):
 	is_gamified = models.BooleanField(default=False)
 	created_at = models.DateTimeField(auto_now_add=True)
 	is_new = models.BooleanField(default=True)
+	is_notifpage_viewed = models.BooleanField(default=False)
 	img_loc = models.CharField(max_length=200)
 	
 	# the post that has been replied
