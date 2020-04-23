@@ -117,8 +117,10 @@ def view_profile(request):
         latest_badge = badges.last()
         reversed_badges = list(badges)
         reversed_badges.reverse()
+        user_activity = update_bonus(user)
         context['badges'] = reversed_badges
         context['latest_badge'] = latest_badge
+        context['user_activity'] = user_activity
         return render(request, 'profile.html', context)
     else:
         return render(request, 'profile.html', context)
@@ -866,7 +868,7 @@ def delete_post(user, obj_id):
         all_replies = get_all_replies([], post, is_gamified)
         reversed_replies = [rep for rep in reversed(all_replies)]
         for rep in reversed_replies:
-            update_user_activity_record(user, 'dr', rep.is_gamified)
+            update_user_activity_record(rep.creator, 'dr', rep.is_gamified)
             rep.delete()
     post.delete()
 
@@ -877,6 +879,12 @@ def delete_post(user, obj_id):
 def delete_reply(user, obj_id):
     reply = UserReply.objects.get(id=obj_id)
     is_gamified = reply.is_gamified
+    if has_replies(reply, is_gamified):
+        all_replies = get_all_replies([], reply, is_gamified)
+        reversed_replies = [rep for rep in reversed(all_replies)]
+        for rep in reversed_replies:
+            update_user_activity_record(rep.creator, 'dr', rep.is_gamified)
+            rep.delete()
     reply.delete()
     if is_gamified:
         update_user_participation_has_been_liked(user)
