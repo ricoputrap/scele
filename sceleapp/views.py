@@ -618,6 +618,7 @@ def update_notif_for_reply(notif, reply_notif, parent_type, parent):
     notif.title = 'Terdapat <b>{0} komentar baru</b> pada {1} Anda yang berjudul "{2}"'.format(reply_notif.rep_quantity, parent_type, parent.subject)
     notif.desc = 'Terdapat {0} komentar baru yang belum Anda buka pada {1} Anda yang berjudul "{2}"'.format(reply_notif.rep_quantity, parent_type, parent.subject)
     notif.created_at = timezone.now()
+    notif.is_notifpage_viewed = False
     notif.save()
     return notif
 
@@ -652,9 +653,10 @@ def add_post_notif(post, is_gamified, creator):
     creator_fullname = creator.get_full_name()
     all_users = User.objects.exclude(id=creator.id)
     for user in all_users:
+        print('user:', user.get_full_name())
         try:
             # notif baru dengan tipe post yang dimiliki user
-            notif = Notif.objects.get(notif_type='p', is_new=True, receiver=user)
+            notif = Notif.objects.get(notif_type='p', is_new=True, receiver=user, is_gamified=is_gamified)
             post_notif = update_post_notif(notif)
             notif = update_notif_for_post(notif, post_notif)
 
@@ -673,6 +675,7 @@ def update_notif_for_post(notif, post_notif):
     notif.desc = 'Terdapat {0} post baru yang belum Anda buka'.format(post_notif.post_quantity)
     notif.user_post = None
     notif.created_at = timezone.now()
+    notif.is_notifpage_viewed = False
     notif.save()
     return notif
 
@@ -1097,6 +1100,7 @@ def view_notification_page(request):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
     all_notif = Notif.objects.filter(receiver=user, is_gamified=is_gamified)
+    print('notif count:', all_notif.count())
     has_notif = False
     if all_notif.count() > 0:
         has_notif = True
