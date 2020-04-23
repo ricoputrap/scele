@@ -813,6 +813,7 @@ def edit_post(request, id):
             msg = form.cleaned_data.get('msg')
             post.subject = subject
             post.msg = msg
+            post.created_at = timezone.now()
             post.save()
         return redirect('post', id=id)
     else:
@@ -846,6 +847,7 @@ def edit_reply(request, id):
             msg = form.cleaned_data.get('msg')
             reply.subject = subject
             reply.msg = msg
+            reply.created_at = timezone.now()
             reply.save()
         return redirect('post', id=post.id)
     else:

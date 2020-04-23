@@ -37,7 +37,7 @@ class Gamification(models.Model):
 class UserPost(models.Model):
 	subject = models.CharField(max_length=100)
 	msg = models.TextField()
-	created_at = models.DateTimeField(auto_now=True)
+	created_at = models.DateTimeField(auto_now_add=True)
 	grade = models.IntegerField(default=0)
 	permalink = models.CharField(max_length=200)
 	is_gamified = models.BooleanField(default=False)
@@ -72,7 +72,7 @@ class GivenPostLike(models.Model):
 class UserReply(models.Model):
 	subject = models.CharField(max_length=100)
 	msg = models.TextField()
-	created_at = models.DateTimeField(auto_now=True)
+	created_at = models.DateTimeField(auto_now_add=True)
 	grade = models.IntegerField(default=0)
 	permalink = models.CharField(max_length=200)
 	is_gamified = models.BooleanField(default=False)
