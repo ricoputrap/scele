@@ -1,0 +1,24 @@
+/* Add a black background color to the top navigation */
+nav {
+    background-color: #323A45;
+    overflow: hidden;
+}
+
+nav a {
+    float: left;
+    color: #ffffff;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+nav a:hover {
+    background-color: #C48F00;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+nav a:first-of-type {
+    margin-left: 3rem;
+    background-color: #E2A500;
+}

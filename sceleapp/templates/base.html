@@ -23,6 +23,11 @@
     <header>
         {% block header %}
             {% include "partials/header.html" %}
+            
+            {% if logged_in %}
+                {% include 'components/navbar.html' %}
+            {% endif %}
+                
         {% endblock %}
     </header>
     <content>{% block content %}{% endblock %}</content>
