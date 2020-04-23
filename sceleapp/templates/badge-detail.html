@@ -139,7 +139,7 @@
                         {% if badge_type == "Post" %}
                         <a class="btn btn-primary" href="{% url 'post' id=badge.user_post.id %}">Lihat Post</a>
                         {% elif badge_type == "Reply" %}
-                        <a class="btn btn-primary" href="{{reply_url}}">Lihat Reply</a>
+                        <a class="btn btn-primary" href="{{item_url}}">Lihat Reply</a>
                         {% endif %}                        
                     </div>
                 </div>
