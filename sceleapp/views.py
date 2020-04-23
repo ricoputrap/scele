@@ -257,17 +257,24 @@ def view_badge_detail(request, code):
             'new_notif_count': new_notif_count}
     badge_type = ""
     if badge.user_post:
+        post = badge.user_post
+        created_at = timezone.localtime(post.created_at, timezone.get_fixed_timezone(420))
+        formatedDate = created_at.strftime("%B %d, %Y, %H:%M")
         badge_type = "Post"
-        context['badge_post'] = badge.user_post
+        context['item'] = badge.user_post
+        context['created_at'] = formatedDate
     elif badge.user_reply:
         reply = badge.user_reply
         post = get_post(reply)
         post_url = reverse('post', kwargs={'id': post.id})
         reply_url = post_url + '#' + str(reply.id)
+        created_at = timezone.localtime(reply.created_at, timezone.get_fixed_timezone(420))
+        formatedDate = created_at.strftime("%B %d, %Y, %H:%M")
         badge_type = "Reply"
         context['badge_post'] = post
-        context['badge_reply'] = reply
-        context['reply_url'] = reply_url
+        context['item'] = reply
+        context['item_url'] = reply_url
+        context['created_at'] = formatedDate
     context['badge_type'] = badge_type
 
     return render(request, 'badge-detail.html', context)
