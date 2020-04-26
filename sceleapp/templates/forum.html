@@ -23,7 +23,31 @@
     </div>
     <div class="content font-open-sans">
         <h2 class="font-bold">Forum</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit</p>
+        <div>
+            {% if is_gamified %}
+                <p>Pada forum ini partisipan dipersilahkan untuk melakukan diskusi. <strong>Topik besar</strong> yang diangkat pada forum ini adalah <strong>wabah Covid-19</strong> yang sedang melanda kita saat ini. </p>
+                <p>Dalam menyampaikan isu/pendapat mengenai wabah Covid-19, partisipan dapat membahas aspek-aspek berikut ini:</p>
+            {% else %}
+                <p>Pada forum ini partisipan dipersilahkan untuk melakukan diskusi. <strong>Topik besar</strong> yang diangkat pada forum ini adalah <strong>Pendidikan Jarak Jauh (PJJ)</strong>.</p>
+                <p>Dalam menyampaikan isu/pendapat mengenai PJJ, partisipan dapat membahas aspek-aspek berikut ini:</p>
+            {% endif %}
+            <ol>
+                <li>Kejujuran</li>
+                <li>Keadilan</li>
+                <li>Keterpercayaan</li>
+                <li>Kemartabatan</li>
+                <li>Tanggung Jawab</li>
+                <li>Kebersamaan</li>
+                <li>Keterbukaan</li>
+            </ol>
+            <p>Aspek-aspek tersebut merupakan 7 dari 9 Nilai-nilai UI. Detail untuk setiap aspek dapat dilihat <a target="_blank" rel="noopener noreferrer" href="https://bit.ly/9nilaiUI">di sini</a>.</p>
+            
+            {% if is_gamified %}
+                <p>Selain itu, partisipan juga dapat melihat halaman <a target="_blank" rel="noopener noreferrer" href="{% url 'course-badges' %}">Course Badges</a> sebagai panduan dalam menulis <em>post/reply</em> yang baik.</p>
+            {% endif %}
+                
+            <p>Selamat berdiskusi!</p>
+        </div>
         <a class="btn btn--green btn--green:hover" href="{% url 'addpost' %}">Add a new discussion</a>
         
         {% if posts %}
