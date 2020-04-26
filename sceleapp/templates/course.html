@@ -30,18 +30,55 @@
             <div class="section-line">
                 <p class="font-open-sans font-bold">Introduction</p>
             </div>
-            <div class="intro text-center">
+            <div class="intro">
                 {% if is_gamified %}
-                <p class="font-open-sans font-bold title">Selamat datang di MPKT A Kelas Y</p>
+                <p class="font-open-sans font-bold title text-center">Selamat datang di MPKT A Kelas Y</p>
                 {% else %}
-                <p class="font-open-sans font-bold title">Selamat datang di MPKT A Kelas X</p>
+                <p class="font-open-sans font-bold title text-center">Selamat datang di MPKT A Kelas X</p>
                 {% endif %}
-                <div class="intro__content">
+                <div class="intro__content text-center">
                     <p class="font-open-sans">Instruktur:</p>
                     <p class="font-open-sans">Rico Putra Pradana</p>
                 </div>
                 <div class="intro__content">
-                    <p class="font-open-sans">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                    <p class="font-open-sans">Kelas ini merupakan kelas online yang dibuat untuk keperluan penelitian dengan judul “Analisis Pengaruh Gamifikasi terhadap Keterlibatan Mahasiswa dalam Diskusi Online”. Aktivitas utama yang akan dikerjakan pada kelas ini adalah <strong>berdiskusi <em>online</em></strong> pada forum yang dapat diakses melalui menu <strong>Forum</strong> pada bagian Activity di bawah ini. Saat ini Anda sedang berada di kelas 
+                        <strong>
+                            <span>
+                                {% if is_gamified %}
+                                    versi gamifikasi.
+                                {% else %}
+                                    versi tanpa gamifikasi.
+                                {% endif %}
+                            </span>
+                        </strong>
+                    </p>
+                    <br>
+                    <p>Selama berdiskusi online Anda dapat melakukan
+                        <span>
+                            {% if is_gamified %}
+                                3
+                            {% else %}
+                                2
+                            {% endif %}
+                        </span>
+                        hal, yaitu:</p>
+                    <ol>
+                        <li>Membuat sebuah <em>post/thread</em> yang berisikan isu/masalah/pertanyaan untuk memulai suatu diskusi</li>
+                        <li>Memberikan balasan (<em>reply</em>) terhadap suatu <em>post/reply</em> yang ada di forum diskusi</li>
+                        {% if is_gamified %}
+                            <li>Memberikan reaksi suka (<em>like</em>) terhadap suatu <em>post/reply</em> yang ada di forum diskusi</li>
+                        {% endif %}
+                    </ol>
+                    <p>Setiap aktivitas yang Anda lakukan di kelas ini akan dicatat. Rangkuman hasil aktivitas Anda dapat dilihat pada box <strong>Your Activity Results</strong> yang berada di sisi kanan halaman ini. Instruktur akan memberikan nilai terhadap setiap <em>post/reply</em> yang Anda buat. <strong>Total nilai</strong> tersebut dapat dilihat pada poin <strong>Grades</strong> yang berada di box Your Activity Results.
+                        <span>
+                            {% if is_gamified %}
+                                Selain itu, Anda juga dapat mengumpulkan <strong>badges</strong> dengan cara membuat post/reply maupun memberikan like dengan kriteria tertentu. Kriteria untuk setiap badge dapat diakses melalui menu <strong>Course Badges</strong> pada bagian Activity di bawah ini.
+                            {% endif %}
+                        </span>
+                    </p>
+                    <br>
+                    <p>Note:</p>
+                    <p>Terdapat nilai bonus sebesar <strong>5 poin</strong> untuk setiap badge yang berhasil dikumpulkan. Total nilai bonus tersebut dapat dilihat pada poin <strong>Bonuses</strong> yang berada di box Your Activity Results.</p>
                 </div>
             </div>
             <!-- ACTIVITY -->
