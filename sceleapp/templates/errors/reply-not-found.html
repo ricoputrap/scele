@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    <title>Reply tidak ditemukan</title>
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/errors.css' %}">
+{% endblock %}
+
+{% block content %}
+<section id="error" class="text-center">
+    <h2>Reply tidak ditemukan</h2>
+    <h4>Kemungkinan reply telah dihapus</h4>
+    <a href="{% url 'forum' %}">Kembali ke forum</a>
+</section>
+{% endblock %}
