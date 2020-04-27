@@ -774,54 +774,61 @@ def add_reply(request, post_id, parent_type, parent_id):
     is_gamified = Gamification.objects.first().is_gamified
     if is_gamified:
         update_user_participation_has_been_liked(user)
-    post = UserPost.objects.get(id=post_id)
-    if parent_type == '0':
-        parent = UserPost.objects.get(id=parent_id)
-    else:
-        parent = UserReply.objects.get(id=parent_id)
-    
-    if request.method == 'POST':
-        form = UserReplyForm(request.POST)
-        if form.is_valid():
-            subject = form.cleaned_data.get('subject')
-            msg = form.cleaned_data.get('msg')
-            permalink = "a"
-            newRep = UserReply()
-            newRep.subject = subject
-            newRep.msg = msg
-            newRep.permalink = permalink
-            newRep.is_gamified = is_gamified
-            newRep.creator = user
-            if parent_type == '0':
-                newRep.user_post = post
-                newRep.save()
-                add_reply_notif(post, newRep, is_gamified, user)
-            else:
-                newRep.host_reply = parent
-                newRep.save()
-                add_reply_notif(parent, newRep, is_gamified, user)
-            
-            update_user_activity_record(user, 'ar', is_gamified)
-            user_participation = UserParticipation.objects.get(user=user)
-            if not user_participation.has_replied and user != parent.creator:
-                update_user_participation(user, 'r', newRep)
-                add_participation_badge_notif(user, 'p2', newRep)
-        return redirect('post', id=post.id)
-    else:
-        notifs = get_notif(user, is_gamified)
-        new_notif_count = notifs.filter(is_new=True, is_notifpage_viewed=False).count()
-        subject = 'Re: ' + parent.subject
-        data = {'subject': subject}
-        form = UserReplyForm(initial=data)
-        return render(request, 'add-reply.html',
+    try:
+        post = UserPost.objects.get(id=post_id)
+        if parent_type == '0':
+            parent = UserPost.objects.get(id=parent_id)
+        else:
+            parent = UserReply.objects.get(id=parent_id)
+        
+        if request.method == 'POST':
+            form = UserReplyForm(request.POST)
+            if form.is_valid():
+                subject = form.cleaned_data.get('subject')
+                msg = form.cleaned_data.get('msg')
+                permalink = "a"
+                newRep = UserReply()
+                newRep.subject = subject
+                newRep.msg = msg
+                newRep.permalink = permalink
+                newRep.is_gamified = is_gamified
+                newRep.creator = user
+                if parent_type == '0':
+                    newRep.user_post = post
+                    newRep.save()
+                    add_reply_notif(post, newRep, is_gamified, user)
+                else:
+                    newRep.host_reply = parent
+                    newRep.save()
+                    add_reply_notif(parent, newRep, is_gamified, user)
+                
+                update_user_activity_record(user, 'ar', is_gamified)
+                user_participation = UserParticipation.objects.get(user=user)
+                if not user_participation.has_replied and user != parent.creator:
+                    update_user_participation(user, 'r', newRep)
+                    add_participation_badge_notif(user, 'p2', newRep)
+            return redirect('post', id=post.id)
+        else:
+            notifs = get_notif(user, is_gamified)
+            new_notif_count = notifs.filter(is_new=True, is_notifpage_viewed=False).count()
+            subject = 'Re: ' + parent.subject
+            data = {'subject': subject}
+            form = UserReplyForm(initial=data)
+            return render(request, 'add-reply.html',
+                {'logged_in': True, 'user': user,
+                'user_fullname': user.get_full_name(),
+                'is_gamified': is_gamified,
+                'parent': parent,
+                'parent_type': parent_type, 
+                'post': post,
+                'form': form,
+                'new_notif_count': new_notif_count})
+    except ObjectDoesNotExist:
+        # return redirect('post-not-found')
+        return error_post_not_found_with_context(request, 
             {'logged_in': True, 'user': user,
             'user_fullname': user.get_full_name(),
-            'is_gamified': is_gamified,
-            'parent': parent,
-            'parent_type': parent_type, 
-            'post': post,
-            'form': form,
-            'new_notif_count': new_notif_count})
+            'is_gamified': is_gamified})
 
 @login_required
 def edit_post(request, id):
