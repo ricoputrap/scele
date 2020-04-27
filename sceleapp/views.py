@@ -27,6 +27,10 @@ def get_notif(user, is_gamified):
     return notifs
 
 @login_required
+def error_post_not_found_with_context(request, context):
+    return render(request, 'errors/post-not-found.html', context)
+
+@login_required
 def error_post_not_found(request):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
@@ -397,32 +401,36 @@ def view_post(request, id):
     if is_gamified:
         update_user_participation_has_been_liked(user)
     post_id = int(id)
-    # try catch kalo post query dengan is_gamified tidak ditemukan -> error page
-    post = UserPost.objects.get(id=post_id)
-    created_at = timezone.localtime(post.created_at, timezone.get_fixed_timezone(420))
-    formatedDate = created_at.strftime("%B %d, %Y, %H:%M")
-    # add_post_notif(post, is_gamified, user)
-    try:
-        total_likes = PostLike.objects.get(user_post=post, is_gamified=is_gamified).quantity
-        user_has_liked = has_liked_post(user, post)
-    except ObjectDoesNotExist:
-        total_likes = 0
-        user_has_liked = False
     notifs = get_notif(user, is_gamified)
     new_notif_count = notifs.filter(is_new=True, is_notifpage_viewed=False).count()
     context = {'logged_in': True, 'user': user,
-            'user_fullname': user.get_full_name(),
-            'is_gamified': is_gamified,
-            'post': post,
-            'formatedDate': formatedDate,
-            'total_likes': total_likes,
-            'user_has_liked': user_has_liked,
-            'new_notif_count': new_notif_count}
-    if has_replies(post, is_gamified):
-        # reps = UserReply.objects.filter(user_post=post)
-        replies = get_replies([], post, 1, is_gamified)
-        context['replies'] = replies
-    return render(request, 'post.html', context)
+                'user_fullname': user.get_full_name(),
+                'is_gamified': is_gamified,
+                'new_notif_count': new_notif_count}
+    # try catch kalo post query dengan is_gamified tidak ditemukan -> error page
+    try:
+        post = UserPost.objects.get(id=post_id)
+        created_at = timezone.localtime(post.created_at, timezone.get_fixed_timezone(420))
+        formatedDate = created_at.strftime("%B %d, %Y, %H:%M")
+        # add_post_notif(post, is_gamified, user)
+        try:
+            total_likes = PostLike.objects.get(user_post=post, is_gamified=is_gamified).quantity
+            user_has_liked = has_liked_post(user, post)
+        except ObjectDoesNotExist:
+            total_likes = 0
+            user_has_liked = False
+        context['post'] = post
+        context['formatedDate'] = formatedDate
+        context['total_likes'] = total_likes
+        context['user_has_liked'] = user_has_liked
+
+        if has_replies(post, is_gamified):
+            # reps = UserReply.objects.filter(user_post=post)
+            replies = get_replies([], post, 1, is_gamified)
+            context['replies'] = replies
+        return render(request, 'post.html', context)
+    except ObjectDoesNotExist:
+        return error_post_not_found_with_context(request, context)
 
 class Reply:
     def __init__(self, obj, lv, parent):
