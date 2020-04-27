@@ -31,6 +31,10 @@ def error_post_not_found_with_context(request, context):
     return render(request, 'errors/post-not-found.html', context)
 
 @login_required
+def error_reply_not_found_with_context(request, context):
+    return render(request, 'errors/reply-not-found.html', context)
+
+@login_required
 def error_post_not_found(request):
     user = request.user
     is_gamified = Gamification.objects.first().is_gamified
@@ -779,7 +783,13 @@ def add_reply(request, post_id, parent_type, parent_id):
         if parent_type == '0':
             parent = UserPost.objects.get(id=parent_id)
         else:
-            parent = UserReply.objects.get(id=parent_id)
+            try:
+                parent = UserReply.objects.get(id=parent_id)
+            except ObjectDoesNotExist:
+                return error_reply_not_found_with_context(request, 
+                    {'logged_in': True, 'user': user,
+                    'user_fullname': user.get_full_name(),
+                    'is_gamified': is_gamified})
         
         if request.method == 'POST':
             form = UserReplyForm(request.POST)
@@ -824,7 +834,6 @@ def add_reply(request, post_id, parent_type, parent_id):
                 'form': form,
                 'new_notif_count': new_notif_count})
     except ObjectDoesNotExist:
-        # return redirect('post-not-found')
         return error_post_not_found_with_context(request, 
             {'logged_in': True, 'user': user,
             'user_fullname': user.get_full_name(),
