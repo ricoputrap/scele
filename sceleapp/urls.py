@@ -22,4 +22,5 @@ urlpatterns = [
     path('forum/post/viewlikers/', views.view_likers, name="viewlikers"),
     path('notifpage/', views.view_notification_page, name="notif-page"),
     path('opennotif/', views.open_and_update_notif_item, name="opennotif"),
+    path('error/postnotfound', views.error_post_not_found, name="post-not-found"),
 ]

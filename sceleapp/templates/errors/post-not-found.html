@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    <title>Post tidak ditemukan</title>
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/errors.css' %}">
+{% endblock %}
+
+{% block content %}
+<section id="error" class="text-center">
+    <h2>Post tidak ditemukan</h2>
+    <h4>Kemungkinan post telah dihapus</h4>
+</section>
+{% endblock %}
