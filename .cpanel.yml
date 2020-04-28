@@ -1,5 +1,5 @@
 ---
 deployment:
  tasks:
- - export DEPLOYPATH=/home/dummysce/game.dummyscele.xyz
+ - export DEPLOYPATH=/home/dummysce/scele.skripsirico.site
  - /usr/bin/rsync -Paz * $DEPLOYPATH --delete
