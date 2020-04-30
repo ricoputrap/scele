@@ -299,35 +299,40 @@ def view_badge_detail(request, code):
         update_user_participation_has_been_liked(user)
         notifs = get_notif(user, True)
         new_notif_count = notifs.filter(is_new=True, is_notifpage_viewed=False).count()
+        try:
+            badge = UserBadge.objects.get(owner=user, badge__code=code)
+            context = {'logged_in': True, 'user': user,
+                    'user_fullname': user.get_full_name(),
+                    'badge': badge,
+                    'new_notif_count': new_notif_count}
+            badge_type = ""
+            if badge.user_post:
+                post = badge.user_post
+                created_at = timezone.localtime(post.created_at, timezone.get_fixed_timezone(420))
+                formatedDate = created_at.strftime("%B %d, %Y, %H:%M")
+                badge_type = "Post"
+                context['item'] = badge.user_post
+                context['created_at'] = formatedDate
+            elif badge.user_reply:
+                reply = badge.user_reply
+                post = get_post(reply)
+                post_url = reverse('post', kwargs={'id': post.id})
+                reply_url = post_url + '#' + str(reply.id)
+                created_at = timezone.localtime(reply.created_at, timezone.get_fixed_timezone(420))
+                formatedDate = created_at.strftime("%B %d, %Y, %H:%M")
+                badge_type = "Reply"
+                context['badge_post'] = post
+                context['item'] = reply
+                context['item_url'] = reply_url
+                context['created_at'] = formatedDate
+            context['badge_type'] = badge_type
 
-        badge = UserBadge.objects.get(owner=user, badge__code=code)
-        context = {'logged_in': True, 'user': user,
+            return render(request, 'badge-detail.html', context)
+        except ObjectDoesNotExist:
+            return error_cannot_be_accessed(request, 
+                {'logged_in': True, 'user': user,
                 'user_fullname': user.get_full_name(),
-                'badge': badge,
-                'new_notif_count': new_notif_count}
-        badge_type = ""
-        if badge.user_post:
-            post = badge.user_post
-            created_at = timezone.localtime(post.created_at, timezone.get_fixed_timezone(420))
-            formatedDate = created_at.strftime("%B %d, %Y, %H:%M")
-            badge_type = "Post"
-            context['item'] = badge.user_post
-            context['created_at'] = formatedDate
-        elif badge.user_reply:
-            reply = badge.user_reply
-            post = get_post(reply)
-            post_url = reverse('post', kwargs={'id': post.id})
-            reply_url = post_url + '#' + str(reply.id)
-            created_at = timezone.localtime(reply.created_at, timezone.get_fixed_timezone(420))
-            formatedDate = created_at.strftime("%B %d, %Y, %H:%M")
-            badge_type = "Reply"
-            context['badge_post'] = post
-            context['item'] = reply
-            context['item_url'] = reply_url
-            context['created_at'] = formatedDate
-        context['badge_type'] = badge_type
-
-        return render(request, 'badge-detail.html', context)
+                'is_gamified': False})
     except Exception as e:
         logging.getLogger("error_logger").error(repr(e))
 
