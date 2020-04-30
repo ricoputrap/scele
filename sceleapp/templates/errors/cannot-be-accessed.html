@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    <title>Halaman tidak dapat diakses</title>
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/errors.css' %}">
+{% endblock %}
+
+{% block content %}
+<section id="error" class="text-center">
+    <h2>Halaman tidak dapat diakses</h2>
+    <a href="{% url 'course' %}">Kembali ke kelas</a>
+</section>
+{% endblock %}

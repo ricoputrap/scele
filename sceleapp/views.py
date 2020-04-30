@@ -35,6 +35,9 @@ def error_post_not_found_with_context(request, context):
 def error_reply_not_found_with_context(request, context):
     return render(request, 'errors/reply-not-found.html', context)
 
+def error_cannot_be_accessed(request, context):
+    return render(request, 'errors/cannot-be-accessed.html', context)
+
 @login_required
 def error_post_not_found(request):
     user = request.user
@@ -263,6 +266,12 @@ def view_course(request):
 def view_course_badges(request):
     try:
         user = request.user
+        is_gamified = Gamification.objects.first().is_gamified
+        if not is_gamified:
+            return error_cannot_be_accessed(request, 
+                {'logged_in': True, 'user': user,
+                'user_fullname': user.get_full_name(),
+                'is_gamified': False})
         update_user_participation_has_been_liked(user)
         badges = Badge.objects.all()
         notifs = get_notif(user, True)
@@ -281,6 +290,12 @@ def view_course_badges(request):
 def view_badge_detail(request, code):
     try:
         user = request.user
+        is_gamified = Gamification.objects.first().is_gamified
+        if not is_gamified:
+            return error_cannot_be_accessed(request, 
+                {'logged_in': True, 'user': user,
+                'user_fullname': user.get_full_name(),
+                'is_gamified': False})
         update_user_participation_has_been_liked(user)
         notifs = get_notif(user, True)
         new_notif_count = notifs.filter(is_new=True, is_notifpage_viewed=False).count()
