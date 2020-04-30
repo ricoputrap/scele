@@ -25,8 +25,7 @@ PRODUCTION = os.environ.get('DATABASE_URL') != None
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = config('DEBUG', default=False, cast=bool)
-DEBUG = False
+DEBUG = config('DEBUG', default=False, cast=bool)
 
 # Put ALLOWED_HOST in .env file
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default=['localhost','0.0.0.0','127.0.0.01'], cast=Csv())
