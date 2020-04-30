@@ -127,30 +127,33 @@ def register(request):
 
 @login_required
 def view_profile(request):
-    user = request.user
-    is_gamified = Gamification.objects.first().is_gamified
-    update_grades(user, is_gamified)
-    user_activity = UserActivity.objects.get(user=user, is_gamified=is_gamified)
-    notifs = get_notif(user, is_gamified)
-    new_notif_count = notifs.filter(is_new=True, is_notifpage_viewed=False).count()
-    context = { 'logged_in': True, 'user': user, 
-                'user_fullname': user.get_full_name(), 
-                'is_gamified': is_gamified,
-                'user_activity': user_activity,
-                'new_notif_count': new_notif_count}
-    if is_gamified:
-        update_user_participation_has_been_liked(user)
-        badges = UserBadge.objects.filter(owner=user)
-        latest_badge = badges.last()
-        reversed_badges = list(badges)
-        reversed_badges.reverse()
-        user_activity = update_bonus(user)
-        context['badges'] = reversed_badges
-        context['latest_badge'] = latest_badge
-        context['user_activity'] = user_activity
-        return render(request, 'profile.html', context)
-    else:
-        return render(request, 'profile.html', context)
+    try:
+        user = request.user
+        is_gamified = Gamification.objects.first().is_gamified
+        update_grades(user, is_gamified)
+        user_activity = UserActivity.objects.get(user=user, is_gamified=is_gamified)
+        notifs = get_notif(user, is_gamified)
+        new_notif_count = notifs.filter(is_new=True, is_notifpage_viewed=False).count()
+        context = { 'logged_in': True, 'user': user, 
+                    'user_fullname': user.get_full_name(), 
+                    'is_gamified': is_gamified,
+                    'user_activity': user_activity,
+                    'new_notif_count': new_notif_count}
+        if is_gamified:
+            update_user_participation_has_been_liked(user)
+            badges = UserBadge.objects.filter(owner=user)
+            latest_badge = badges.last()
+            reversed_badges = list(badges)
+            reversed_badges.reverse()
+            user_activity = update_bonus(user)
+            context['badges'] = reversed_badges
+            context['latest_badge'] = latest_badge
+            context['user_activity'] = user_activity
+            return render(request, 'profile.html', context)
+        else:
+            return render(request, 'profile.html', context)
+    except Exception as e:
+        logging.getLogger("error_logger").error(repr(e))
 
 def count_postlikes_earned(user):
     postlikes_earned_count = 0
@@ -228,102 +231,114 @@ def update_bonus(user):
 
 @login_required
 def view_course(request):
-    user = request.user
-    is_gamified = Gamification.objects.first().is_gamified
-    update_grades(user, is_gamified)
-    user_activity = UserActivity.objects.get(user=user, is_gamified=is_gamified)
-    notifs = get_notif(user, is_gamified)
-    new_notif_count = notifs.filter(is_new=True, is_notifpage_viewed=False).count()
-    context = {'logged_in': True, 'user': user, 
-            'user_fullname': user.get_full_name(), 
-            'is_gamified': is_gamified,
-            'notifs': notifs,
-            'new_notif_count': new_notif_count,
-            'user_activity': user_activity}
+    try:
+        user = request.user
+        is_gamified = Gamification.objects.first().is_gamified
+        update_grades(user, is_gamified)
+        user_activity = UserActivity.objects.get(user=user, is_gamified=is_gamified)
+        notifs = get_notif(user, is_gamified)
+        new_notif_count = notifs.filter(is_new=True, is_notifpage_viewed=False).count()
+        context = {'logged_in': True, 'user': user, 
+                'user_fullname': user.get_full_name(), 
+                'is_gamified': is_gamified,
+                'notifs': notifs,
+                'new_notif_count': new_notif_count,
+                'user_activity': user_activity}
 
-    if is_gamified:
-        update_user_participation_has_been_liked(user)
-        badges = UserBadge.objects.filter(owner=user)
-        latest_badge = badges.last()
-        user_activity = update_bonus(user)
-        context['badges'] = badges
-        context['latest_badge'] = latest_badge
-        context['user_activity'] = user_activity
-        
-    return render(request, 'course.html', context)
+        if is_gamified:
+            update_user_participation_has_been_liked(user)
+            badges = UserBadge.objects.filter(owner=user)
+            latest_badge = badges.last()
+            user_activity = update_bonus(user)
+            context['badges'] = badges
+            context['latest_badge'] = latest_badge
+            context['user_activity'] = user_activity
+            
+        return render(request, 'course.html', context)
+    except Exception as e:
+        logging.getLogger("error_logger").error(repr(e))
 
 # TODO if not gamified: redirect error page
 @login_required
 def view_course_badges(request):
-    user = request.user
-    update_user_participation_has_been_liked(user)
-    badges = Badge.objects.all()
-    notifs = get_notif(user, True)
-    new_notif_count = notifs.filter(is_new=True, is_notifpage_viewed=False).count()
-    return render(request, 'course-badges.html',
-        {'logged_in': True, 'user': user,
-        'user_fullname': user.get_full_name(),
-        'is_gamified': True,
-        'badges': badges,
-        'new_notif_count': new_notif_count})
+    try:
+        user = request.user
+        update_user_participation_has_been_liked(user)
+        badges = Badge.objects.all()
+        notifs = get_notif(user, True)
+        new_notif_count = notifs.filter(is_new=True, is_notifpage_viewed=False).count()
+        return render(request, 'course-badges.html',
+            {'logged_in': True, 'user': user,
+            'user_fullname': user.get_full_name(),
+            'is_gamified': True,
+            'badges': badges,
+            'new_notif_count': new_notif_count})
+    except Exception as e:
+        logging.getLogger("error_logger").error(repr(e))
 
 # TODO if not gamified: redirect error page
 @login_required
 def view_badge_detail(request, code):
-    user = request.user
-    update_user_participation_has_been_liked(user)
-    notifs = get_notif(user, True)
-    new_notif_count = notifs.filter(is_new=True, is_notifpage_viewed=False).count()
+    try:
+        user = request.user
+        update_user_participation_has_been_liked(user)
+        notifs = get_notif(user, True)
+        new_notif_count = notifs.filter(is_new=True, is_notifpage_viewed=False).count()
 
-    badge = UserBadge.objects.get(owner=user, badge__code=code)
-    context = {'logged_in': True, 'user': user,
-            'user_fullname': user.get_full_name(),
-            'badge': badge,
-            'new_notif_count': new_notif_count}
-    badge_type = ""
-    if badge.user_post:
-        post = badge.user_post
-        created_at = timezone.localtime(post.created_at, timezone.get_fixed_timezone(420))
-        formatedDate = created_at.strftime("%B %d, %Y, %H:%M")
-        badge_type = "Post"
-        context['item'] = badge.user_post
-        context['created_at'] = formatedDate
-    elif badge.user_reply:
-        reply = badge.user_reply
-        post = get_post(reply)
-        post_url = reverse('post', kwargs={'id': post.id})
-        reply_url = post_url + '#' + str(reply.id)
-        created_at = timezone.localtime(reply.created_at, timezone.get_fixed_timezone(420))
-        formatedDate = created_at.strftime("%B %d, %Y, %H:%M")
-        badge_type = "Reply"
-        context['badge_post'] = post
-        context['item'] = reply
-        context['item_url'] = reply_url
-        context['created_at'] = formatedDate
-    context['badge_type'] = badge_type
+        badge = UserBadge.objects.get(owner=user, badge__code=code)
+        context = {'logged_in': True, 'user': user,
+                'user_fullname': user.get_full_name(),
+                'badge': badge,
+                'new_notif_count': new_notif_count}
+        badge_type = ""
+        if badge.user_post:
+            post = badge.user_post
+            created_at = timezone.localtime(post.created_at, timezone.get_fixed_timezone(420))
+            formatedDate = created_at.strftime("%B %d, %Y, %H:%M")
+            badge_type = "Post"
+            context['item'] = badge.user_post
+            context['created_at'] = formatedDate
+        elif badge.user_reply:
+            reply = badge.user_reply
+            post = get_post(reply)
+            post_url = reverse('post', kwargs={'id': post.id})
+            reply_url = post_url + '#' + str(reply.id)
+            created_at = timezone.localtime(reply.created_at, timezone.get_fixed_timezone(420))
+            formatedDate = created_at.strftime("%B %d, %Y, %H:%M")
+            badge_type = "Reply"
+            context['badge_post'] = post
+            context['item'] = reply
+            context['item_url'] = reply_url
+            context['created_at'] = formatedDate
+        context['badge_type'] = badge_type
 
-    return render(request, 'badge-detail.html', context)
+        return render(request, 'badge-detail.html', context)
+    except Exception as e:
+        logging.getLogger("error_logger").error(repr(e))
 
 @login_required
 def view_forum(request):
-    user = request.user
-    is_gamified = Gamification.objects.first().is_gamified
-    if is_gamified:
-        update_user_participation_has_been_liked(user)
-    notifs = get_notif(user, is_gamified)
-    new_notif_count = notifs.filter(is_new=True, is_notifpage_viewed=False).count()
-    posts = list(UserPost.objects.filter(is_gamified=is_gamified))
-    context = {'logged_in': True, 'user': user,
-        'user_fullname': user.get_full_name(),
-        'is_gamified': is_gamified,
-        'new_notif_count': new_notif_count}
-    
-    len_posts = len(posts)
-    if len_posts > 0:
-        sort_post(posts, 0, len_posts-1)
-        posts.reverse()
-        context['posts'] = posts
-    return render(request, 'forum.html', context)
+    try:
+        user = request.user
+        is_gamified = Gamification.objects.first().is_gamified
+        if is_gamified:
+            update_user_participation_has_been_liked(user)
+        notifs = get_notif(user, is_gamified)
+        new_notif_count = notifs.filter(is_new=True, is_notifpage_viewed=False).count()
+        posts = list(UserPost.objects.filter(is_gamified=is_gamified))
+        context = {'logged_in': True, 'user': user,
+            'user_fullname': user.get_full_name(),
+            'is_gamified': is_gamified,
+            'new_notif_count': new_notif_count}
+        
+        len_posts = len(posts)
+        if len_posts > 0:
+            sort_post(posts, 0, len_posts-1)
+            posts.reverse()
+            context['posts'] = posts
+        return render(request, 'forum.html', context)
+    except Exception as e:
+        logging.getLogger("error_logger").error(repr(e))
 
 
 def swap(posts, i, j):
@@ -404,41 +419,44 @@ def get_deepest_replies(deepest_replies, rep):
 
 @login_required
 def view_post(request, id):
-    user = request.user
-    is_gamified = Gamification.objects.first().is_gamified
-    if is_gamified:
-        update_user_participation_has_been_liked(user)
-    post_id = int(id)
-    notifs = get_notif(user, is_gamified)
-    new_notif_count = notifs.filter(is_new=True, is_notifpage_viewed=False).count()
-    context = {'logged_in': True, 'user': user,
-                'user_fullname': user.get_full_name(),
-                'is_gamified': is_gamified,
-                'new_notif_count': new_notif_count}
-    # try catch kalo post query dengan is_gamified tidak ditemukan -> error page
     try:
-        post = UserPost.objects.get(id=post_id)
-        created_at = timezone.localtime(post.created_at, timezone.get_fixed_timezone(420))
-        formatedDate = created_at.strftime("%B %d, %Y, %H:%M")
-        # add_post_notif(post, is_gamified, user)
+        user = request.user
+        is_gamified = Gamification.objects.first().is_gamified
+        if is_gamified:
+            update_user_participation_has_been_liked(user)
+        post_id = int(id)
+        notifs = get_notif(user, is_gamified)
+        new_notif_count = notifs.filter(is_new=True, is_notifpage_viewed=False).count()
+        context = {'logged_in': True, 'user': user,
+                    'user_fullname': user.get_full_name(),
+                    'is_gamified': is_gamified,
+                    'new_notif_count': new_notif_count}
+        # try catch kalo post query dengan is_gamified tidak ditemukan -> error page
         try:
-            total_likes = PostLike.objects.get(user_post=post, is_gamified=is_gamified).quantity
-            user_has_liked = has_liked_post(user, post)
-        except ObjectDoesNotExist:
-            total_likes = 0
-            user_has_liked = False
-        context['post'] = post
-        context['formatedDate'] = formatedDate
-        context['total_likes'] = total_likes
-        context['user_has_liked'] = user_has_liked
+            post = UserPost.objects.get(id=post_id)
+            created_at = timezone.localtime(post.created_at, timezone.get_fixed_timezone(420))
+            formatedDate = created_at.strftime("%B %d, %Y, %H:%M")
+            # add_post_notif(post, is_gamified, user)
+            try:
+                total_likes = PostLike.objects.get(user_post=post, is_gamified=is_gamified).quantity
+                user_has_liked = has_liked_post(user, post)
+            except ObjectDoesNotExist:
+                total_likes = 0
+                user_has_liked = False
+            context['post'] = post
+            context['formatedDate'] = formatedDate
+            context['total_likes'] = total_likes
+            context['user_has_liked'] = user_has_liked
 
-        if has_replies(post, is_gamified):
-            # reps = UserReply.objects.filter(user_post=post)
-            replies = get_replies([], post, 1, is_gamified)
-            context['replies'] = replies
-        return render(request, 'post.html', context)
-    except ObjectDoesNotExist:
-        return error_post_not_found_with_context(request, context)
+            if has_replies(post, is_gamified):
+                # reps = UserReply.objects.filter(user_post=post)
+                replies = get_replies([], post, 1, is_gamified)
+                context['replies'] = replies
+            return render(request, 'post.html', context)
+        except ObjectDoesNotExist:
+            return error_post_not_found_with_context(request, context)
+    except Exception as e:
+        logging.getLogger("error_logger").error(repr(e))
 
 class Reply:
     def __init__(self, obj, lv, parent):
@@ -731,44 +749,47 @@ def create_new_post_notif(notif):
 
 @login_required
 def add_post(request):
-    user = request.user
-    is_gamified = Gamification.objects.first().is_gamified
-    if is_gamified:
-        update_user_participation_has_been_liked(user)
-    if request.method == 'POST':
-        form = UserPostForm(request.POST)
-        if form.is_valid():
-            subject = form.cleaned_data.get('subject')
-            msg = form.cleaned_data.get('msg')
-            permalink = "a"
-            newPost = UserPost()
-            newPost.subject = subject
-            newPost.msg = msg
-            newPost.permalink = permalink
-            newPost.is_gamified = is_gamified
-            newPost.creator = user
-            newPost.save()
-            update_user_activity_record(user, 'ap', is_gamified)
+    try:
+        user = request.user
+        is_gamified = Gamification.objects.first().is_gamified
+        if is_gamified:
+            update_user_participation_has_been_liked(user)
+        if request.method == 'POST':
+            form = UserPostForm(request.POST)
+            if form.is_valid():
+                subject = form.cleaned_data.get('subject')
+                msg = form.cleaned_data.get('msg')
+                permalink = "a"
+                newPost = UserPost()
+                newPost.subject = subject
+                newPost.msg = msg
+                newPost.permalink = permalink
+                newPost.is_gamified = is_gamified
+                newPost.creator = user
+                newPost.save()
+                update_user_activity_record(user, 'ap', is_gamified)
 
-            add_post_notif(newPost, is_gamified, user)
+                add_post_notif(newPost, is_gamified, user)
 
-            if is_gamified:
-                user_participation = UserParticipation.objects.get(user=user)
-                if not user_participation.has_posted:
-                    update_user_participation(user, 'p', newPost)
-                    add_participation_badge_notif(user, 'p1', newPost)
+                if is_gamified:
+                    user_participation = UserParticipation.objects.get(user=user)
+                    if not user_participation.has_posted:
+                        update_user_participation(user, 'p', newPost)
+                        add_participation_badge_notif(user, 'p1', newPost)
 
-        return redirect('forum')
-    else:
-        notifs = get_notif(user, is_gamified)
-        new_notif_count = notifs.filter(is_new=True, is_notifpage_viewed=False).count()
-        form = UserPostForm()
-        return render(request, 'add-post.html', 
-            {'logged_in': True, 'user': user,
-            'user_fullname': user.get_full_name(),
-            'is_gamified': is_gamified,
-            'form': form,
-            'new_notif_count': new_notif_count})
+            return redirect('forum')
+        else:
+            notifs = get_notif(user, is_gamified)
+            new_notif_count = notifs.filter(is_new=True, is_notifpage_viewed=False).count()
+            form = UserPostForm()
+            return render(request, 'add-post.html', 
+                {'logged_in': True, 'user': user,
+                'user_fullname': user.get_full_name(),
+                'is_gamified': is_gamified,
+                'form': form,
+                'new_notif_count': new_notif_count})
+    except Exception as e:
+        logging.getLogger("error_logger").error(repr(e))
 
 def get_post(reply):
     if reply.user_post:
@@ -778,134 +799,156 @@ def get_post(reply):
 
 @login_required
 def add_reply(request, post_id, parent_type, parent_id):
-    user = request.user
-    is_gamified = Gamification.objects.first().is_gamified
-    if is_gamified:
-        update_user_participation_has_been_liked(user)
     try:
-        post = UserPost.objects.get(id=post_id)
-        if parent_type == '0':
-            parent = UserPost.objects.get(id=parent_id)
-        else:
-            try:
-                parent = UserReply.objects.get(id=parent_id)
-            except ObjectDoesNotExist:
-                return error_reply_not_found_with_context(request, 
+        user = request.user
+        is_gamified = Gamification.objects.first().is_gamified
+        if is_gamified:
+            update_user_participation_has_been_liked(user)
+        try:
+            post = UserPost.objects.get(id=post_id)
+            if parent_type == '0':
+                parent = UserPost.objects.get(id=parent_id)
+            else:
+                try:
+                    parent = UserReply.objects.get(id=parent_id)
+                except ObjectDoesNotExist:
+                    return error_reply_not_found_with_context(request, 
+                        {'logged_in': True, 'user': user,
+                        'user_fullname': user.get_full_name(),
+                        'is_gamified': is_gamified})
+            
+            if request.method == 'POST':
+                form = UserReplyForm(request.POST)
+                if form.is_valid():
+                    subject = form.cleaned_data.get('subject')
+                    msg = form.cleaned_data.get('msg')
+                    permalink = "a"
+                    newRep = UserReply()
+                    newRep.subject = subject
+                    newRep.msg = msg
+                    newRep.permalink = permalink
+                    newRep.is_gamified = is_gamified
+                    newRep.creator = user
+                    if parent_type == '0':
+                        newRep.user_post = post
+                        newRep.save()
+                        add_reply_notif(post, newRep, is_gamified, user)
+                    else:
+                        newRep.host_reply = parent
+                        newRep.save()
+                        add_reply_notif(parent, newRep, is_gamified, user)
+                    
+                    update_user_activity_record(user, 'ar', is_gamified)
+                    user_participation = UserParticipation.objects.get(user=user)
+                    if not user_participation.has_replied and user != parent.creator:
+                        update_user_participation(user, 'r', newRep)
+                        add_participation_badge_notif(user, 'p2', newRep)
+                return redirect('post', id=post.id)
+            else:
+                notifs = get_notif(user, is_gamified)
+                new_notif_count = notifs.filter(is_new=True, is_notifpage_viewed=False).count()
+                subject = 'Re: ' + parent.subject
+                data = {'subject': subject}
+                form = UserReplyForm(initial=data)
+                return render(request, 'add-reply.html',
                     {'logged_in': True, 'user': user,
                     'user_fullname': user.get_full_name(),
-                    'is_gamified': is_gamified})
+                    'is_gamified': is_gamified,
+                    'parent': parent,
+                    'parent_type': parent_type, 
+                    'post': post,
+                    'form': form,
+                    'new_notif_count': new_notif_count})
+        except ObjectDoesNotExist:
+            return error_post_not_found_with_context(request, 
+                {'logged_in': True, 'user': user,
+                'user_fullname': user.get_full_name(),
+                'is_gamified': is_gamified})
+    except Exception as e:
+        logging.getLogger("error_logger").error(repr(e))
+
+@login_required
+def edit_post(request, id):
+    try:
+        user = request.user
+        is_gamified = Gamification.objects.first().is_gamified
+        if is_gamified:
+            update_user_participation_has_been_liked(user)
+        try:
+            post = UserPost.objects.get(id=id)
+        except ObjectDoesNotExist:
+            return error_reply_not_found_with_context(request, 
+                {'logged_in': True, 'user': user,
+                'user_fullname': user.get_full_name(),
+                'is_gamified': is_gamified})
+        
+        if request.method == 'POST':
+            form = UserPostForm(request.POST)
+            if form.is_valid():
+                subject = form.cleaned_data.get('subject')
+                msg = form.cleaned_data.get('msg')
+                post.subject = subject
+                post.msg = msg
+                post.created_at = timezone.now()
+                post.save()
+            return redirect('post', id=id)
+        else:
+            notifs = get_notif(user, is_gamified)
+            new_notif_count = notifs.filter(is_new=True, is_notifpage_viewed=False).count()
+            form = UserPostForm(instance=post)
+            return render(request, 'edit-post.html', 
+                {'logged_in': True, 'user': user,
+                'user_fullname': user.get_full_name(),
+                'is_gamified': is_gamified,
+                'form': form,
+                'new_notif_count': new_notif_count})
+    except Exception as e:
+        logging.getLogger("error_logger").error(repr(e))
+
+@login_required
+def edit_reply(request, id):
+    try:
+        user = request.user
+        is_gamified = Gamification.objects.first().is_gamified
+        if is_gamified:
+            update_user_participation_has_been_liked(user)
+        try:
+            reply = UserReply.objects.get(id=id)
+        except ObjectDoesNotExist:
+            return error_reply_not_found_with_context(request, 
+                {'logged_in': True, 'user': user,
+                'user_fullname': user.get_full_name(),
+                'is_gamified': is_gamified})
+        post = get_post(reply)
+        if reply.user_post:
+            parent = reply.user_post
+        else:
+            parent = reply.host_reply
         
         if request.method == 'POST':
             form = UserReplyForm(request.POST)
             if form.is_valid():
                 subject = form.cleaned_data.get('subject')
                 msg = form.cleaned_data.get('msg')
-                permalink = "a"
-                newRep = UserReply()
-                newRep.subject = subject
-                newRep.msg = msg
-                newRep.permalink = permalink
-                newRep.is_gamified = is_gamified
-                newRep.creator = user
-                if parent_type == '0':
-                    newRep.user_post = post
-                    newRep.save()
-                    add_reply_notif(post, newRep, is_gamified, user)
-                else:
-                    newRep.host_reply = parent
-                    newRep.save()
-                    add_reply_notif(parent, newRep, is_gamified, user)
-                
-                update_user_activity_record(user, 'ar', is_gamified)
-                user_participation = UserParticipation.objects.get(user=user)
-                if not user_participation.has_replied and user != parent.creator:
-                    update_user_participation(user, 'r', newRep)
-                    add_participation_badge_notif(user, 'p2', newRep)
+                reply.subject = subject
+                reply.msg = msg
+                reply.created_at = timezone.now()
+                reply.save()
             return redirect('post', id=post.id)
         else:
             notifs = get_notif(user, is_gamified)
             new_notif_count = notifs.filter(is_new=True, is_notifpage_viewed=False).count()
-            subject = 'Re: ' + parent.subject
-            data = {'subject': subject}
-            form = UserReplyForm(initial=data)
-            return render(request, 'add-reply.html',
+            form = UserReplyForm(instance=reply)
+            return render(request, 'edit-reply.html',
                 {'logged_in': True, 'user': user,
                 'user_fullname': user.get_full_name(),
                 'is_gamified': is_gamified,
                 'parent': parent,
-                'parent_type': parent_type, 
                 'post': post,
                 'form': form,
                 'new_notif_count': new_notif_count})
-    except ObjectDoesNotExist:
-        return error_post_not_found_with_context(request, 
-            {'logged_in': True, 'user': user,
-            'user_fullname': user.get_full_name(),
-            'is_gamified': is_gamified})
-
-@login_required
-def edit_post(request, id):
-    user = request.user
-    is_gamified = Gamification.objects.first().is_gamified
-    if is_gamified:
-        update_user_participation_has_been_liked(user)
-    post = UserPost.objects.get(id=id)
-    if request.method == 'POST':
-        form = UserPostForm(request.POST)
-        if form.is_valid():
-            subject = form.cleaned_data.get('subject')
-            msg = form.cleaned_data.get('msg')
-            post.subject = subject
-            post.msg = msg
-            post.created_at = timezone.now()
-            post.save()
-        return redirect('post', id=id)
-    else:
-        notifs = get_notif(user, is_gamified)
-        new_notif_count = notifs.filter(is_new=True, is_notifpage_viewed=False).count()
-        form = UserPostForm(instance=post)
-        return render(request, 'edit-post.html', 
-            {'logged_in': True, 'user': user,
-            'user_fullname': user.get_full_name(),
-            'is_gamified': is_gamified,
-            'form': form,
-            'new_notif_count': new_notif_count})
-
-@login_required
-def edit_reply(request, id):
-    user = request.user
-    is_gamified = Gamification.objects.first().is_gamified
-    if is_gamified:
-        update_user_participation_has_been_liked(user)
-    reply = UserReply.objects.get(id=id)
-    post = get_post(reply)
-    if reply.user_post:
-        parent = reply.user_post
-    else:
-        parent = reply.host_reply
-    
-    if request.method == 'POST':
-        form = UserReplyForm(request.POST)
-        if form.is_valid():
-            subject = form.cleaned_data.get('subject')
-            msg = form.cleaned_data.get('msg')
-            reply.subject = subject
-            reply.msg = msg
-            reply.created_at = timezone.now()
-            reply.save()
-        return redirect('post', id=post.id)
-    else:
-        notifs = get_notif(user, is_gamified)
-        new_notif_count = notifs.filter(is_new=True, is_notifpage_viewed=False).count()
-        form = UserReplyForm(instance=reply)
-        return render(request, 'edit-reply.html',
-            {'logged_in': True, 'user': user,
-            'user_fullname': user.get_full_name(),
-            'is_gamified': is_gamified,
-            'parent': parent,
-            'post': post,
-            'form': form,
-            'new_notif_count': new_notif_count})
+    except Exception as e:
+        logging.getLogger("error_logger").error(repr(e))
 
 def delete_post(user, obj_id):
     post = UserPost.objects.get(id=obj_id)
@@ -917,7 +960,7 @@ def delete_post(user, obj_id):
             update_user_activity_record(rep.creator, 'dr', rep.is_gamified)
             rep.delete()
     post.delete()
-
+    update_user_activity_record(user, 'dp', is_gamified)
     if is_gamified:
         update_user_participation_has_been_liked(user)
     return JsonResponse({'response':'sukses'})
@@ -932,22 +975,24 @@ def delete_reply(user, obj_id):
             update_user_activity_record(rep.creator, 'dr', rep.is_gamified)
             rep.delete()
     reply.delete()
+    update_user_activity_record(user, 'dr', is_gamified)
     if is_gamified:
         update_user_participation_has_been_liked(user)
     return JsonResponse({'response':'sukses'})
 
 @login_required
 def delete_item(request):
-    user = request.user
-    is_gamified = Gamification.objects.first().is_gamified
-    data = request.POST
-    obj_id = int(data['obj_id'])
-    item_type = data['item_type']
-    if item_type == 'p':
-        update_user_activity_record(user, 'dp', is_gamified)
-        return delete_post(user, obj_id)
-    update_user_activity_record(user, 'dr', is_gamified)
-    return delete_reply(user, obj_id)
+    try:
+        user = request.user
+        is_gamified = Gamification.objects.first().is_gamified
+        data = request.POST
+        obj_id = int(data['obj_id'])
+        item_type = data['item_type']
+        if item_type == 'p':
+            return delete_post(user, obj_id)
+        return delete_reply(user, obj_id)
+    except Exception as e:
+        logging.getLogger("error_logger").error(repr(e))
 
 def has_liked_post(user, post):
     postlike = PostLike.objects.get(user_post=post)
@@ -991,171 +1036,183 @@ def record_replyliker(liker, replylike):
 # TODO if not gamified: redirect to error page
 @login_required
 def add_like(request):
-    user = request.user
-    is_gamified = Gamification.objects.first().is_gamified
-    data = request.POST
-    like_type = data['like_type']
-    obj_id = int(data['obj_id'])
-    
-    if like_type == 'p':
-        userpost = UserPost.objects.get(id=obj_id)
-        postlikes = PostLike.objects.all()
-
-        # create/update postlike quantity
-        try:
-            postlike = PostLike.objects.all().get(user_post=userpost)
-            postlike.quantity += 1
-        except ObjectDoesNotExist:
-            postlike = create_new_postlike(user, userpost, is_gamified)
-        postlike.save()
-
-        # update notif
-        add_like_notif(userpost, is_gamified, user)
-
-        # add post_owner likes earned and user likes given
-        post_owner = userpost.creator
-        if user != post_owner:
-            update_user_activity_record(user, 'lga', is_gamified)
-            update_user_activity_record(post_owner, 'lea', is_gamified)
-
-        # update whether user has liked or not yet
-        user_participation = UserParticipation.objects.get(user=user)
-        if not user_participation.has_liked and user != post_owner:
-            update_user_participation(user, 'lp', userpost)
-            add_participation_badge_notif(user, 'p3', userpost)
-
-        # update whether user has been liked 3 times
-        if not user_participation.has_been_liked_3_times:
-            if has_first_3_likes(user):
-                update_user_participation(user, 'liked')
+    try:
+        user = request.user
+        is_gamified = Gamification.objects.first().is_gamified
+        data = request.POST
+        like_type = data['like_type']
+        obj_id = int(data['obj_id'])
         
-        record_liker = record_postliker(user, postlike)
-        dict_postlike = model_to_dict(postlike)
-        return JsonResponse({'likes': dict_postlike})
-    else:
-        userreply = UserReply.objects.get(id=obj_id)
-        replylikes = ReplyLike.objects.all()
-        try:
-            replylike = replylikes.get(user_reply=userreply)
-            replylike.quantity += 1
-        except ObjectDoesNotExist:
-            replylike = create_new_replylike(user, userreply, is_gamified)
-        replylike.save()
+        if like_type == 'p':
+            userpost = UserPost.objects.get(id=obj_id)
+            postlikes = PostLike.objects.all()
 
-        # update notif
-        add_like_notif(userreply, is_gamified, user)
-        
-        # add reply_owner likes earned & user likes given
-        reply_owner = userreply.creator
-        if user != reply_owner:
-            update_user_activity_record(user, 'lga', is_gamified)
-            update_user_activity_record(reply_owner, 'lea', is_gamified)
+            # create/update postlike quantity
+            try:
+                postlike = PostLike.objects.all().get(user_post=userpost)
+                postlike.quantity += 1
+            except ObjectDoesNotExist:
+                postlike = create_new_postlike(user, userpost, is_gamified)
+            postlike.save()
 
-        # update whether user has replied or not yet
-        user_participation = UserParticipation.objects.get(user=user)
-        if not user_participation.has_liked and user != reply_owner:
-            update_user_participation(user, 'lr', userreply)
-            add_participation_badge_notif(user, 'p3', userreply)
+            # update notif
+            add_like_notif(userpost, is_gamified, user)
 
-        # update whether user has been liked 3 times
-        if not user_participation.has_been_liked_3_times:
-            if has_first_3_likes(user):
-                update_user_participation(user, 'liked')
+            # add post_owner likes earned and user likes given
+            post_owner = userpost.creator
+            if user != post_owner:
+                update_user_activity_record(user, 'lga', is_gamified)
+                update_user_activity_record(post_owner, 'lea', is_gamified)
 
-        record_liker = record_replyliker(user, replylike)
-        dict_replylike = model_to_dict(replylike)
-        return JsonResponse({'likes': dict_replylike})
+            # update whether user has liked or not yet
+            user_participation = UserParticipation.objects.get(user=user)
+            if not user_participation.has_liked and user != post_owner:
+                update_user_participation(user, 'lp', userpost)
+                add_participation_badge_notif(user, 'p3', userpost)
+
+            # update whether user has been liked 3 times
+            if not user_participation.has_been_liked_3_times:
+                if has_first_3_likes(user):
+                    update_user_participation(user, 'liked')
+            
+            record_liker = record_postliker(user, postlike)
+            dict_postlike = model_to_dict(postlike)
+            return JsonResponse({'likes': dict_postlike})
+        else:
+            userreply = UserReply.objects.get(id=obj_id)
+            replylikes = ReplyLike.objects.all()
+            try:
+                replylike = replylikes.get(user_reply=userreply)
+                replylike.quantity += 1
+            except ObjectDoesNotExist:
+                replylike = create_new_replylike(user, userreply, is_gamified)
+            replylike.save()
+
+            # update notif
+            add_like_notif(userreply, is_gamified, user)
+            
+            # add reply_owner likes earned & user likes given
+            reply_owner = userreply.creator
+            if user != reply_owner:
+                update_user_activity_record(user, 'lga', is_gamified)
+                update_user_activity_record(reply_owner, 'lea', is_gamified)
+
+            # update whether user has replied or not yet
+            user_participation = UserParticipation.objects.get(user=user)
+            if not user_participation.has_liked and user != reply_owner:
+                update_user_participation(user, 'lr', userreply)
+                add_participation_badge_notif(user, 'p3', userreply)
+
+            # update whether user has been liked 3 times
+            if not user_participation.has_been_liked_3_times:
+                if has_first_3_likes(user):
+                    update_user_participation(user, 'liked')
+
+            record_liker = record_replyliker(user, replylike)
+            dict_replylike = model_to_dict(replylike)
+            return JsonResponse({'likes': dict_replylike})
+    except Exception as e:
+        logging.getLogger("error_logger").error(repr(e))
 
 # TODO if not gamified: redirect error page
 @login_required
 def unlike(request):
-    user = request.user
-    is_gamified = Gamification.objects.first().is_gamified
-    update_user_participation_has_been_liked(user)
-    data = request.POST
-    like_type = data['like_type']
-    obj_id = int(data['obj_id'])
-    new_quantity = 0
-    owner = None
+    try:
+        user = request.user
+        is_gamified = Gamification.objects.first().is_gamified
+        update_user_participation_has_been_liked(user)
+        data = request.POST
+        like_type = data['like_type']
+        obj_id = int(data['obj_id'])
+        new_quantity = 0
+        owner = None
 
-    if like_type == 'p':
-        userpost = UserPost.objects.get(id=obj_id)
-        postlike = PostLike.objects.get(user_post=userpost)
-        owner = userpost.creator
-        if postlike.quantity > 1:
-            postlike.quantity -= 1
-            postlike.save()
-            new_quantity = postlike.quantity
-            GivenPostLike.objects.get(liker=user, post_like=postlike).delete()
+        if like_type == 'p':
+            userpost = UserPost.objects.get(id=obj_id)
+            postlike = PostLike.objects.get(user_post=userpost)
+            owner = userpost.creator
+            if postlike.quantity > 1:
+                postlike.quantity -= 1
+                postlike.save()
+                new_quantity = postlike.quantity
+                GivenPostLike.objects.get(liker=user, post_like=postlike).delete()
+            else:
+                postlike.delete()
         else:
-            postlike.delete()
-    else:
-        userreply = UserReply.objects.get(id=obj_id)
-        replylike = ReplyLike.objects.get(user_reply=userreply)
-        owner = userreply.creator
-        if replylike.quantity > 1:
-            replylike.quantity -= 1
-            replylike.save()
-            new_quantity = replylike.quantity
-            GivenReplyLike.objects.get(liker=user, reply_like=replylike).delete()
-        else:
-            replylike.delete()
-    
-    if user != owner:
-        update_user_activity_record(user, 'lgs', is_gamified)
-        update_user_activity_record(owner, 'les', is_gamified)
-    
-    return JsonResponse({'new_quantity': new_quantity})
+            userreply = UserReply.objects.get(id=obj_id)
+            replylike = ReplyLike.objects.get(user_reply=userreply)
+            owner = userreply.creator
+            if replylike.quantity > 1:
+                replylike.quantity -= 1
+                replylike.save()
+                new_quantity = replylike.quantity
+                GivenReplyLike.objects.get(liker=user, reply_like=replylike).delete()
+            else:
+                replylike.delete()
+        
+        if user != owner:
+            update_user_activity_record(user, 'lgs', is_gamified)
+            update_user_activity_record(owner, 'les', is_gamified)
+        
+        return JsonResponse({'new_quantity': new_quantity})
+    except Exception as e:
+        logging.getLogger("error_logger").error(repr(e))
 
 # TODO if not gamified: redirect error page
 @login_required
 def view_likers(request):
-    user = request.user
-    is_gamified = Gamification.objects.first().is_gamified
-    update_user_participation_has_been_liked(user)
-    data = request.POST
-    like_type = data['like_type']
-    obj_id = int(data['obj_id'])
-    likers = dict()
+    try:
+        user = request.user
+        is_gamified = Gamification.objects.first().is_gamified
+        update_user_participation_has_been_liked(user)
+        data = request.POST
+        like_type = data['like_type']
+        obj_id = int(data['obj_id'])
+        likers = dict()
 
-    if like_type == 'p':
-        userpost = UserPost.objects.get(id=obj_id)
-        postlike = PostLike.objects.get(user_post=userpost)
-        recorded_likes = GivenPostLike.objects.filter(post_like=postlike)
-        for obj in recorded_likes:
-            liker = obj.liker.get_full_name()
-            # rec = model_to_dict(obj)
-            likers[obj.id] = liker
-    else:
-        userreply = UserReply.objects.get(id=obj_id)
-        replylike = ReplyLike.objects.get(user_reply=userreply)
-        recorded_likes = GivenReplyLike.objects.filter(reply_like=replylike)
-        for obj in recorded_likes:
-            liker = obj.liker.get_full_name()
-            likers[obj.id] = liker
-    
-    return JsonResponse({'response': likers})
+        if like_type == 'p':
+            userpost = UserPost.objects.get(id=obj_id)
+            postlike = PostLike.objects.get(user_post=userpost)
+            recorded_likes = GivenPostLike.objects.filter(post_like=postlike)
+            for obj in recorded_likes:
+                liker = obj.liker.get_full_name()
+                # rec = model_to_dict(obj)
+                likers[obj.id] = liker
+        else:
+            userreply = UserReply.objects.get(id=obj_id)
+            replylike = ReplyLike.objects.get(user_reply=userreply)
+            recorded_likes = GivenReplyLike.objects.filter(reply_like=replylike)
+            for obj in recorded_likes:
+                liker = obj.liker.get_full_name()
+                likers[obj.id] = liker
+        
+        return JsonResponse({'response': likers})
+    except Exception as e:
+        logging.getLogger("error_logger").error(repr(e))
 
 ################ NOTIF AREA ################
 
 @login_required
 def view_notification_page(request):
-    user = request.user
-    is_gamified = Gamification.objects.first().is_gamified
-    all_notif = Notif.objects.filter(receiver=user, is_gamified=is_gamified)
-    print('notif count:', all_notif.count())
-    has_notif = False
-    if all_notif.count() > 0:
-        has_notif = True
-        for notif in all_notif:
-            make_notif_is_viewed_in_notifpage(notif)
+    try:
+        user = request.user
+        is_gamified = Gamification.objects.first().is_gamified
+        all_notif = Notif.objects.filter(receiver=user, is_gamified=is_gamified)
+        print('notif count:', all_notif.count())
+        has_notif = False
+        if all_notif.count() > 0:
+            has_notif = True
+            for notif in all_notif:
+                make_notif_is_viewed_in_notifpage(notif)
 
-    context = {'logged_in': True, 'user': user,
-            'user_fullname': user.get_full_name(),
-            'is_gamified': is_gamified,
-            'all_notif': all_notif,
-            'has_notif': has_notif}
-    return render(request, 'notifications.html', context)
+        context = {'logged_in': True, 'user': user,
+                'user_fullname': user.get_full_name(),
+                'is_gamified': is_gamified,
+                'all_notif': all_notif,
+                'has_notif': has_notif}
+        return render(request, 'notifications.html', context)
+    except Exception as e:
+        logging.getLogger("error_logger").error(repr(e))
 
 def make_notif_is_not_new(notif):
     notif.is_new = False
@@ -1167,56 +1224,59 @@ def make_notif_is_viewed_in_notifpage(notif):
 
 @login_required
 def open_and_update_notif_item(request):
-    user = request.user
-    is_gamified = Gamification.objects.first().is_gamified
-    data = request.POST
-    print('data:', data)
-    obj_id = int(data['obj_id'])
-    notif = Notif.objects.get(id=obj_id)
-    res = dict()
-    notif_type = notif.notif_type
+    try:
+        user = request.user
+        is_gamified = Gamification.objects.first().is_gamified
+        data = request.POST
+        print('data:', data)
+        obj_id = int(data['obj_id'])
+        notif = Notif.objects.get(id=obj_id)
+        res = dict()
+        notif_type = notif.notif_type
 
-    if notif_type == 'p':
-        if notif.user_post:
-            post = notif.user_post
-            res = setup_res(res, 'post', post)
-        else:
-            res['page'] = 'forum'
-    elif notif_type == 'r':
-        reply_notif = ReplyNotif.objects.get(notif=notif)
-        # Mengomentari sebuah reply
-        if reply_notif.reply:
-            new_reply = reply_notif.reply
-            res = setup_res(res, 'reply', new_reply)
-        # Terdapat > 1 reply pada sebuah post
-        elif notif.user_post:
-            parent_post = notif.user_post
-            res = setup_res(res, 'post', parent_post)
-        # Terdapat > 1 reply pada sebuah reply
-        else:
-            parent_reply = notif.user_reply
-            res = setup_res(res, 'reply', parent_reply)
-    elif notif_type == 'l':
-        if notif.user_post:
-            liked_post = notif.user_post
-            res = setup_res(res, 'post', liked_post)
-        else:
-            liked_reply = notif.user_reply
-            res = setup_res(res, 'reply', liked_reply)
-    elif notif_type == 'b':
+        if notif_type == 'p':
+            if notif.user_post:
+                post = notif.user_post
+                res = setup_res(res, 'post', post)
+            else:
+                res['page'] = 'forum'
+        elif notif_type == 'r':
+            reply_notif = ReplyNotif.objects.get(notif=notif)
+            # Mengomentari sebuah reply
+            if reply_notif.reply:
+                new_reply = reply_notif.reply
+                res = setup_res(res, 'reply', new_reply)
+            # Terdapat > 1 reply pada sebuah post
+            elif notif.user_post:
+                parent_post = notif.user_post
+                res = setup_res(res, 'post', parent_post)
+            # Terdapat > 1 reply pada sebuah reply
+            else:
+                parent_reply = notif.user_reply
+                res = setup_res(res, 'reply', parent_reply)
+        elif notif_type == 'l':
+            if notif.user_post:
+                liked_post = notif.user_post
+                res = setup_res(res, 'post', liked_post)
+            else:
+                liked_reply = notif.user_reply
+                res = setup_res(res, 'reply', liked_reply)
+        elif notif_type == 'b':
+            if notif.is_new:
+                res = setup_modal_res(res, notif)
+            if notif.user_post:
+                badged_post = notif.user_post
+                res = setup_res(res, 'post', badged_post)
+            elif notif.user_reply:
+                badged_post = notif.user_reply
+                res = setup_res(res, 'reply', badged_post)
+
         if notif.is_new:
-            res = setup_modal_res(res, notif)
-        if notif.user_post:
-            badged_post = notif.user_post
-            res = setup_res(res, 'post', badged_post)
-        elif notif.user_reply:
-            badged_post = notif.user_reply
-            res = setup_res(res, 'reply', badged_post)
+            make_notif_is_not_new(notif)
 
-    if notif.is_new:
-        make_notif_is_not_new(notif)
-
-    return JsonResponse({'res': res})
+        return JsonResponse({'res': res})
+    except Exception as e:
+        logging.getLogger("error_logger").error(repr(e))
 
 def setup_modal_res(res, notif):
     res['title'] = notif.title
