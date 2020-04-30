@@ -25,7 +25,8 @@ PRODUCTION = os.environ.get('DATABASE_URL') != None
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=False, cast=bool)
+# DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = False
 
 # Put ALLOWED_HOST in .env file
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default=['localhost','0.0.0.0','127.0.0.01'], cast=Csv())
@@ -138,3 +139,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 LOGIN_URL = 'login/'
 
+try:
+    from .logger_settings import *
+except Exception as e:
+    pass

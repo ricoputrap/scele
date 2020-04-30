@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.forms.models import model_to_dict
 import json
 import pytz
+import logging
 
 from django.utils import timezone
 from django.templatetags.static import static
@@ -51,18 +52,21 @@ def error_post_not_found(request):
 
 @login_required
 def dashboard(request):
-    user = request.user
-    is_gamified = Gamification.objects.first().is_gamified
-    if is_gamified:
-        update_user_participation_has_been_liked(user)
-    user_activity = UserActivity.objects.get(user=user, is_gamified=is_gamified)
-    notifs = get_notif(user, is_gamified)
-    new_notif_count = notifs.filter(is_new=True, is_notifpage_viewed=False).count()
-    context = { 'logged_in': True, 
-                'user_fullname': user.get_full_name(), 
-                'is_gamified': is_gamified,
-                'new_notif_count': new_notif_count}
-    return render(request, 'dashboard.html', context)
+    try:
+        user = request.user
+        is_gamified = Gamification.objects.first().is_gamified
+        if is_gamified:
+            update_user_participation_has_been_liked(user)
+        user_activity = UserActivity.objects.get(user=user, is_gamified=is_gamified)
+        notifs = get_notif(user, is_gamified)
+        new_notif_count = notifs.filter(is_new=True, is_notifpage_viewed=False).count()
+        context = { 'logged_in': True, 
+                    'user_fullname': user.get_full_name(), 
+                    'is_gamified': is_gamified,
+                    'new_notif_count': new_notif_count}
+        return render(request, 'dashboard.html', context)
+    except Exception as e:
+        logging.getLogger("error_logger").error(repr(e))
 
 def login(request):
     if request.user.is_authenticated:

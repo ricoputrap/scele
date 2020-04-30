@@ -1,0 +1,149 @@
+#post {
+    padding: 1rem 2rem;
+    color: #555;
+}
+
+.breadcrumb-menu a, .breadcrumb-menu p {
+    display: inline;
+    color: #7B5A60;
+}
+
+.content {
+    padding: 2rem 13rem 1rem 2rem;
+}
+
+#content-area {
+    margin-top: 2rem;
+}
+
+.hidden {
+    visibility: hidden;
+}
+
+.box-item {
+    background-color: #F9F9F9;
+    padding: 0.5rem 0.5rem 0.5rem 1rem;
+    margin-bottom: 1rem;
+    border-left-color: #E2A500;
+    border-left-style: solid;
+    border-right: 1px solid #E3E3E3;
+    border-top: 1px solid #E3E3E3;
+    border-bottom: 1px solid #E3E3E3;
+    width: 100%;
+}
+
+.indent {
+    margin-left: 3%;
+}
+
+.box-item__main-content {
+    display: flex;
+}
+
+.user-icon-area {
+    height: fit-content;
+}
+
+.box-item a, .box-item a:hover {
+    color: #966B00;
+    text-decoration: none;
+}
+
+.box-item img {
+    max-height: 38px;
+    border-radius: 100%;
+    margin-right: 1rem;
+}
+
+.box-item__content {
+    width: 100%;
+    word-break: break-word;
+}
+
+.box-item__content p:not(.box-item__content__msg) {
+    margin: 0;
+}
+
+.box-item__content__msg {
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+}
+
+.box-item__content__footer a {
+    display: inline;
+}
+
+.extra-padding-bottom {
+    padding-bottom: 1.5rem;
+}
+
+/* MODAL */
+
+.liker-item {
+    margin-bottom: 1rem;
+}
+
+.liker-item:last-child {
+    margin-bottom: 0;
+}
+
+.liker-item a, .liker-item p {
+    display: inline;
+}
+
+.liker-item img {
+    max-height: 4rem;
+    border-radius: 100%;
+    margin-right: 1rem;
+}
+
+/* DELETE MODAL */
+#delete-conf .modal-body {
+    padding: 1rem 0;
+}
+
+.modal-content__content-area {
+    padding: 0 2rem;
+}
+
+#delete-conf h3 {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+#delete-conf p {
+    color: #999999;
+}
+
+.btn {
+    border-radius: 0;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    cursor: pointer;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2), 0 2px 20px rgba(0, 0, 0, 0.19);
+}
+
+.btn--block {
+    display: block;
+    width: 100%;
+}
+
+.btn--green {
+    background-color: #8EC63F;
+    color: #fff;
+}
+
+.btn--red {
+    background-color: #C23A34;
+    color: #fff;
+}
+
+.btn--green:hover {
+    background-color: #77AE29;
+    color: #fff;
+}
+.btn--red:hover {
+    background-color: #B82D27;
+    color: #fff;
+}
