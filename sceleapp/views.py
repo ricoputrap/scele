@@ -434,27 +434,28 @@ def view_post(request, id):
         # try catch kalo post query dengan is_gamified tidak ditemukan -> error page
         try:
             post = UserPost.objects.get(id=post_id)
-            created_at = timezone.localtime(post.created_at, timezone.get_fixed_timezone(420))
-            formatedDate = created_at.strftime("%B %d, %Y, %H:%M")
-            # add_post_notif(post, is_gamified, user)
-            try:
-                total_likes = PostLike.objects.get(user_post=post, is_gamified=is_gamified).quantity
-                user_has_liked = has_liked_post(user, post)
-            except ObjectDoesNotExist:
-                total_likes = 0
-                user_has_liked = False
-            context['post'] = post
-            context['formatedDate'] = formatedDate
-            context['total_likes'] = total_likes
-            context['user_has_liked'] = user_has_liked
-
-            if has_replies(post, is_gamified):
-                # reps = UserReply.objects.filter(user_post=post)
-                replies = get_replies([], post, 1, is_gamified)
-                context['replies'] = replies
-            return render(request, 'post.html', context)
         except ObjectDoesNotExist:
             return error_post_not_found_with_context(request, context)
+        created_at = timezone.localtime(post.created_at, timezone.get_fixed_timezone(420))
+        formatedDate = created_at.strftime("%B %d, %Y, %H:%M")
+        # add_post_notif(post, is_gamified, user)
+        try:
+            total_likes = PostLike.objects.get(user_post=post, is_gamified=is_gamified).quantity
+            user_has_liked = has_liked_post(user, post)
+        except ObjectDoesNotExist:
+            total_likes = 0
+            user_has_liked = False
+        context['post'] = post
+        context['formatedDate'] = formatedDate
+        context['total_likes'] = total_likes
+        context['user_has_liked'] = user_has_liked
+
+        if has_replies(post, is_gamified):
+            # reps = UserReply.objects.filter(user_post=post)
+            replies = get_replies([], post, 1, is_gamified)
+            context['replies'] = replies
+        return render(request, 'post.html', context)
+        
     except Exception as e:
         logging.getLogger("error_logger").error(repr(e))
 
@@ -806,64 +807,65 @@ def add_reply(request, post_id, parent_type, parent_id):
             update_user_participation_has_been_liked(user)
         try:
             post = UserPost.objects.get(id=post_id)
-            if parent_type == '0':
-                parent = UserPost.objects.get(id=parent_id)
-            else:
-                try:
-                    parent = UserReply.objects.get(id=parent_id)
-                except ObjectDoesNotExist:
-                    return error_reply_not_found_with_context(request, 
-                        {'logged_in': True, 'user': user,
-                        'user_fullname': user.get_full_name(),
-                        'is_gamified': is_gamified})
-            
-            if request.method == 'POST':
-                form = UserReplyForm(request.POST)
-                if form.is_valid():
-                    subject = form.cleaned_data.get('subject')
-                    msg = form.cleaned_data.get('msg')
-                    permalink = "a"
-                    newRep = UserReply()
-                    newRep.subject = subject
-                    newRep.msg = msg
-                    newRep.permalink = permalink
-                    newRep.is_gamified = is_gamified
-                    newRep.creator = user
-                    if parent_type == '0':
-                        newRep.user_post = post
-                        newRep.save()
-                        add_reply_notif(post, newRep, is_gamified, user)
-                    else:
-                        newRep.host_reply = parent
-                        newRep.save()
-                        add_reply_notif(parent, newRep, is_gamified, user)
-                    
-                    update_user_activity_record(user, 'ar', is_gamified)
-                    user_participation = UserParticipation.objects.get(user=user)
-                    if not user_participation.has_replied and user != parent.creator:
-                        update_user_participation(user, 'r', newRep)
-                        add_participation_badge_notif(user, 'p2', newRep)
-                return redirect('post', id=post.id)
-            else:
-                notifs = get_notif(user, is_gamified)
-                new_notif_count = notifs.filter(is_new=True, is_notifpage_viewed=False).count()
-                subject = 'Re: ' + parent.subject
-                data = {'subject': subject}
-                form = UserReplyForm(initial=data)
-                return render(request, 'add-reply.html',
-                    {'logged_in': True, 'user': user,
-                    'user_fullname': user.get_full_name(),
-                    'is_gamified': is_gamified,
-                    'parent': parent,
-                    'parent_type': parent_type, 
-                    'post': post,
-                    'form': form,
-                    'new_notif_count': new_notif_count})
         except ObjectDoesNotExist:
             return error_post_not_found_with_context(request, 
                 {'logged_in': True, 'user': user,
                 'user_fullname': user.get_full_name(),
                 'is_gamified': is_gamified})
+        if parent_type == '0':
+            parent = UserPost.objects.get(id=parent_id)
+        else:
+            try:
+                parent = UserReply.objects.get(id=parent_id)
+            except ObjectDoesNotExist:
+                return error_reply_not_found_with_context(request, 
+                    {'logged_in': True, 'user': user,
+                    'user_fullname': user.get_full_name(),
+                    'is_gamified': is_gamified})
+        
+        if request.method == 'POST':
+            form = UserReplyForm(request.POST)
+            if form.is_valid():
+                subject = form.cleaned_data.get('subject')
+                msg = form.cleaned_data.get('msg')
+                permalink = "a"
+                newRep = UserReply()
+                newRep.subject = subject
+                newRep.msg = msg
+                newRep.permalink = permalink
+                newRep.is_gamified = is_gamified
+                newRep.creator = user
+                if parent_type == '0':
+                    newRep.user_post = post
+                    newRep.save()
+                    add_reply_notif(post, newRep, is_gamified, user)
+                else:
+                    newRep.host_reply = parent
+                    newRep.save()
+                    add_reply_notif(parent, newRep, is_gamified, user)
+                
+                update_user_activity_record(user, 'ar', is_gamified)
+                user_participation = UserParticipation.objects.get(user=user)
+                if not user_participation.has_replied and user != parent.creator:
+                    update_user_participation(user, 'r', newRep)
+                    add_participation_badge_notif(user, 'p2', newRep)
+            return redirect('post', id=post.id)
+        else:
+            notifs = get_notif(user, is_gamified)
+            new_notif_count = notifs.filter(is_new=True, is_notifpage_viewed=False).count()
+            subject = 'Re: ' + parent.subject
+            data = {'subject': subject}
+            form = UserReplyForm(initial=data)
+            return render(request, 'add-reply.html',
+                {'logged_in': True, 'user': user,
+                'user_fullname': user.get_full_name(),
+                'is_gamified': is_gamified,
+                'parent': parent,
+                'parent_type': parent_type, 
+                'post': post,
+                'form': form,
+                'new_notif_count': new_notif_count})
+        
     except Exception as e:
         logging.getLogger("error_logger").error(repr(e))
 
@@ -877,7 +879,7 @@ def edit_post(request, id):
         try:
             post = UserPost.objects.get(id=id)
         except ObjectDoesNotExist:
-            return error_reply_not_found_with_context(request, 
+            return error_post_not_found_with_context(request, 
                 {'logged_in': True, 'user': user,
                 'user_fullname': user.get_full_name(),
                 'is_gamified': is_gamified})
