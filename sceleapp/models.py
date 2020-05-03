@@ -84,7 +84,7 @@ class UserReply(models.Model):
 		ordering = ['created_at']
 
 	def __str__(self):
-		return self.subject
+		return '{0} - subject: "{1}" - msg: "{2}"'.format(self.creator, self.subject, self.msg)
 
 class ReplyLike(models.Model):
 	user_reply = models.OneToOneField(UserReply, on_delete=models.SET_NULL, null=True, blank=True)
