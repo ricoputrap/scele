@@ -56,5 +56,10 @@ input {
     color: #fff;
 }
 
+#id_password {
+    margin-bottom: 0.5rem;
+}
 
-
+.show-password {
+    width: fit-content;
+}

@@ -19,12 +19,19 @@
                         <p>
                             {{ field.label_tag }}<br>
                             {{ field }}
+                            
                             <!-- {% if field.help_text %}
                             <small style="color: grey">{{ field.help_text }}</small>
                             {% endif %} -->
                             {% for error in field.errors %}
                             <p style="color: red">{{ error }}</p>
                             {% endfor %}
+
+                            {% if field.label == "Password" %}
+                            <span><input class="show-password" type="checkbox"> Show Password</span>
+                            {% endif %}
+                                
+                            
                         </p>
                     {% endfor %}
                     <button type="submit" class="btn btn--block btn--green btn--green:hover">Log in</button>
