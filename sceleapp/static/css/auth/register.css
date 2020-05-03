@@ -57,3 +57,11 @@ input {
     background-color: #B82D27;
     color: #fff;
 }
+
+#id_password1, #id_password2 {
+    margin-bottom: 0.5rem;
+}
+
+#show-password1, #show-password2 {
+    width: fit-content;
+}

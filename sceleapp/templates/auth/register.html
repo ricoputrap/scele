@@ -25,6 +25,14 @@
               {% for error in field.errors %}
                 <p style="color: red">{{ error }}</p>
               {% endfor %}
+
+              {% if field.label == "Password" %}
+              <span><input id="show-password1" type="checkbox"> Show Password</span>
+              {% endif %}
+
+              {% if field.label == "Password confirmation" %}
+              <span><input id="show-password2" type="checkbox"> Show Password</span>
+              {% endif %}
             </p>
           {% endfor %}
           <div class="row">
@@ -45,3 +53,6 @@
 
 {% endblock %}
 
+{% block script %}
+<script src="{% static 'js/register.js' %}"></script>
+{% endblock %}
