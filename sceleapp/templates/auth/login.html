@@ -30,8 +30,6 @@
                             {% if field.label == "Password" %}
                             <span><input class="show-password" type="checkbox"> Show Password</span>
                             {% endif %}
-                                
-                            
                         </p>
                     {% endfor %}
                     <button type="submit" class="btn btn--block btn--green btn--green:hover">Log in</button>
@@ -48,4 +46,9 @@
         </div>
     </div>
 </section>
+{% endblock %}
+
+
+{% block script %}
+<script src="{% static 'js/login.js' %}"></script>
 {% endblock %}
